@@ -1,0 +1,165 @@
+<article data-role="page" id="page-setting-view" class="page-main" data-theme="a">
+    <!-- <div id="main" class="view-main" data-role="none" class="main"> -->
+    <div class="customScrollbar">
+        <div data-role="none" id="setting-sections" class="setting-sections">
+            <div id="device-info-sec" class="device-info-sec" data-role="none">
+                <h1 id="device-name-label" data-i18n="config.label.dp" data-role="none"></h1>
+                <table id="device-info" class="detail-form">
+                    <tr>
+                        <td class="lbl" data-i18n="config.dp.label.serialId" data-role="none"></td>
+                        <td class="val" id="device-serial-id" data-role="none">-</td>
+                    </tr>
+                    <tr id="device-version-area">
+                        <td class="lbl" data-i18n="config.dp.label.version" data-role="none"></td>
+                        <td class="val" id="device-version" data-role="none">-</td>
+                    </tr>
+                </table>
+                <input type="button" id="pairing-button" data-i18n="[value]config.button.repairing" value="" data-role="none" tabindex="1"/>
+            </div>
+            <section data-role="none" id="self_setting_sec">
+              <div data-role="none" class="hrline"></div>
+              <div data-role="none" class="hidebtautoconnect">
+                <div id="bttitle-row" class="bttitle-row" data-role="none">
+                    <div class="bttitle-area" data-role="none">
+                        <h1 data-i18n="config.label.btautoconnect"></h1>
+                    </div>
+                    <div class="bt-switch-area" data-role="none">
+                        <input type="radio" name="bt-switch" id="bt-off" value="off" data-role="none" />
+                        <label for="bt-off" isRadioLabel class="rest" data-i18n="config.btautoconnect.off" data-role="none" tabindex="12"></label>
+                        <input type="radio" name="bt-switch" id="bt-on"  value="on" data-role="none" />
+                        <label for="bt-on" isRadioLabel class="rest" data-i18n="config.btautoconnect.on" data-role="none" tabindex="11"></label>
+                    </div>
+                </div>
+                <div id="btdscrpt" class="btdescription-row" data-role="none">
+                </div>
+                <div data-role="none" class="hrline" style="margin-top:28px"></div>
+              </div>
+              
+              <div data-role="none" class="autosync">
+                <div id="synctitle-row" class="synctitle-row" data-role="none">
+                    <div class="synctitle-area" data-role="none">
+                        <h1 data-i18n="config.label.autosync"></h1>
+                    </div>
+                    <div class="sync-switch-area" data-role="none">
+                        <input type="radio" name="sync-switch" id="sync-off" value="off" data-role="none" />
+                        <label for="sync-off" isRadioLabel class="rest" data-i18n="config.autosync.setting.off" data-role="none" tabindex="22"></label>
+                        <input type="radio" name="sync-switch" id="sync-on"  value="on" data-role="none" />
+                        <label for="sync-on" isRadioLabel class="rest" data-i18n="config.autosync.setting.on"  data-role="none" tabindex="21"></label>
+                    </div>
+                </div>
+                <div id="syncinterval-row" class="syncinterval-row" data-role="none">
+                    <div class="syncinterval-title" style="margin-top:5px;" data-role="none">
+                        <h1 data-i18n="config.autosync.label.interval"></h1>
+                    </div>
+                    <div class="val" data-role="none" >
+                        <select id="autosync-interval" data-role="none" tabindex="23">
+                            <option value="10M" data-i18n="config.autosync.interval.min_10"></option>
+                            <option value="30M" data-i18n="config.autosync.interval.min_30"></option>
+                            <option value="60M" data-i18n="config.autosync.interval.hour_1"></option>
+                            <option value="90M" data-i18n="config.autosync.interval.min_90"></option>
+                        </select>
+                    </div>
+                </div>
+                <div id="syncdescription-row" class="syncdescription-row" data-role="none">
+                    <label class="lbl" data-i18n="config.autosync.setting.description" data-role="none"></label>
+                </div>
+                <div data-role="none" class="hrline" style="margin-top:25px" > </div>
+              </div>
+
+            </section>
+            <div class="hideWhenDisconnected">
+                <div id="note_template_section" data-role="none"> </div>
+                <div data-role="none" class="hrline"></div>
+                <div id="wifi_setting_section" data-role="none"> </div>
+                <div data-role="none" class="hrline"></div>
+                <div id="general_setting_section" data-role="none"> </div>
+            </div>
+        </div>
+    </div>
+    <!-- </div> -->
+    <div id="page-footer" data-role="none">
+        <input type="button" data-i18n="[value]app.words.close" data-role="none" id="close-button" value="*閉じる" tabindex="99"/>
+    </div>
+    <!-- Templates -->
+    <script type="text/template" id="note-template">
+        {{#noteTemplate}}
+        <label>{{template_name}}</label>
+        {{/noteTemplate}}
+    </script>
+    <script type="text/template" id="wifiAP-template">
+        {{#wifiAP}}
+        <label>{{ssid}}</label>
+        {{/wifiAP}}
+    </script>
+    <script type="text/template" id="template_note_template_section">
+        <section data-role="none" id="note_template_sec">
+            <div id="note_template_sec">
+                <h1 data-i18n="config.label.templates"></h1>
+                <div id="note-tmep-list" class="section-detail" data-role="none">
+                    <ul id="note_template-list" data-role="none" class="detail-list"> </ul>
+                </div>
+            </div>
+            <footer data-type="horizontal" data-role="none">
+                <input type="button" data-i18n="[value]config.templates.button.addNew" id="addTemplate-button" value="" data-role="none" tabindex="31"/>
+                <input type="button" data-i18n="[value]config.templates.button.delete" id="deleteTemplate-button" value="" disabled data-role="none" tabindex="32"/>
+                <input type="button" data-i18n="[value]config.templates.button.rename" id="renameTemplate-button" value="" disabled data-role="none" tabindex="33"/>
+            </footer>
+        </section>
+    </script>
+    <script type="text/template" id="template_wifi_setting_section">
+        <section data-role="none" id="wifi-list-sec">
+            <div id="title-row" class="title-row" data-role="none">
+                <div class="title-area" data-role="none">
+                    <h1 id="wifi-setting-title" data-i18n="config.label.wifiOnOff.wifiSettings"></h1>
+                </div>
+                <div class="wifi-switch-area" data-role="none">
+                    <input type="radio" name="wifi-switch" id="wifi-off" value="off" data-role="none" />
+                    <label for="wifi-off" isRadioLabel class="rest" id="wifi-off-label" data-i18n="config.wifiSettings.radio.wifiOff" data-role="none" tabindex="42"></label>
+                    <input type="radio" name="wifi-switch" id="wifi-on" value="on" data-role="none" />
+                    <label for="wifi-on" isRadioLabel class="rest" id="wifi-on-label" data-i18n="config.wifiSettings.radio.wifiOn" data-role="none" tabindex="41"></label>
+                </div>
+            </div>
+            <div id="wifi-list-title" class="wifi-list-title" data-i18n="config.label.wifiSettings">Wifi List</div>
+            <div id="wifi-list-div" class="section-detail" data-role="none">
+                <ul id="wifi-list" class="detail-list" data-role="none"> </ul>
+            </div>
+            <footer data-type="horizontal">
+                <input type="button" data-i18n="[value]config.wifiSettings.button.addNew" id="addWifiSetting-button" value="" data-role="none" tabindex="51"/>
+                <input type="button" data-i18n="[value]config.wifiSettings.button.delete" id="deleteWifiSetting-button" value="" disabled data-role="none" tabindex="52"/>
+                <input type="button" data-i18n="[value]config.wifiSettings.button.edit" id="editWifiSetting-button" value="" disabled data-role="none" tabindex="53"/>
+            </footer>
+            <div id="wifi-note" data-i18n="config.wifiSettings.description"></div>
+        </section>
+    </script>
+    <script type="text/template" id="template_general_setting_section">
+        <section data-role="none" id="base-settings-sec">
+            <h1 data-i18n="config.label.generalSettings">{{title}}</h1>
+            <div id="base-settings">
+                <table id="settings" data-role="none" class="detail-form">
+                    <tr class="line" data-role="none">
+                        <td data-i18n="config.generalSettings.label.userName" class="lbl" data-role="none">{{owner_label}}</td>
+                        <td class="val" id="owner" data-role="none">{{owner}}</td>
+                    </tr>
+                    <tr class="line" data-role="none">
+                        <td data-i18n="config.generalSettings.label.formatDate" class="lbl" data-role="none">{{date_format_label}}</td>
+                        <td class="val" id="date-format" data-role="none">{{date_format}}</td>
+                    </tr>
+                    <tr class="line" data-role="none">
+                        <td data-i18n="config.generalSettings.label.formatTime" class="lbl" data-role="none">{{time_format_label}}</td>
+                        <td class="val" id="time-format" data-role="none">{{time_format}}</td>
+                    </tr>
+                    <tr class="line" data-role="none">
+                        <td data-i18n="config.generalSettings.label.timezone" class="lbl" data-role="none">{{time_zone_label}}</td>
+                        <td class="val" id="time-zone" data-role="none">{{time_zone}}</td>
+                    </tr>
+                    <tr class="line" data-role="none">
+                        <td data-i18n="config.label.wifiSettings" class="lbl" data-role="none">{{timeout_to_standby_label}}</td>
+                        <td class="val" id="timeout_to_standby" data-role="none">{{timeout_to_standby}}</td>
+                    </tr>
+                </table>
+            </div>
+            <footer data-type="horizontal" id="form-btn">
+                <input type="button" id="base-setting-button" data-i18n="[value]config.generalSettings.label.button.edit" value="{{edit_btn_label}}" data-inline="true" data-role="none" tabindex="61"/> </footer>
+        </section>
+    </script>
+</article>

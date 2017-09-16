@@ -1,0 +1,39 @@
+﻿{
+    "aplist": [
+        { 
+            "ssid":  "SSID-01",
+            "security": "nonsec",
+            "state": "connected",
+            "frequency_band": "2.4ghz",
+            "rssi_level": "5"
+        },
+        { 
+            "ssid":  "SSID-02",
+            "security": "nonsec",
+            "state": "none",
+            "frequency_band": "2.4ghz",
+            "rssi_level": "4"
+        },
+        { 
+            "ssid":  "SSID-03",
+            "security": "psk",
+            "state": "connecting",
+            "frequency_band": "2.4ghz",
+            "rssi_level": "3"
+        },
+        { 
+            "ssid":  "SSID-04",
+            "security": "eap",
+            "state": "saved",
+            "frequency_band": "5ghz",
+            "rssi_level": "2"
+        },
+        { 
+            "ssid":  "SSID-05",
+            "security": "eap",
+            "state": "disabled",
+            "frequency_band": "5ghz",
+            "rssi_level": "-1"
+        }
+    ]
+}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <!-- <title></title> -->
+    <!-- <ATELIERMARKUP type="load-stylesheet" /> -->
+    <link rel="stylesheet" href="stylesheets/dialog_sync_result.css" />
+    <!-- <ATELIERMARKUP type="load-library-script" /> -->
+    <!-- application: model entry -->
+    <!-- <ATELIERMARKUP type="load-model-script" /> -->
+    <!-- <ATELIERMARKUP type="load-collection-script" /> -->
+    <!-- application: view entry -->
+    <!-- <ATELIERMARKUP type="load-view-script" /> -->
+    <script defer type="lazy" src="scripts/View/Dialog/DialogDefs.js"></script>
+    <script defer type="lazy" src="scripts/View/Dialog/DialogBase.js"></script>
+    <script defer type="lazy" src="scripts/View/Dialog/OpenChildDialogs.js"></script>
+    <script defer type="lazy" src="scripts/View/Dialog/DialogSyncResult.js"></script>
+    <!-- <ATELIERMARKUP type="load-page-script" /> -->
+</head>
+
+<body style="display: none;">
+    <article id="dialog-sync-result" data-role="page" data-corners="false" data-theme="none" data-overlay-theme="b">
+        <p data-i18n='sync.ngResult.message' class="title">
+            <!-- 以下のフォルダーやファイルの同期が実行できませんでした。 -->
+        </p>
+        <p data-i18n='sync.ngResult.toDP.caption' class="subtitle">
+            <!-- コンピューターのファイル -->
+        </p>
+        <div class="titlesroll" id="local-result-title-sroll">
+            <div id="title-list" class="main">
+                <div class="line">
+                    <div class="path" data-i18n='sync.ngResult.toDP.label.fileList'>コンピューターのファイル</div>
+                    <div class="resizer" result-div-id="local-result-list" result-type="path"></div>
+                    <div class="message" style="width: 386px" data-i18n='sync.ngResult.toDP.label.process'>デジタルペーパーへの処理</div>
+                    <div class="resizer" result-div-id="local-result-list" result-type="message"></div>
+                </div>
+            </div>
+        </div>
+        <div id="local-result-list-sroll" class="sroll">
+            <div id="local-result-list" class="main">
+            </div>
+        </div>
+        <p data-i18n='sync.ngResult.toPC.caption' class="subtitle">
+            <!-- コンピューターのファイル -->
+        </p>
+        <div class="titlesroll" id="remote-result-title-sroll">
+            <div id="title-list" class="main">
+                <div class="line">
+                    <div class="path" data-i18n='sync.ngResult.toPC.label.fileList'></div>
+                    <div class="resizer" result-div-id="remote-result-list" result-type="path"></div>
+                    <div class="message" style="width: 386px" data-i18n='sync.ngResult.toPC.label.process'></div>
+                    <div class="resizer" result-div-id="remote-result-list" result-type="message"></div>
+                </div>
+            </div>
+        </div>
+        <div id="remote-result-list-sroll" class="sroll">
+            <div id="remote-result-list" class="main">
+            </div>
+        </div>
+        <div class="btn-area" data-role="none">
+            <div class="btn-line" data-role="none">
+                <input type="button" id="cancel-button" data-role="none" data-i18n="[value]app.words.close" tabindex="1"/>
+            </div>
+        </div>
+    </article>
+    <!-- Templates -->
+    <script type="text/template" id="sync-template">
+        {{#aplist}}
+        <div class="line">
+            <div class="path" style="width: 380px;  padding-left: 8px;">{{path}}</div>
+            <div class="message" style="width: 390px;  padding-left: 18px;">{{process}}</div>
+        </div>
+        {{/aplist}}
+    </script>
+    <script src="scripts/config.js"></script>
+    <script src="modules/requirejs/scripts/require.js" data-main="scripts/init_dialog_sync_result"></script>
+    <div style="width: 100%; height: 100%; z-index: 100; position: absolute; visibility: hidden;" id="modal-lock-panel"></div>
+</body>
+
+</html>

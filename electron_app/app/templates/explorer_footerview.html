@@ -1,0 +1,43 @@
+<div id='sync_progress' class='progressbar'>
+    <div id="footer_auto_sync_result" class="auto_sync_result">
+        <label id="footer_auto_sync_txt"></label>
+    </div>
+    <div id="sync_file_transfer" class="file_transfer" data-i18n="content.sub.label.sync"> </div>
+    <div id="sync_progress_info" class='progress'>
+        <img class="loading_icon" src="../res/image/svg/Assets_Altair_Main_Progress_Sync.svg" data-role="none">
+        <span id='sync_file_name'></span>
+        <span id='sync_ruler' style='visibility:hidden'></span>
+    </div>
+    <div id='sync_transfer'>
+        <div class='transfer_finish sync_finish'>
+            <span id='sync_current'>0</span><span data-i18n="content.sub.label.unit" />
+        </div>
+        <div class='transfer_cancel sync_cancel'>
+            <a id='sync_cancel' class="button" transfer-type='deneb_to_pc' data-i18n="content.sub.label.abort"></a>
+        </div>
+    </div>
+</div>
+<div id='download_progress' class='progressbar'>
+    <div class="file_transfer" data-i18n="content.sub.label.importing"> </div>
+    <div class='progress transfer_progress'>
+        <div id='download_progress_bar' class='bar' />
+    </div>
+    <div class='transfer_finish'>
+        <span id='download_current'>0</span> / <span id='download_total'>0</span> <span data-i18n="content.sub.label.unit" />
+    </div>
+    <div class='transfer_cancel'>
+        <a id='download_cancel' class="button" transfer-type='deneb_to_pc' data-i18n="content.sub.label.abort"></a>
+    </div>
+</div>
+<div id='upload_progress' class='progressbar'>
+    <div class="file_transfer" data-i18n="content.sub.label.exporting"> </div>
+    <div class='progress transfer_progress'>
+        <div id='upload_progress_bar' class='bar' />
+    </div>
+    <div class='transfer_finish'>
+        <span id='upload_current'>0</span> / <span id='upload_total'>0</span> <span data-i18n="content.sub.label.unit"></span>
+    </div>
+    <div class='transfer_cancel'>
+        <a id='upload_cancel' class="button" transfer-type='pc_to_deneb' data-i18n="content.sub.label.abort"></a>
+    </div>
+</div>

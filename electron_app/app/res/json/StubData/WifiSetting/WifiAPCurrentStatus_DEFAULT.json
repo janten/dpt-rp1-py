@@ -1,0 +1,7 @@
+﻿{ 
+    "ssid":  "Current-SSID-01",
+    "security": "nonsec",
+    "state": "connected",
+    "frequency_band": "2.4ghz",
+    "rssi_level": "5"
+}

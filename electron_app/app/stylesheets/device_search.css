@@ -1,0 +1,210 @@
+/* line 45, device_search.scss */
+html {
+  height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  overflow: auto;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-color: #FFFFFF;
+}
+/* line 60, device_search.scss */
+html label {
+  font-size: 12px;
+  font-color: #333333;
+}
+/* line 66, device_search.scss */
+html button,
+html input[type=button] {
+  font-size: 12px;
+  background-color: #FAFAFA;
+  border-color: #CCCCCC;
+  color: #333333;
+  width: 160px;
+  margin-left: 4px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 2px;
+  height: 24px;
+  outline: none;
+}
+/* line 80, device_search.scss */
+html button:focus,
+html input[type=button]:focus {
+  outline: 2px solid #49D2FF;
+}
+/* line 84, device_search.scss */
+html button:hover,
+html input[type=button]:hover {
+  background-color: #FBFBFB;
+  border-color: #DBDBDB;
+  color: #5C5C5C;
+}
+/* line 90, device_search.scss */
+html button:active,
+html input[type=button]:active {
+  background-color: #D9D9D9;
+  border-color: #BBBBBB;
+  color: #1A1A1A;
+}
+/* line 96, device_search.scss */
+html #page-device-search-view {
+  background-color: #FFFFFF;
+  /**  data list */
+}
+/* line 101, device_search.scss */
+html #page-device-search-view header {
+  font-size: 12px;
+  font-color: #333333;
+  background-color: #FFFFFF;
+  text-indent: 32px;
+  margin-bottom: 32px;
+  margin-top: 32px;
+  text-shadow: none;
+}
+/* line 110, device_search.scss */
+html #page-device-search-view div.title {
+  width: auto;
+  margin-left: 32px;
+  margin-right: 32px;
+  height: 22px;
+  border: solid 1px;
+  border-bottom: none;
+  border-color: #E5E5E5;
+}
+/* line 118, device_search.scss */
+html #page-device-search-view div.title table {
+  font-size: 10px;
+  font-color: #F2F2F2;
+}
+/* line 121, device_search.scss */
+html #page-device-search-view div.title table td:first-child {
+  width: 53px;
+}
+/* line 124, device_search.scss */
+html #page-device-search-view div.title table td {
+  height: 22px;
+  padding: 0 0 0 0;
+  color: #808080;
+  font-size: 12px;
+  text-shadow: none;
+}
+/* line 135, device_search.scss */
+html #page-device-search-view div.list {
+  width: auto;
+  height: 400px;
+  margin-left: 32px;
+  margin-right: 32px;
+  border: solid 1px;
+  border-color: #E5E5E5;
+  /**/
+  /*hide button*/
+  /* Handle */
+}
+/* line 145, device_search.scss */
+html #page-device-search-view div.list ::-webkit-scrollbar {
+  width: 6px;
+  opacity: 0.8;
+}
+/* line 149, device_search.scss */
+html #page-device-search-view div.list ::-webkit-scrollbar:horizontal {
+  height: 6px;
+  opacity: 0.8;
+}
+/* line 154, device_search.scss */
+html #page-device-search-view div.list ::-webkit-scrollbar-button {
+  width: 4px;
+  height: 4px;
+  background: #FFFFFF;
+}
+/* line 160, device_search.scss */
+html #page-device-search-view div.list ::-webkit-scrollbar-thumb {
+  border-radius: 12px;
+  background: rgba(51, 51, 51, 0.8);
+  opacity: 0.8;
+  border-width: 1px 1px 1px 6px;
+  min-height: 24px;
+  padding-left: 2px;
+  opacity: 0.8;
+}
+/* line 170, device_search.scss */
+html #page-device-search-view div.list ::-webkit-scrollbar-thumb:hover {
+  background: rgba(92, 92, 92, 0.8);
+  opacity: 0.8;
+}
+/* line 175, device_search.scss */
+html #page-device-search-view div.list ::-webkit-scrollbar-thumb:active {
+  background: #333333;
+  opacity: 1;
+}
+/* line 180, device_search.scss */
+html #page-device-search-view div.list ul.detail-list {
+  margin: 0;
+  padding: 0;
+  height: 400px;
+  overflow: auto;
+  list-style: none;
+}
+/* line 186, device_search.scss */
+html #page-device-search-view div.list ul.detail-list li {
+  font-size: 12px;
+  padding: 0;
+  height: 52px;
+  line-height: 52px;
+}
+/* line 191, device_search.scss */
+html #page-device-search-view div.list ul.detail-list li div.img-box {
+  width: 56px;
+  height: 52px;
+  display: inline-block;
+  float: left;
+  text-align: center;
+}
+/* line 197, device_search.scss */
+html #page-device-search-view div.list ul.detail-list li div.img-box object {
+  width: 24px;
+  height: 52px;
+}
+/* line 202, device_search.scss */
+html #page-device-search-view div.list ul.detail-list li text {
+  height: 52px;
+  width: 90px;
+  text-shadow: none;
+}
+/* line 210, device_search.scss */
+html #page-device-search-view div.list ul.detail-list li:hover {
+  background-color: #F4FCFE;
+}
+/* line 213, device_search.scss */
+html #page-device-search-view div.list ul.detail-list li:active {
+  background-color: #C8F0FA;
+}
+/* line 216, device_search.scss */
+html #page-device-search-view div.list ul.detail-list li.selected {
+  background-color: #C8F0FA;
+}
+/* line 221, device_search.scss */
+html #page-device-search-view footer {
+  bottom: 0px;
+  overflow: hidden;
+  position: absolute;
+  width: 100%;
+  height: 48px;
+  vertical-align: middle;
+  border-top: solid 1px;
+  border-top-color: #E5E5E5;
+}
+/* line 230, device_search.scss */
+html #page-device-search-view footer .btn-area {
+  margin-right: 16px;
+  float: right;
+  display: table-cell;
+  vertical-align: middle;
+  line-height: 48px;
+}

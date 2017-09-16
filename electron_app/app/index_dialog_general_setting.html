@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <!-- <title></title> -->
+    <!-- <ATELIERMARKUP type="load-stylesheet" /> -->
+    <link rel="stylesheet" href="stylesheets/dialog_general_setting.css" />
+    <!-- <ATELIERMARKUP type="load-library-script" /> -->
+    <!-- application: model entry -->
+    <!-- <ATELIERMARKUP type="load-model-script" /> -->
+    <!-- <ATELIERMARKUP type="load-collection-script" /> -->
+    <!-- application: view entry -->
+    <!-- <ATELIERMARKUP type="load-view-script" /> -->
+    <script defer type="lazy" src="scripts/View/Dialog/DialogDefs.js"></script>
+    <script defer type="lazy" src="scripts/View/Dialog/DialogBase.js"></script>
+    <script defer type="lazy" src="scripts/View/Dialog/OpenChildDialogs.js"></script>
+    <script defer type="lazy" src="scripts/View/Setting/DialogGeneralSetting.js"></script>
+    <!-- <ATELIERMARKUP type="load-page-script" /> -->
+</head>
+
+<body style="display: none;">
+    <article id="dialog-general-setting" data-role="page" data-corners="false" data-theme="none" data-overlay-theme="b">
+        <div id="note-tmep-list" class="main">
+            <table id="settings" data-role="none" class="detail-form">
+                <tr class="line" data-role="none">
+                    <td data-i18n="config.generalSettings.label.userName" class="lbl" data-role="none"></td>
+                    <td class="val" data-role="none">
+                        <input id="owner" type="text" value="" data-role="none" tabindex="1"/>
+                    </td>
+                </tr>
+                <tr class="line" data-role="none">
+                    <td class="nolbl" data-role="none"> </td>
+                    <td id="owner-details" class="detail-label" data-role="none">
+                        <div class="detail-label">
+                            <span data-i18n="config.generalSettings.description.userName"></span>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="line" data-role="none">
+                    <td data-i18n="config.generalSettings.label.formatDate" class="lbl" data-role="none"></td>
+                    <td class="val" data-role="none">
+                        <select id="date-format" data-role="none" tabindex="2">
+                            <option value="yyyy/M/d" data-i18n="config.generalSettings.formatDate.ymd">
+                                <!-- 年/月/日 -->
+                            </option>
+                            <option value="M/d/yyyy" data-i18n="config.generalSettings.formatDate.mdy">
+                                <!-- 月/日/年 -->
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="line" data-role="none">
+                    <td data-role="none">
+                        <div data-i18n="config.generalSettings.label.formatTime" class="lbl short" ></div>
+                    </td>
+                    <td class="val" data-role="none">
+                        <select id="time-format" data-role="none" class="short" tabindex="3">
+                            <option value="12hour" selected data-i18n="config.generalSettings.formatTime.hour12">
+                                <!-- 12時間表示 -->
+                            </option>
+                            <option value="24hour" data-i18n="config.generalSettings.formatTime.hour24">
+                                <!-- 24時間表示 -->
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="line" data-role="none">
+                    <td data-role="none">
+                        <div data-i18n="config.generalSettings.label.timezone" class="lbl short" ></div>
+                    </td>
+                    <td class="val" data-role="none">
+                        <select id="time-zone" data-role="none" class="short" tabindex="4">
+                            <option data-i18n="config.generalSettings.timezone.m12" value="Etc/GMT+12">
+                                <!-- UTC-12:00 -->
+                            </option>
+                            <option data-i18n="config.generalSettings.timezone.m11" value="Etc/GMT+11">
+                                <!-- UTC-11:00 -->
+                            </option>
+                            <option data-i18n="config.generalSettings.timezone.m10" value="Pacific/Honolulu">
+                                <!-- ハワイ・アリューシャン標準時  -->
+                            </option>
+                            <option data-i18n="config.generalSettings.timezone.m9" value="America/Anchorage">
+                                <!-- アラスカ標準時 -->
+                            </option>
+                            <option data-i18n="config.generalSettings.timezone.m8" value="America/Los_Angeles">
+                                <!-- アメリカ太平洋標準時 -->
+                            </option>
+                            <option data-i18n="config.generalSettings.timezone.m7" value="America/Denver">
+                                <!-- アメリカ山地標準時 -->
+                            </option>
+                            <option data-i18n="config.generalSettings.timezone.m6" value="America/Chicago">
+                                <!--  アメリカ中部標準時 -->
+                            </option>
+                            <option data-i18n="config.generalSettings.timezone.m5" value="America/New_York">
+                                <!--  アメリカ東部標準時 -->
+                            </option>
+                            <option data-i18n="config.generalSettings.timezone.m4" value="America/Halifax">
+                                <!--   大西洋標準時 -->
+                            </option>
+                            <option data-i18n="config.generalSettings.timezone.m3" value="Etc/GMT+3">
+                                <!--   UTC-3:00 -->
+                            </option>
+                            <option data-i18n="config.generalSettings.timezone.m2" value="Etc/GMT+2">
+                                <!--   UTC-2:00 -->
+                            </option>
+                            <option data-i18n="config.generalSettings.timezone.m1" value="Etc/GMT+1">
+                                <!--   UTC-1:00 -->
+                            </option>
+                            <option data-i18n="config.generalSettings.timezone.utc" value="UTC">
+                                <!-- UTC -->
+                            </option>
+                            <option data-i18n="config.generalSettings.timezone.p1" value="Europe/Amsterdam">
+                                <!--    中央ヨーロッパ標準時 -->
+                            </option>
+                            <option data-i18n="config.generalSettings.timezone.p2" value="Europe/Helsinki">
+                                <!-- 東ヨーロッパ標準時 -->
+                            </option>
+                            <option data-i18n="config.generalSettings.timezone.p3" value="Etc/GMT-3">
+                                <!-- UTC+3:00 -->
+                            </option>
+                            <option data-i18n="config.generalSettings.timezone.p4" value="Etc/GMT-4">
+                                <!--  UTC+4:00 -->
+                            </option>
+                            <option data-i18n="config.generalSettings.timezone.p5" value="Etc/GMT-5">
+                                <!--  UTC+5:00 -->
+                            </option>
+                            <option data-i18n="config.generalSettings.timezone.p6" value="Etc/GMT-6">
+                                <!-- UTC+6:00 -->
+                            </option>
+                            <option data-i18n="config.generalSettings.timezone.p7" value="Etc/GMT-7">
+                                <!--  UTC+7:00 -->
+                            </option>
+                            <option data-i18n="config.generalSettings.timezone.p8" value="Etc/GMT-8">
+                                <!--  UTC+8:00 -->
+                            </option>
+                            <option data-i18n="config.generalSettings.timezone.p9" value="Asia/Tokyo">
+                                <!--  日本標準時 -->
+                            </option>
+                            <option data-i18n="config.generalSettings.timezone.p10" value="Etc/GMT-10">
+                                <!-- UTC+10:00 -->
+                            </option>
+                            <option data-i18n="config.generalSettings.timezone.p11" value="Etc/GMT-11">
+                                <!--   UTC+11:00 -->
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="line" data-role="none">
+                    <td data-i18n="config.generalSettings.label.autosleep" class="lbl" data-role="none"></td>
+                    <td class="val" data-role="none">
+                        <select id="timeout-to-standby" data-role="none" tabindex="5">
+                            <option value="never" selected data-i18n="config.generalSettings.autosleep.none">
+                                <!-- なし -->
+                            </option>
+                            <option value="5" data-i18n="config.generalSettings.autosleep.m5">
+                                <!-- ５分 -->
+                            </option>
+                            <option value="10" data-i18n="config.generalSettings.autosleep.m10">
+                                <!-- １０分 -->
+                            </option>
+                            <option value="30" data-i18n="config.generalSettings.autosleep.m30">
+                                <!-- ３０分 -->
+                            </option>
+                            <option value="60" data-i18n="config.generalSettings.autosleep.m60">
+                                <!-- ６０分 -->
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="line" data-role="none">
+                    <td class="nolbl" data-role="none"> </td>
+                    <td id="stanby-time-details"   data-role="none">
+                        <div class="detail-label">
+                            <span data-i18n="config.generalSettings.description.autosleep"></span>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="btn-area" data-role="none">
+            <div class="btn-line" data-role="none">
+                <input type="button" id="cancel-button" data-role="none" data-i18n="[value]app.words.cancel" tabindex="99"/>
+                <input type="button" id="submit-button" data-i18n="[value]config.button.update" data-role="none" tabindex="98"/>
+            </div>
+        </div>
+    </article>
+    <script src="scripts/config.js"></script>
+    <script src="modules/requirejs/scripts/require.js" data-main="scripts/init_dialog_general_setting"></script>
+    <div style="width: 100%; height: 100%; z-index: 100; position: absolute; visibility: hidden;" id="modal-lock-panel"></div>
+</body>
+
+</html>

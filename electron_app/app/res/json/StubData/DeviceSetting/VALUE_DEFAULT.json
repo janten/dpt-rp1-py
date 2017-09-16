@@ -1,0 +1,20 @@
+﻿{
+    "timezone":  {
+        "value": "UTC"
+    },
+    "date_format": {
+        "value": "yyyy/M/d"
+    },
+    "time_format": {
+        "value": "24hour"
+    },
+    "initialized_flag": {
+        "value": "none"
+    }, 
+    "timeout_to_standby": {
+        "value": "10"
+    }, 
+    "owner": {
+        "value": "ソニー太郎"
+    }
+}

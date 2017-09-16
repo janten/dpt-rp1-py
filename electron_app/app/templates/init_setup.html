@@ -1,0 +1,712 @@
+<article data-role="page" id="page-settings-main" data-theme="a">
+    <header data-role="none" data-position="inline" data-i18n="wizard.connect.header">
+        <!-- デジタルペーパーとつなぐ -->
+    </header>
+    <section id="settings-left-menu" data-role="none">
+        <div id="menu" data-role="none">
+            <ul data-role="none">
+                <li id="menu-welcome" class="selected" data-role="none" data-i18n="page.welcomeConnection.header">
+                    <!--  デジタルペーパーとのペアリング -->
+                </li>
+                <li id="menu-wifi" data-role="none" data-i18n="page.wifiConf.header">
+                    <!-- 接続 ( Wi-Fi ) 設定 -->
+                </li>
+                <li id="menu-finish" data-role="none" data-i18n="page.setupComplete.header">
+                    <!--  完了 -->
+                </li>
+            </ul>
+        </div>
+        <div class="detail" id="page-pc-welcome-view" 　data-role="none" style="display:none">
+            <section>
+                <p data-i18n="[html]page.welcomeConnection.description">
+                    <!--  デジタルペーパーとのペアリングを行います。
+                <br/>
+                <br/> デジタルペーパーとペアリングすると、そのデジタルペーパーとの間でドキュメントの出し入れが行えます。
+                 -->
+                </p>
+                <div align="center" id="instruction">
+                    <img src="../res/image/svg/Asset_Altair_Setup_Instruction_Connection.svg" width="676px" height="320px">
+                </div>
+            </section>
+            <footer>
+                <div class="btn-area">
+                    <button data-role="none" id="next" data-inline="true" class="button" data-i18n="app.words.next" tabindex="1">
+                        <!-- 次へ &gt; -->
+                    </button>
+                    <button data-role="none" id="cancel" data-inline="true" class="button" data-i18n="app.words.cancel" tabindex="99">
+                        <!-- キャンセル -->
+                    </button>
+                </div>
+            </footer>
+        </div>
+        <div class="detail" id="page-pc-register-view" style="display:none">
+            <section>
+                <p data-i18n="[html]page.pairing.description">
+                    <!--  デジタルペーパーに表示された認証コードを入力してください。
+                     <br/> ペアリングするデジタルペーパーの画面に表示された認証コードを以下のテキストボックスに入力して [次へ] ボタンを押してください。
+                        -->
+                </p>
+            </section>
+            <section>
+                <div>
+                    <label data-role="none" data-i18n="page.pairing.label.authCode" style="display:inline-block">
+                        <!-- 認証コード: -->
+                    </label>
+                    <input type="text" id="authCode" data-role="none" style="width:152px;" tabindex="1"/>
+                </div>
+            </section>
+            <footer>
+                <div class="btn-area">
+                    <button data-role="none" id="back" data-inline="true" class="button" data-i18n="app.words.back" tabindex="97">
+                        <!-- 戻る -->
+                    </button>
+                    <button data-role="none" id="next" data-inline="true" class="button" data-i18n="app.words.next" tabindex="98">
+                        <!-- 次へ &gt; -->
+                    </button>
+                    <button data-role="none" id="cancel" data-inline="true" class="button" data-i18n="app.words.cancel" tabindex="99">
+                        <!-- キャンセル -->
+                    </button>
+                </div>
+            </footer>
+        </div>
+        <div class="detail" id="page-pc-certificate-install-view" style="display:none">
+            <section>
+                <p data-i18n="[html]page.installCert.description">
+                    <!--                     デジタルペーパーと安全に接続するため、コンピューターに証明書をインストールします。
+                    <br/>
+                    <br/> [次へ] ボタンを押すと、証明書のインストールを行います。
+                    <br/> オペレーティングシステムより確認を求められる場合があります。
+                    <br/> インストールする証明書はペアリングしたデジタルペーパーとの通信以外の目的で使用されることはありません。 -->
+                </p>
+            </section>
+            <footer>
+                <div class="btn-area">
+                    <button data-role="none" id="back" data-inline="true" class="button" data-i18n="app.words.back">
+                        <!-- 戻る -->
+                    </button>
+                    <button data-role="none" id="next" data-inline="true" class="button" data-i18n="app.words.next" tabindex="98">
+                        <!-- 次へ &gt; -->
+                    </button>
+                    <button data-role="none" id="cancel" data-inline="true" class="button" data-i18n="app.words.cancel" tabindex="99">
+                        <!-- キャンセル -->
+                    </button>
+                </div>
+            </footer>
+        </div>
+        <!-- -->
+        <div class="detail" id="page-pc-wifi-setup-view" style="display:none" data-role="none">
+            <section>
+                <p style="margin-bottom:32px" data-i18n="[html]page.wifiConf.description">
+                    <!--  デジタルペーパーが接続するWi-Fiネットワークを設定します。
+                    <br/> デジタルペーパーがコンピューターとWi-Fiで通信するためには、お互いに同じネットワークに接続する必要があります。
+                     -->
+                </p>
+                <input id="wifisetup-ssidlist" type="radio" value="ssid" name="wifiSetup" checked="checked" data-role="none" />
+                <label for="wifisetup-ssidlist" data-role="none" class="rest">
+                    <b data-i18n="page.wifiConf.select.label"><!-- 一覧から選択する --></b>
+                </label>
+                <label data-role="none" style="margin-left: 19px;margin-top:8px; margin-bottom:8px" data-i18n="page.wifiConf.select.description">
+                    <!-- デジタルペーパーが利用可能な Wi-Fi ネットワークの一覧から選択します。 -->
+                </label>
+                <div class="list" data-role="none">
+                    <ul id="wifiSsidList" data-role="none" class="detail-list">
+                    </ul>
+                    <div class="search-bar-img-box" id="search-bar-waitting-icon">
+                        <object data="../res/image/svg/Asset_Altair_Dialog_Processing.svg" type="image/svg+xml" id="search-bar-wait" class="search-bar-wait-img" data-role="none"></object>
+                        <!-- お待ちください。 -->
+                        <span data-i18n="page.wifiConf.message.wait"></span>
+                    </div>
+                </div>
+                <button data-role="none" id="wifiSsidUpdate" style="margin-left: 19px; margin-top:4px" data-i18n="page.wifiConf.select.refresh">
+                    <!-- 一覧を更新 -->
+                </button>
+                <div style="margin-top:32px; ">
+                    <input id="wifiSetup-pin" type="radio" value="protected" name="wifiSetup" data-role="none" />
+                    <label for="wifiSetup-pin" class="rest" data-role="none"><b data-i18n="page.wifiConf.wps.label"><!--  Wi-Fi Protected Setup™ で設定する --></b> </label>
+                    <label data-role="none" style="margin-left:19px;margin-top:8px;" data-i18n="page.wifiConf.wps.description">
+                        <!-- WPS プッシュボタン方式、または WPS PIN 方式にを使用して設定します。 -->
+                    </label>
+                </div>
+                <div style="margin-top:32px; ">
+                    <input id="wifiSetup-ssid" type="radio" value="manual" name="wifiSetup" data-role="none" />
+                    <label for="wifiSetup-ssid" class="rest" data-role="none"><b data-i18n="page.wifiConf.manual.label"><!--  Wi-Fi ネットワークを選択、または指定して設定する --></b></label>
+                </div>
+                <div id="bluetooth">
+                    <label data-i18n="[html]page.wifiConf.bt.message"></label>
+                    <a id="bluetoothUrl"></a>
+                </div>
+            </section>
+            <footer>
+                <div class="btn-area">
+                    <button data-role="none" id="back" data-inline="true" class="button" data-i18n="app.words.back">
+                        <!-- 戻る -->
+                    </button>
+                    <button data-role="none" id="next" data-inline="true" class="button" data-i18n="app.words.next">
+                        <!-- 次へ &gt; -->
+                    </button>
+                    <button data-role="none" id="skip" data-inline="true" data-i18n="app.words.skip">
+                        <!-- スキップ -->
+                    </button>
+                </div>
+            </footer>
+            <script type="text/template" id="page-pc-wifi-setup-template">
+                {{#aplist}}
+                <li ssid="{{ssid}}" security="{{security}}">
+                    <span style="width:270px;position:relative;float:left;">{{ssid}}</span>
+                    <span>{{security_name}}</span>
+                </li>
+                {{/aplist}}
+            </script>
+        </div>
+        <!-- -->
+        <div class="detail" id="page-pc-wifi-setup-protected-view" style="display:none">
+            <section>
+                <label data-i18n="[html]page.wifiDetail.description.wps">
+                    <!-- Wi-Fi Protected Setup™ の方式を選択してください。 -->
+                </label>
+                <div style="margin-top:32px; ">
+                    <input id="wifiProtectedSetup-push" type="radio" value="push" name="wifiProtectedSetup" checked="checked" data-role="none" />
+                    <label for="wifiProtectedSetup-push" class="rest" data-i18n="page.wifiDetail.label.wpsPush">
+                        <!-- プッシュボタン方式 -->
+                    </label>
+                </div>
+                <div style="margin-top:16px; ">
+                    <input id="wifiProtectedSetup-pin" type="radio" value="pin" name="wifiProtectedSetup" data-role="none" />
+                    <label for="wifiProtectedSetup-pin" class="rest" data-role="none" data-i18n="page.wifiDetail.label.wpsPin">
+                        <!-- PIN方式 -->
+                    </label>
+                </div>
+            </section>
+            <footer>
+                <div data-role="none" class="btn-area">
+                    <button data-role="none" id="back" data-inline="true" class="button" data-i18n="app.words.back">
+                        <!-- 戻る -->
+                    </button>
+                    <button data-role="none" id="next" data-inline="true" class="button" data-i18n="app.words.next">
+                        <!-- 次へ &gt; -->
+                    </button>
+                    <button data-role="none" id="skip" data-inline="true" data-i18n="app.words.skip" disabled="true">
+                        <!-- スキップ -->
+                    </button>
+                </div>
+            </footer>
+        </div>
+        <div class="detail" id="page-pc-wifi-setup-manual-view" data-role="none" style="display:none;">
+            <section id="page-pc-wifi-setup-manual-section">
+                <p style="margin-bottom:32px;margin-top: 32px;" data-i18n="[html]page.wifiDetail.description.manual">
+                    <!--  Wi-Fi ネットワークを選択、または指定して設定します。 -->
+                </p>
+                <div style="height:430px; ">
+                    <table id="wifiManualSetup">
+                        <tbody>
+                            <tr>
+                                <td style="width:195px">
+                                    <label data-role="none" data-i18n="page.wifiDetail.manual.label.ssid">
+                                        SSID:
+                                    </label>
+                                </td>
+                                <td>
+                                    <div style="position:relative;" id="ssidlistarea">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label data-role="none" data-i18n="page.wifiDetail.manual.label.secMethod">
+                                        <!-- セキュリティー方式: -->
+                                    </label>
+                                </td>
+                                <td>
+                                    <select data-role="none" list="test" id="securityType">
+                                        <option value="nonsec" data-i18n="page.wifiDetail.manual.secMethod.open">
+                                            <!-- Open -->
+                                        </option>
+                                        <option value="psk" data-i18n="page.wifiDetail.manual.secMethod.wpa2Psk">
+                                            <!-- WPA / WPA2 PSK -->
+                                        </option>
+                                        <option value="eap" data-i18n="page.wifiDetail.manual.secMethod.8021xEap">
+                                            <!-- 802.1x EAP -->
+                                        </option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="tr_eapMethod">
+                                <td>
+                                    <label data-role="none" data-i18n="page.wifiDetail.manual.label.eapMethod">
+                                        <!-- EAP Method: -->
+                                    </label>
+                                </td>
+                                <td>
+                                    <select data-role="none" id="eap">
+                                        <option value="peap" data-i18n="page.wifiDetail.manual.eapMethod.peap">
+                                            <!-- PEAP -->
+                                        </option>
+                                        <option value="tls" data-i18n="page.wifiDetail.manual.eapMethod.tls">
+                                            <!-- TLS -->
+                                        </option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="tr_phase2Auth">
+                                <td>
+                                    <label data-role="none" data-i18n="page.wifiDetail.manual.label.phase2auth">
+                                        <!-- Phase 2 authentication: -->
+                                    </label>
+                                </td>
+                                <td>
+                                    <select data-role="none" id="eap_phase2">
+                                        <option value="none" data-i18n="page.wifiDetail.manual.phase2auth.none">
+                                            <!-- None -->
+                                        </option>
+                                        <option value="mschapv2" data-i18n="page.wifiDetail.manual.phase2auth.mschapv2">
+                                            <!-- MSCHAPV2 -->
+                                        </option>
+                                        <option value="gtc" data-i18n="page.wifiDetail.manual.phase2auth.gtc">
+                                            <!-- GTC -->
+                                        </option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="tr_caCertificate">
+                                <td>
+                                    <label data-role="none" data-i18n="page.wifiDetail.manual.label.caCert" style="margin-bottom: 25px;">
+                                        <!-- CA証明書: -->
+                                    </label>
+                                </td>
+                                <td style="text-align:right">
+                                    <select id="eap_cacert" data-role="none">
+                                    </select>
+                                    <br/>
+                                    <button style="margin-top:4px" data-role="none" id="uploadCaCert" data-i18n="page.wifiDetail.manual.caCert.button.install">
+                                        <!-- 証明書インストール -->
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="tr_identity">
+                                <td>
+                                    <label data-role="none" data-i18n="page.wifiDetail.manual.label.identity">
+                                        <!-- Identity -->
+                                    </label>
+                                </td>
+                                <td>
+                                    <input type="text" id="eap_id" data-role="none" />
+                                </td>
+                            </tr>
+                            <tr class="tr_passowrd">
+                                <td>
+                                    <label data-role="none" data-i18n="page.wifiDetail.manual.label.password" style="margin-bottom: 25px;">
+                                        <!-- セキュリティーキー: -->
+                                    </label>
+                                </td>
+                                <td style="text-align:right">
+                                    <input type="password" id="passwd" data-role="none" autocomplete="false" />
+                                    <br/>
+                                    <input type="checkbox" id="securityDisplay" data-role="none">
+                                    <label style="margin-top:4px;margin-right:3px" for="securityDisplay" class="rest" data-i18n="page.wifiDetail.manual.password.button.show">
+                                        <!-- パスワードを表示する -->
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr class="tr_anonymousIdentity">
+                                <td>
+                                    <label data-role="none" data-i18n="page.wifiDetail.manual.label.anonymousIdentity">
+                                        <!-- Anonymous Identity: -->
+                                    </label>
+                                </td>
+                                <td>
+                                    <input type="text" id="eap_anid" data-role="none" />
+                                </td>
+                            </tr>
+                            <tr class="tr_clientCertificate">
+                                <td>
+                                    <label data-role="none" data-i18n="page.wifiDetail.manual.label.userCert" style="margin-bottom: 25px;">
+                                        <!-- クライアント証明書 : -->
+                                    </label>
+                                </td>
+                                <td style="text-align:right">
+                                    <select id="eap_cert" data-role="none">
+                                    </select>
+                                    <br/>
+                                    <button style="margin-top:4px" data-role="none" id="uploadClientCert" data-i18n="page.wifiDetail.manual.userCert.button.install">
+                                        <!-- 証明書インストール -->
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr style="height:3px" />
+                            <tr>
+                                <td colspan="2">
+                                    <div>
+                                        <input type="checkbox" name="dhcpCheck" id="dhcpCheck" data-role="none">
+                                        <label data-role="none" for="dhcpCheck" class="rest" data-i18n="page.wifiDetail.manual.label.noDhcp">
+                                            <!--  自動でIPアドレスを取得する -->
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="iparea">
+                                <td>
+                                    <label data-role="none" data-i18n="page.wifiDetail.manual.label.ipAddr">
+                                        <!-- IPアドレス: -->
+                                    </label>
+                                </td>
+                                <td>
+                                    <input type="text" name="static_address" id="static_address" data-role="none">
+                                </td>
+                            </tr>
+                            <tr class="iparea">
+                                <td>
+                                    <label data-role="none" data-i18n="page.wifiDetail.manual.label.subnetmask">
+                                        <!-- ネットマスク -->
+                                    </label>
+                                </td>
+                                <td>
+                                    <select name="" name="network_mask" id="network_mask" data-role="none">
+                                        <option value="0" data-i18n="wifi.netmask.list.mask0">
+                                            <!-- 0.0.0.0 -->
+                                        </option>
+                                        <option value="1" data-i18n="wifi.netmask.list.mask1">
+                                            <!-- 128.0.0.0 -->
+                                        </option>
+                                        <option value="2" data-i18n="wifi.netmask.list.mask2">
+                                            <!-- 192.0.0.0 -->
+                                        </option>
+                                        <option value="3" data-i18n="wifi.netmask.list.mask3">
+                                            <!-- 224.0.0.0-->
+                                        </option>
+                                        <option value="4" data-i18n="wifi.netmask.list.mask4">
+                                            <!-- 240.0.0.0-->
+                                        </option>
+                                        <option value="5" data-i18n="wifi.netmask.list.mask5">
+                                            <!-- 248.0.0.0-->
+                                        </option>
+                                        <option value="6" data-i18n="wifi.netmask.list.mask6">
+                                            <!-- 252.0.0.0-->
+                                        </option>
+                                        <option value="7" data-i18n="wifi.netmask.list.mask7">
+                                            <!-- 254.0.0.0-->
+                                        </option>
+                                        <option value="8" data-i18n="wifi.netmask.list.mask8">
+                                            <!-- 255.0.0.0-->
+                                        </option>
+                                        <option value="9" data-i18n="wifi.netmask.list.mask9">
+                                            <!-- 255.128.0.0-->
+                                        </option>
+                                        <option value="10" data-i18n="wifi.netmask.list.mask10">
+                                            <!-- 255.192.0.0-->
+                                        </option>
+                                        <option value="11" data-i18n="wifi.netmask.list.mask11">
+                                            <!-- 255.224.0.0-->
+                                        </option>
+                                        <option value="12" data-i18n="wifi.netmask.list.mask12">
+                                            <!-- 255.240.0.0-->
+                                        </option>
+                                        <option value="13" data-i18n="wifi.netmask.list.mask13">
+                                            <!-- 255.248.0.0-->
+                                        </option>
+                                        <option value="14" data-i18n="wifi.netmask.list.mask14">
+                                            <!-- 255.252.0.0-->
+                                        </option>
+                                        <option value="15" data-i18n="wifi.netmask.list.mask15">
+                                            <!-- 255.254.0.0-->
+                                        </option>
+                                        <option value="16" data-i18n="wifi.netmask.list.mask16">
+                                            <!-- 255. 255.0.0-->
+                                        </option>
+                                        <option value="17" data-i18n="wifi.netmask.list.mask17">
+                                            <!-- 255. 255.128.0-->
+                                        </option>
+                                        <option value="18" data-i18n="wifi.netmask.list.mask18">
+                                            <!-- 255. 255.192.0-->
+                                        </option>
+                                        <option value="19" data-i18n="wifi.netmask.list.mask19">
+                                            <!-- 255. 255.224.0-->
+                                        </option>
+                                        <option value="20" data-i18n="wifi.netmask.list.mask20">
+                                            <!-- 255. 255.240.0-->
+                                        </option>
+                                        <option value="21" data-i18n="wifi.netmask.list.mask21">
+                                            <!-- 255. 255.248.0-->
+                                        </option>
+                                        <option value="22" data-i18n="wifi.netmask.list.mask22">
+                                            <!-- 255. 255.252.0-->
+                                        </option>
+                                        <option value="23" data-i18n="wifi.netmask.list.mask23">
+                                            <!-- 255. 255.254.0-->
+                                        </option>
+                                        <option value="24" data-i18n="wifi.netmask.list.mask24">
+                                            <!-- 255. 255.255.0-->
+                                        </option>
+                                        <option value="25" data-i18n="wifi.netmask.list.mask25">
+                                            <!-- 255. 255.255.128-->
+                                        </option>
+                                        <option value="26" data-i18n="wifi.netmask.list.mask26">
+                                            <!-- 255.255.255.192-->
+                                        </option>
+                                        <option value="27" data-i18n="wifi.netmask.list.mask27">
+                                            <!-- 255.255.255.224-->
+                                        </option>
+                                        <option value="28" data-i18n="wifi.netmask.list.mask28">
+                                            <!-- 255.255.255.240-->
+                                        </option>
+                                        <option value="29" data-i18n="wifi.netmask.list.mask29">
+                                            <!-- 255.255.255.248-->
+                                        </option>
+                                        <option value="30" data-i18n="wifi.netmask.list.mask30">
+                                            <!-- 255.255.255.252-->
+                                        </option>
+                                        <option value="31" data-i18n="wifi.netmask.list.mask31">
+                                            <!-- 255.255.255.254-->
+                                        </option>
+                                        <option value="32" data-i18n="wifi.netmask.list.mask32">
+                                            <!-- 255.255.255.255-->
+                                        </option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="iparea">
+                                <td>
+                                    <label data-role="none" data-i18n="page.wifiDetail.manual.label.gateway">
+                                        <!-- デフォルトゲートウェイ -->
+                                    </label>
+                                </td>
+                                <td>
+                                    <input type="text" name="gateway" id="gateway" data-role="none">
+                                </td>
+                            </tr>
+                            <tr class="iparea">
+                                <td>
+                                    <label data-role="none" data-i18n="page.wifiDetail.manual.label.dns1">
+                                        <!-- プライマリDNS -->
+                                    </label>
+                                </td>
+                                <td>
+                                    <input type="text" name="dns1" id="dns1" data-role="none">
+                                </td>
+                            </tr>
+                            <tr class="iparea">
+                                <td>
+                                    <label data-role="none" data-i18n="page.wifiDetail.manual.label.dns2">
+                                        <!-- セカンダリDNS -->
+                                    </label>
+                                </td>
+                                <td>
+                                    <input type="text" name="dns2" id="dns2" data-role="none">
+                                </td>
+                            </tr>
+                            <tr style="height: 28px">
+                                <td>
+                                    <label data-role="none" data-i18n="page.wifiDetail.manual.label.macAddr">
+                                        <!-- デジタルペーパーの Mac アドレス : -->
+                                    </label>
+                                </td>
+                                <td>
+                                    <label data-role="none" id="macAddress"></label>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <footer>
+                <div class="btn-area">
+                    <button data-role="none" id="back" data-inline="true" class="button" data-i18n="app.words.back">
+                        <!-- 戻る -->
+                    </button>
+                    <button data-role="none" id="next" data-inline="true" class="button" data-i18n="app.words.next">
+                        <!-- 次へ &gt; -->
+                    </button>
+                    <button data-role="none" id="skip" data-inline="true" data-i18n="app.words.skip" disabled="true">
+                        <!-- スキップ -->
+                    </button>
+                </div>
+            </footer>
+            <script type="text/template" id="wifi-edit-edit">
+                <label>{{ssid}}</label>
+                <input type="hidden" id="ssid" value="{{ssid}}">
+            </script>
+            <script type="text/template" id="wifi-manual-edit">
+                <input type="text" id="ssid" value="">
+            </script>
+            <script type="text/template" id="wifi-manual-certificate">
+                <option></option>
+                {{#cert}}
+                <option>{{name}}</option>
+                {{/cert}}
+            </script>
+        </div>
+        <!-- 接続 ( Wi-Fi ) 設定-->
+        <div class="detail" id="page-pc-wifi-setup-finish-view" data-role="none" style="display:none">
+            <section>
+                <p data-i18n="page.wifiDetail.connected">
+                    <!--  Wi-Fi ネットワークを設定しました。 -->
+                </p>
+                <div id="saved-wifi-setting-template" style="display:none">
+                    <p id="wifiInfoTitle" data-i18n="page.wifiDetail.label.savedInfo">
+                        <!--  保存した Wi-Fi ネットワーク情報 -->
+                    </p>
+                    <table id="wifiFinishInfo">
+                        <tr>
+                            <td data-i18n="page.wifiDetail.manual.label.ssid">
+                                <!-- SSID : -->
+                            </td>
+                            <td class="td-value">{{ssid}}</td>
+                        </tr>
+                        <tr>
+                            <td data-i18n="page.wifiDetail.manual.label.secMethod">
+                                <!-- セキュリティー方式 : -->
+                            </td>
+                            <td class="td-value">{{security_name}}</td>
+                        </tr>
+                        <tr class="eap">
+                            <td data-i18n="page.wifiDetail.manual.label.eapMethod">
+                                <!-- EAP 方式 : -->
+                            </td>
+                            <td class="td-value">{{eap}}</td>
+                        </tr>
+                        <tr class="eap_phase2">
+                            <td data-i18n="page.wifiDetail.manual.label.phase2auth">
+                                <!-- フェーズ 2 認証 : -->
+                            </td>
+                            <td class="td-value">{{eap_phase2}}</td>
+                        </tr>
+                        <tr class="eap_cacert">
+                            <td data-i18n="page.wifiDetail.manual.label.caCert">
+                                <!-- CA 証明書 : -->
+                            </td>
+                            <td class="td-value">{{eap_cacert}}</td>
+                        </tr>
+                        <tr class="eap_cert">
+                            <td data-i18n="page.wifiDetail.manual.userCert.install">
+                                <!-- ユーザー証明書 : -->
+                            </td>
+                            <td class="td-value">{{eap_cert}}</td>
+                        </tr>
+                        <tr class="eap_id">
+                            <td data-i18n="page.wifiDetail.manual.label.identity">
+                                <!-- ユーザー名 : -->
+                            </td>
+                            <td style="text-overflow: ellipsis;">{{eap_id}}</td>
+                        </tr>
+                        <tr class="eap_anid">
+                            <td data-i18n="page.wifiDetail.manual.label.anonymousIdentity">
+                                <!-- 匿名 ID :  -->
+                            </td>
+                            <td style="text-overflow: ellipsis;">{{eap_anid}}</td>
+                        </tr>
+                        <tr class="iparea">
+                            <td data-i18n="page.wifiDetail.manual.label.ipAddr">
+                                <!-- IPアドレス : -->
+                            </td>
+                            <td class="td-value">{{static_address}}</td>
+                        </tr>
+                        <tr class="iparea">
+                            <td data-i18n="page.wifiDetail.manual.label.subnetmask">
+                                <!-- サブネットマスク : -->
+                            </td>
+                            <td class="td-value">{{network_mask_name}}</td>
+                        </tr class="iparea">
+                        <tr class="iparea">
+                            <td data-i18n="page.wifiDetail.manual.label.gateway">
+                                <!-- ゲートウェイ : -->　</td>
+                            <td class="td-value">{{gateway}}</td>
+                        </tr>
+                        <tr class="iparea">
+                            <td data-i18n="page.wifiDetail.manual.label.dns1">
+                                <!-- プライマリー DNS :  -->
+                            </td>
+                            <td class="td-value">{{dns1}}</td>
+                        </tr>
+                        <tr class="iparea">
+                            <td data-i18n="page.wifiDetail.manual.label.dns2">
+                                <!-- セカンダリー DNS :  -->
+                            </td>
+                            <td class="td-value">{{dns2}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="saved-wifi-setting" class="invisible">
+                </div>
+                <div id="WiFi-Status">
+                    <div class="separator-line">
+                    </div>
+                    <p id="WiFi-Status-label" data-i18n="page.wifiDetail.dpStatus.label" style="display:inline-block;">
+                        <!--  デジタルペーパーの Wi-Fi 接続状況 -->
+                    </p>
+                    <table id="status-detail">
+                        <tr>
+                            <td data-i18n="page.wifiDetail.dpStatus.ssid.label" class="supplemental">
+                                <!-- SSID -->
+                            </td>
+                            <td id="status-ssid"></td>
+                        </tr>
+                        <tr>
+                            <td data-i18n="page.wifiDetail.dpStatus.status.label" class="supplemental">
+                                <!-- 接続状況  -->
+                            </td>
+                            <td>
+                                <div>
+                                    <div class="status-conn-img-box" id="status-conn-waitting-icon">
+                                        <object data="../res/image/svg/Asset_Altair_InitialSetting_Wifi_Status_Processing.svg" type="image/svg+xml" id="status-conn-wait" class="spin-img" data-role="none" style="display: none;"></object>
+                                        <object data="../res/image/svg/Asset_Altair_InitialSetting_Wifi_Status_Success.svg" type="image/svg+xml" id="status-conn-success" class="static-img" data-role="none" style="display: none;"></object>
+                                        <object data="../res/image/svg/Asset_Altair_InitialSetting_Wifi_Status_Failure.svg" type="image/svg+xml" id="status-conn-failure" class="static-img" data-role="none"></object>
+                                    </div>
+                                    <!--                                    <img id="status-conn-img" src="../res/image/svg/Asset_Altair_InitialSetting_Wifi_Status_Processing.svg" class="spining" /> -->
+                                    <span id="status-conn-label" data-i18n="page.wifiDetail.dpStatus.status.disconnect"></span>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <p id="status-description" data-i18n="[html]page.wifiDetail.status.description" class="supplemental">
+                        <!--  デジタルペーパーが電波の届く範囲にあるにもかかわらず、Wi-Fi接続状況が「未接続」または 「接続中」のままの場合、保存した情報が正しくない可能性があります。[戻る]を押して設定を確認してください。
+
+このまま終了する場合は、[次へ]を押してください。 Wi-Fiネットワークの設定は、「設定」画面で後から行えます。
+ -->
+                    </p>
+                </div>
+                <!--                <p id="settingFailure" style="margin-top:32px" data-i18n="[html]page.wifiDetail.result.prompt"> -->
+                <!--  もう一度設定する場合は、[戻る]ボタンを押してください。
+                    <br/> このまま完了する場合は、[次へ]ボタンを押してください。 -->
+                <!-- </p> -->
+            </section>
+            <footer>
+                <div class="btn-area">
+                    <button data-role="none" id="back" data-inline="true" class="button" data-i18n="app.words.back">
+                        <!-- 戻る -->
+                    </button>
+                    <button data-role="none" id="next" data-inline="true" class="button" data-i18n="app.words.next">
+                        <!-- 次へ &gt; -->
+                    </button>
+                </div>
+            </footer>
+        </div>
+        <!-- 接続設定完了-->
+        <div class="detail" id="page-pc-setup-finish-view" data-role="none" style="display:none">
+            <section>
+                <p id="finish-jp-init" style="display:none" data-i18n="[html]page.setupComplete.description">
+                    <!--  デジタルペーパーとつなぐ設定が完了しました。
+                    <br/>
+                    <br/>続けて製品登録に進みます。
+                    <br/>製品をご購入いただいたお客様のサポートの充実を図るため、製品の登録をおすすめしています。
+                    <br/>製品のご登録をされたお客様に、便利な使い方や製品に関するキャンペーン情報をいち早くお届けします。 -->
+                </p>
+                <p id="finish-jp" style="display:none" data-i18n="[html]page.setupComplete.intro.jp">
+                    <!--  デジタルペーパーとつなぐ設定が完了しました。
+                    <br/>
+                    <br/> デジタルペーパーのサポートサイトでは、デジタルペーパーに関する最新情報や便利な使い方を紹介しています。
+                    -->
+                </p>
+                <p id="finish-other" style="display:none" data-i18n="[html]page.setupComplete.intro.us">
+                    <!--  デジタルペーパーとつなぐ設定が完了しました。
+                    -->
+                </p>
+            </section>
+            <footer>
+                <div class="btn-area">
+                    <button data-role="none" id="close" data-inline="true" class="button" data-i18n="page.setupComplete.button.close" tabindex="1">
+                        <!-- 閉じる -->
+                    </button>
+                </div>
+            </footer>
+        </div>
+    </section>
+</article>

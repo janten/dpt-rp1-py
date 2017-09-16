@@ -1,0 +1,705 @@
+/* line 51, _init_setup_base.scss */
+body {
+  height: 100%;
+  overflow: auto;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  text-shadow: none;
+  /*article*/
+}
+/* line 65, _init_setup_base.scss */
+body label {
+  font-size: 12px;
+  font-color: #333333;
+  text-shadow: none;
+  outline: none;
+}
+/* line 72, _init_setup_base.scss */
+body input[type=textbox],
+body input[type=text],
+body input[type=password] {
+  border: solid 1px;
+  border-color: #CCCCCC;
+  background-color: #FFFFFF;
+  height: 22px;
+  text-indent: 8px;
+  font-size: 12px;
+  padding: 0 8px 0 0;
+  outline: none;
+}
+/* line 84, _init_setup_base.scss */
+body input[type=textbox]:focus,
+body input[type=text]:focus,
+body input[type=password]:focus {
+  outline: 2px solid #49D2FF;
+}
+/* line 90, _init_setup_base.scss */
+body button,
+body input[type=button] {
+  font-size: 12px;
+  background-color: #FAFAFA;
+  border-color: #CCCCCC;
+  color: #333333;
+  width: 160px;
+  margin-left: 8px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 2px;
+  height: 24px;
+  outline: none;
+}
+/* line 104, _init_setup_base.scss */
+body button:focus,
+body input[type=button]:focus {
+  outline: 2px solid #49D2FF;
+}
+/* line 108, _init_setup_base.scss */
+body button:hover,
+body input[type=button]:hover {
+  background-color: #FBFBFB;
+  border-color: #DBDBDB;
+  color: #5C5C5C;
+}
+/* line 114, _init_setup_base.scss */
+body button:active,
+body input[type=button]:active {
+  background-color: #D9D9D9;
+  border-color: #BBBBBB;
+  color: #1A1A1A;
+}
+/* line 121, _init_setup_base.scss */
+body select {
+  border: solid 1px;
+  border-color: #CCCCCC;
+  text-indent: 8px;
+  background-color: #FFFFFF;
+  outline: none;
+}
+/* line 129, _init_setup_base.scss */
+body input[type=radio],
+body input[type=checkbox] {
+  display: inline-block;
+  margin-right: 4px;
+}
+/* line 134, _init_setup_base.scss */
+body input[type=radio] + label,
+body input[type=checkbox] + label {
+  position: relative;
+  display: inline-block;
+  margin-right: 12px;
+  cursor: pointer;
+}
+@media (min-width: 1px) {
+  /* line 143, _init_setup_base.scss */
+  body input[type=radio],
+  body input[type=checkbox] {
+    display: none;
+    margin: 0;
+  }
+  /* line 148, _init_setup_base.scss */
+  body input[type=radio] + label,
+  body input[type=checkbox] + label {
+    padding: 0 0 0 19px;
+    font-size: 12px;
+    font-color: #333333;
+    margin: 0 0 0 0;
+  }
+  /* line 156, _init_setup_base.scss */
+  body input[type=checkbox] + label.radio-border-clear::before,
+  body input[type=radio] + label.radio-border-clear::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 166, _init_setup_base.scss */
+  body input[type=radio] + label.radio-border-clear::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FAFAFA;
+    border: 1px solid #CCCCCC;
+    border-radius: 30px;
+  }
+  /* line 174, _init_setup_base.scss */
+  body input[type=checkbox] + label.radio-border-clear::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FAFAFA;
+    border: 1px solid #CCCCCC;
+  }
+  /* line 181, _init_setup_base.scss */
+  body input[type=checkbox]:checked + label.radio-border-clear::after,
+  body input[type=radio]:checked + label.radio-border-clear::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 190, _init_setup_base.scss */
+  body input[type=radio]:checked + label.radio-border-clear::after {
+    display: block;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    margin-top: -5px;
+    background: #333333;
+    border-radius: 8px;
+  }
+  /* line 199, _init_setup_base.scss */
+  body input[type=checkbox]:checked + label.radio-border-clear::after {
+    left: 3px;
+    width: 10px;
+    height: 7px;
+    margin-top: -6px;
+    border-left: 2px solid #333333;
+    border-bottom: 2px solid #333333;
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+  }
+  /* line 211, _init_setup_base.scss */
+  body input[type=radio] + label.rest::before,
+  body input[type=checkbox] + label.rest::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 221, _init_setup_base.scss */
+  body input[type=radio] + label.rest::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FAFAFA;
+    border: 1px solid #CCCCCC;
+    border-radius: 30px;
+  }
+  /* line 229, _init_setup_base.scss */
+  body input[type=radio] + label.rest:focus::before,
+  body input[type=checkbox] + label.rest:focus::before {
+    border: 2px solid #49D2FF;
+  }
+  /* line 233, _init_setup_base.scss */
+  body input[type=checkbox] + label.rest::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FAFAFA;
+    border: 1px solid #CCCCCC;
+  }
+  /* line 240, _init_setup_base.scss */
+  body input[type=radio]:checked + label.rest::after,
+  body input[type=checkbox]:checked + label.rest::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 249, _init_setup_base.scss */
+  body input[type=radio]:checked + label.rest::after {
+    display: block;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    margin-top: -5px;
+    background: #333333;
+    border-radius: 8px;
+  }
+  /* line 258, _init_setup_base.scss */
+  body input[type=checkbox]:checked + label.rest::after {
+    left: 3px;
+    width: 10px;
+    height: 7px;
+    margin-top: -6px;
+    border-left: 2px solid #333333;
+    border-bottom: 2px solid #333333;
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+  }
+  /* line 270, _init_setup_base.scss */
+  body input[type=radio] + label.hover::before,
+  body input[type=checkbox] + label.hover::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 280, _init_setup_base.scss */
+  body input[type=radio] + label.hover::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FBFBFB;
+    border: 1px solid #DBDBDB;
+    border-radius: 30px;
+  }
+  /* line 288, _init_setup_base.scss */
+  body input[type=checkbox] + label.hover::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FBFBFB;
+    border: 1px solid #DBDBDB;
+  }
+  /* line 295, _init_setup_base.scss */
+  body input[type=radio]:checked + label.hover::after,
+  body input[type=checkbox]:checked + label.hover::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 304, _init_setup_base.scss */
+  body input[type=radio]:checked + label.hover::after {
+    display: block;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    margin-top: -5px;
+    background: #5C5C5C;
+    border-radius: 8px;
+  }
+  /* line 313, _init_setup_base.scss */
+  body input[type=checkbox]:checked + label.hover::after {
+    left: 3px;
+    width: 10px;
+    height: 7px;
+    margin-top: -6px;
+    border-left: 2px solid #5C5C5C;
+    border-bottom: 2px solid #5C5C5C;
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+  }
+  /* line 325, _init_setup_base.scss */
+  body input[type=radio] + label.hover-outline-appear::before,
+  body input[type=checkbox] + label.hover-outline-appear::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 335, _init_setup_base.scss */
+  body input[type=radio] + label.hover-outline-appear::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FBFBFB;
+    border: 2px solid #49D2FF;
+    border-radius: 30px;
+  }
+  /* line 343, _init_setup_base.scss */
+  body input[type=checkbox] + label.hover-outline-appear::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FBFBFB;
+    border: 2px solid #49D2FF;
+  }
+  /* line 350, _init_setup_base.scss */
+  body input[type=radio]:checked + label.hover-outline-appear::after,
+  body input[type=checkbox]:checked + label.hover-outline-appear::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 359, _init_setup_base.scss */
+  body input[type=radio]:checked + label.hover-outline-appear::after {
+    display: block;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    margin-top: -5px;
+    background: #5C5C5C;
+    border-radius: 8px;
+  }
+  /* line 368, _init_setup_base.scss */
+  body input[type=checkbox]:checked + label.hover-outline-appear::after {
+    left: 3px;
+    width: 10px;
+    height: 7px;
+    margin-top: -6px;
+    border-left: 2px solid #5C5C5C;
+    border-bottom: 2px solid #5C5C5C;
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+  }
+  /* line 380, _init_setup_base.scss */
+  body input[type=radio] + label.pressed::before,
+  body input[type=checkbox] + label.pressed::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 390, _init_setup_base.scss */
+  body input[type=radio] + label.pressed::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #D9D9D9;
+    border: 1px solid #BBBBBB;
+    border-radius: 30px;
+  }
+  /* line 398, _init_setup_base.scss */
+  body input[type=checkbox] + label.pressed::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #D9D9D9;
+    border: 1px solid #BBBBBB;
+  }
+  /* line 405, _init_setup_base.scss */
+  body input[type=radio]:checked + label.pressed::after,
+  body input[type=checkbox]:checked + label.pressed::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 414, _init_setup_base.scss */
+  body input[type=radio]:checked + label.pressed::after {
+    display: block;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    margin-top: -5px;
+    background: #333333;
+    border-radius: 8px;
+  }
+  /* line 423, _init_setup_base.scss */
+  body input[type=checkbox]:checked + label.pressed::after {
+    left: 3px;
+    width: 10px;
+    height: 7px;
+    margin-top: -6px;
+    border-left: 2px solid #333333;
+    border-bottom: 2px solid #333333;
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+  }
+}
+/* line 437, _init_setup_base.scss */
+body article .ui-btn,
+body article .ui-slider {
+  z-index: 2;
+}
+/* line 442, _init_setup_base.scss */
+body article section .outline-clear:focus {
+  outline: none;
+}
+/* line 445, _init_setup_base.scss */
+body article section.normal-screen {
+  padding: 0;
+}
+/* line 448, _init_setup_base.scss */
+body article section.fullscreen {
+  position: absolute;
+  padding: 0;
+  margin: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+/* line 457, _init_setup_base.scss */
+body article section.fixed-screen {
+  position: absolute;
+  padding: 0;
+  top: 45px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+/* line 50, _dialog_base.scss */
+label {
+  font-size: 12px;
+  color: #333333;
+}
+
+/* line 55, _dialog_base.scss */
+input[type=textbox],
+input[type=text],
+input[type=password] {
+  border: solid 1px;
+  border-color: #CCCCCC;
+  background-color: #FFFFFF;
+  height: 22px;
+  text-indent: 8px;
+  font-size: 12px;
+  padding: 0;
+}
+
+/* line 67, _dialog_base.scss */
+input[type=text]:focus {
+  outline: 2px solid #49D2FF;
+}
+
+/* line 71, _dialog_base.scss */
+button,
+input[type=button] {
+  font-size: 12px;
+  background-color: #FAFAFA;
+  border-color: #CCCCCC;
+  color: #333333;
+  width: 160px;
+  margin-left: 8px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 2px;
+  outline: none;
+}
+
+/* line 84, _dialog_base.scss */
+button:focus,
+input[type=button]:focus {
+  outline: 2px solid #49D2FF;
+}
+
+/* line 88, _dialog_base.scss */
+button:hover,
+input[type=button]:hover {
+  background-color: #FBFBFB;
+  border-color: #DBDBDB;
+  color: #5C5C5C;
+}
+
+/* line 94, _dialog_base.scss */
+button:active,
+input[type=button]:active {
+  background-color: #D9D9D9;
+  border-color: #BBBBBB;
+  color: #1A1A1A;
+}
+
+/* line 100, _dialog_base.scss */
+button[disabled],
+input[type=button][disabled] {
+  opacity: .2;
+}
+
+/* line 105, _dialog_base.scss */
+select {
+  border: solid 1px;
+  border-color: #CCCCCC;
+  background-color: #FFFFFF;
+  text-indent: 4px;
+  outline: none;
+}
+
+/* line 113, _dialog_base.scss */
+select:focus {
+  outline: 2px solid #49D2FF;
+}
+
+/* line 117, _dialog_base.scss */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  cursor: default;
+}
+/* line 123, _dialog_base.scss */
+html article,
+body article {
+  outline: none;
+}
+
+/* line 3, software_update.scss */
+#page-software-update {
+  background-color: white;
+  padding: 32px 32px 0 32px;
+  bottom: 0;
+  right: 0;
+  width: auto;
+}
+/* line 9, software_update.scss */
+#page-software-update input[type="button"] {
+  height: 35px;
+  min-width: 100px;
+  margin-right: 10px;
+  padding: 5px 15px;
+}
+/* line 16, software_update.scss */
+#page-software-update #update-detect section {
+  margin: 0 0 32px 0;
+  margin-bottom: 32px;
+  /*hide button*/
+  /* Handle */
+}
+/* line 18, software_update.scss */
+#page-software-update #update-detect section li {
+  list-style-type: none;
+}
+/* line 20, software_update.scss */
+#page-software-update #update-detect section li label {
+  font-size: 12px;
+}
+/* line 23, software_update.scss */
+#page-software-update #update-detect section li #new-version-message {
+  color: #333333;
+}
+/* line 26, software_update.scss */
+#page-software-update #update-detect section li #current-version-message {
+  color: #808080;
+  display: inline;
+}
+/* line 30, software_update.scss */
+#page-software-update #update-detect section li #current-version {
+  font-size: 12px;
+  color: #808080;
+}
+/* line 35, software_update.scss */
+#page-software-update #update-detect section h1 {
+  margin: 0;
+  font-size: 12px;
+  color: #333333;
+}
+/* line 41, software_update.scss */
+#page-software-update #update-detect section ::-webkit-scrollbar {
+  width: 6px;
+  opacity: 0.8;
+}
+/* line 45, software_update.scss */
+#page-software-update #update-detect section ::-webkit-scrollbar:horizontal {
+  height: 6px;
+  opacity: 0.8;
+}
+/* line 50, software_update.scss */
+#page-software-update #update-detect section ::-webkit-scrollbar-button {
+  width: 4px;
+  height: 4px;
+  background: #FFFFFF;
+}
+/* line 56, software_update.scss */
+#page-software-update #update-detect section ::-webkit-scrollbar-thumb {
+  border-radius: 12px;
+  background: rgba(51, 51, 51, 0.8);
+  opacity: 0.8;
+  border-width: 1px 1px 1px 6px;
+  min-height: 24px;
+  padding-left: 2px;
+  opacity: 0.8;
+}
+/* line 66, software_update.scss */
+#page-software-update #update-detect section ::-webkit-scrollbar-thumb:hover {
+  background: rgba(92, 92, 92, 0.8);
+  opacity: 0.8;
+}
+/* line 71, software_update.scss */
+#page-software-update #update-detect section ::-webkit-scrollbar-thumb:active {
+  background: #333333;
+  opacity: 1;
+}
+/* line 76, software_update.scss */
+#page-software-update #update-detect section #description,
+#page-software-update #update-detect section #disclaimer {
+  margin-top: 4px;
+  width: 100%;
+  font-size: 12px;
+  padding: 8px;
+  width: calc(100% - 16px);
+  outline: none;
+  overflow-y: auto;
+  border-color: #E5E5E5;
+  border-style: solid;
+  border-width: 1px;
+  white-space: pre-line;
+  height: 110px;
+}
+/* line 92, software_update.scss */
+#page-software-update #update-detect #accept-update-area {
+  margin: 0 0 32px 0;
+}
+/* line 96, software_update.scss */
+#page-software-update #update-eula {
+  display: none;
+}
+/* line 99, software_update.scss */
+#page-software-update #footer-area {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  overflow: hidden;
+  border-color: #E5E5E5;
+  border-style: solid;
+  border-width: 1px 0px 0px 0px;
+  /*input[type=button] {
+      font-size: 12px;
+      background-color: #FAFAFA;
+      border-color: #CCCCCC;
+      color: #333333;
+      width: 160px;
+      border-style: solid;
+      border-width: 1px;
+      border-radius: 2px;
+      outline: none;
+  }*/
+}
+/* line 109, software_update.scss */
+#page-software-update #footer-area button[disabled],
+#page-software-update #footer-area input[type=button][disabled] {
+  opacity: .2;
+}
+/* line 113, software_update.scss */
+#page-software-update #footer-area input {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 16px;
+  height: 24px;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 0;
+}
+/* line 123, software_update.scss */
+#page-software-update #footer-area #update-button,
+#page-software-update #footer-area #download-button {
+  right: 184px;
+}
+/* line 127, software_update.scss */
+#page-software-update #footer-area #cancel-button {
+  right: 16px;
+}

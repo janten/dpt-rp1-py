@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="cache-control" content="no-cache" />
+        <meta http-equiv="expires" content="0" />
+        <!-- <title>Digital Paper App</title> -->
+
+        <!-- style sheet entry -->
+        <link rel="stylesheet" href="modules/jquery/stylesheets/jquery.mobile.css" />
+
+        <!-- application: stylesheets -->
+        <link rel="stylesheet" href="stylesheets/setting.css" />
+
+        <!-- application: utils entry -->
+        <script defer type="lazy" src="scripts/Utils/WindowUtils.js"></script>
+        <script defer type="lazy" src="scripts/Utils/StringUtils.js"></script>
+        <script defer type="lazy" src="scripts/Utils/LocalFileUtils.js"></script>
+        <script defer type="lazy" src="scripts/Utils/LocalStorageUtils.js"></script>
+        <script defer type="lazy" src="scripts/Utils/ErrorUtils.js"></script>
+
+        <!-- application: model entry -->
+        <script defer type="lazy" src="scripts/Model/Common/_module_scripts.html"></script>
+        <script defer type="lazy" src="scripts/Model/Content/_module_scripts.html"></script>
+        <script defer type="lazy" src="scripts/Model/Device/_module_scripts.html"></script>
+        <script defer type="lazy" src="scripts/Model/DeviceSetting/_module_scripts.html"></script>
+        <script defer type="lazy" src="scripts/Model/NoteTemplate/_module_scripts.html"></script>
+        <script defer type="lazy" src="scripts/Model/WiFiSetting/_module_scripts.html"></script>
+
+        <!-- application: common entry -->
+        <script defer type="lazy" src="scripts/AppCtrl/_module_scripts.html"></script>
+
+        <!-- application: view.dialog entry -->
+        <script defer type="lazy" src="scripts/View/Dialog/DialogDefs.js"></script>
+        <script defer type="lazy" src="scripts/View/Dialog/DialogBase.js"></script>
+        <script defer type="lazy" src="scripts/View/Dialog/OpenChildDialogs.js"></script>
+        <script defer type="lazy" src="scripts/View/Dialog/OpenDialogs.js"></script>
+        <script defer type="lazy" src="scripts/View/Setting/DialogSetting.js"></script>
+
+        <!-- application: view entry -->
+        <script defer type="lazy" src="scripts/View/Setting/SettingDefs.js"></script>
+        <script defer type="lazy" src="scripts/View/Setting/GeneralSettingView.js"></script>
+        <script defer type="lazy" src="scripts/View/Setting/NoteTemplateView.js"></script>
+        <script defer type="lazy" src="scripts/View/Setting/NoteTemplateListView.js"></script>
+        <script defer type="lazy" src="scripts/View/Setting/WifiAPView.js"></script>
+        <script defer type="lazy" src="scripts/View/Setting/WifiAPListView.js"></script>
+        <script defer type="lazy" src="scripts/View/Setting/SettingView.js"></script>
+        <script defer type="lazy" src="scripts/View/Setting/SettingPage.js"></script>
+    </head>
+
+    <body>
+        <div data-role="page" id="splash"></div>
+        <!-- foundation script entry -->
+        <script src="scripts/config.js"></script>
+        <script src="modules/requirejs/scripts/require.js" data-main="scripts/init_setting"></script>
+    <div style="width: 100%; height: 100%; z-index: 100; position: absolute; visibility: hidden;" id="modal-lock-panel"></div>
+    </body>
+
+</html>

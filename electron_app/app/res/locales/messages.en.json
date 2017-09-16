@@ -1,0 +1,1050 @@
+{
+  "app": {
+    "defaultname": {
+      "screenshot": {
+        "prefix": "DP_"
+      }, 
+      "syncconflict": {
+        "prefix": "_conflicted_"
+      }
+    }, 
+    "format": {
+      "date": {
+        "type1": "{{dtYear}}/{{dtMonth}}/{{dtDate}}", 
+        "type2": "{{dtMonth}}/{{dtDate}}/{{dtYear}}"
+      }, 
+      "dateTime": "{{app.format.date}} {{app.format.time}}", 
+      "fileSize": {
+        "byte": "{{filesize}} Byte", 
+        "giga": "{{filesize}} GB", 
+        "kilo": "{{filesize}} KB", 
+        "mega": "{{filesize}} MB"
+      }, 
+      "time": {
+        "12h": {
+          "am": "{{dtHour}}:{{dtMin}} AM", 
+          "pm": "{{dtHour}}:{{dtMin}} PM"
+        }, 
+        "type1": "{{dtHour}}:{{dtMin}}", 
+        "type2": "{{dtHour}}:{{dtMin}}"
+      }
+    }, 
+    "language": {
+      "name": "English"
+    }, 
+    "name": "Digital Paper App", 
+    "system": {
+      "win": {
+        "filetype": {
+          "document": "PDF (*.pdf)"
+        }
+      }
+    }, 
+    "words": {
+      "abort": "Abort", 
+      "back": "Back", 
+      "cancel": "Cancel", 
+      "close": "Close", 
+      "minutes": "minutes", 
+      "next": "Next", 
+      "no": "No", 
+      "ok": "OK", 
+      "seconds": "seconds", 
+      "skip": "Skip", 
+      "yes": "Yes"
+    }
+  }, 
+  "appInfo": {
+    "copyright": "Ⓒ2016, 2017 Sony Corporation", 
+    "label": {
+      "version": "Version"
+    }, 
+    "title": "Digital Paper App Version Information", 
+    "version": {
+      "value": "{{version}}"
+    }
+  }, 
+  "config": {
+    "addTemplate": {
+      "button": {
+        "file": "Select file"
+      }, 
+      "description": "Adds a template used for note creation. Select a PDF file and enter the template name.", 
+      "label": {
+        "fileName": "Filename", 
+        "templateName": "Template name"
+      }, 
+      "title": "Add Template"
+    }, 
+    "autosync": {
+      "interval": {
+        "hour_1": "60 minutes", 
+        "min_10": "10 minutes", 
+        "min_30": "30 minutes", 
+        "min_90": "90 minutes"
+      }, 
+      "label": {
+        "interval": "Interval"
+      }, 
+      "setting": {
+        "description": "While the Digital Paper App is running, it will automatically sync with the Digital Paper at specified intervals.", 
+        "off": "Off", 
+        "on": "On"
+      }
+    }, 
+    "btautoconnect": {
+      "description": "Digital Paper App will automatically connect with the Digital Paper (i.e., as long as Bluetooth pairing has been completed).  Click {{link}} for details.", 
+      "linkOfDescription": "here", 
+      "off": "Off", 
+      "on": "On"
+    }, 
+    "button": {
+      "pairing": "Pair with Digital Paper", 
+      "repairing": "Re-pair with Digital Paper", 
+      "update": "Refresh"
+    }, 
+    "dp": {
+      "label": {
+        "serialId": "Device ID", 
+        "version": "Version"
+      }
+    }, 
+    "generalSettings": {
+      "autosleep": {
+        "m10": "10 minutes", 
+        "m30": "30 minutes", 
+        "m5": "5 minutes", 
+        "m60": "60 minutes", 
+        "none": "Never sleep"
+      }, 
+      "description": {
+        "autosleep": "The device will enter sleep mode after the set time has elapsed with no operation.", 
+        "userName": "Used for the document annotation author."
+      }, 
+      "formatDate": {
+        "mdy": "Month/Day/Year", 
+        "ymd": "Year/Month/Day"
+      }, 
+      "formatTime": {
+        "hour12": "12-hour display", 
+        "hour24": "24-hour display"
+      }, 
+      "label": {
+        "autosleep": "Auto sleep", 
+        "button": {
+          "edit": "Edit"
+        }, 
+        "formatDate": "Date format", 
+        "formatTime": "Time format", 
+        "timezone": "Time zone", 
+        "userName": "Username"
+      }, 
+      "timezone": {
+        "m1": "UTC -1:00", 
+        "m10": "Hawaii-Aleutian Standard Time", 
+        "m11": "UTC -11:00", 
+        "m12": "UTC -12:00", 
+        "m2": "UTC -2:00", 
+        "m3": "UTC -3:00", 
+        "m4": "Atlantic Standard Time", 
+        "m5": "North American Eastern Standard Time", 
+        "m6": "North American Central Standard Time", 
+        "m7": "North American Mountain Standard Time", 
+        "m8": "North American Pacific Standard Time", 
+        "m9": "Alaska Standard Time", 
+        "p1": "Central European Time", 
+        "p10": "UTC +10:00", 
+        "p11": "UTC +11:00", 
+        "p2": "Eastern European Time", 
+        "p3": "UTC +3:00", 
+        "p4": "UTC +4:00", 
+        "p5": "UTC +5:00", 
+        "p6": "UTC +6:00", 
+        "p7": "UTC +7:00", 
+        "p8": "UTC +8:00", 
+        "p9": "Japan Standard Time", 
+        "utc": "UTC"
+      }, 
+      "title": "General Settings"
+    }, 
+    "label": {
+      "autosync": "Automatic sync", 
+      "btautoconnect": "Bluetooth automatic connection", 
+      "dp": "Paired Digital Paper", 
+      "generalSettings": "General Settings", 
+      "templates": "Note template", 
+      "wifiOnOff": {
+        "wifiSettings": "Wi-Fi of the Digital Paper"
+      }, 
+      "wifiSettings": "Saved Wi-Fi networks"
+    }, 
+    "templates": {
+      "button": {
+        "addNew": "Add", 
+        "delete": "Delete", 
+        "rename": "Rename"
+      }
+    }, 
+    "title": "Settings", 
+    "wifi": {
+      "title": "Add a Wi-Fi Network", 
+      "wifiDetail": {
+        "status": {
+          "description": "Even if the Digital Paper is within range of radio waves, if the Wi-Fi connection status remains as \"Disconnected\" or \"Connecting\", it is possible that the saved information is not correct. Press \"Back\" and confirm settings.<br/>\n<br/>\nTo exit, press \"Close\"."
+        }
+      }
+    }, 
+    "wifiSettings": {
+      "button": {
+        "addNew": "Add", 
+        "delete": "Delete", 
+        "edit": "Edit"
+      }, 
+      "description": "To set up the Wi-Fi of the Digital Paper, connect the Digital Paper to the computer using the USB cable, and turn on  [Wi-Fi of the Digital Paper]", 
+      "radio": {
+        "wifiOff": "Off", 
+        "wifiOn": "On"
+      }
+    }
+  }, 
+  "content": {
+    "init": {
+      "linkOfNoDeviceMsg": "this", 
+      "noRegMsg": "Connect the Digital Paper to the computer using the USB Cable. Start the pairing process with the Digital Paper. <br/>\nIf the pairing setup window is not displayed on the computer screen, reconnect the USB cable. <br/>\nThe Digital Paper must be powered on to perform this operation.", 
+      "parts": {
+        "noDeviceMsg": {
+          "i1": "1.", 
+          "i2": "2.", 
+          "i3": "3.", 
+          "p1": "Connect Digital Paper.", 
+          "p10": "Connectivity guide", 
+          "p2": "It may take a few seconds to recognize the Digital Paper.", 
+          "p3": "If the app is still not recognized after some time has passed, check the following:", 
+          "p4": "The Digital Paper is switched on.", 
+          "p5": "If connecting via USB:<br />The Digital Paper and the computer are connected with a USB cable if connecting through USB.", 
+          "p6": "If connecting via the Bluetooth function:<br />The devices have been paired via Bluetooth.", 
+          "p7": "To connect manually, press the following button:", 
+          "p8": "If connecting via Wi-Fi:<br />The Digital Paper is connected to a Wi-Fi network that can communicate with the computer.", 
+          "p9": "Please see this if the connection still fails."
+        }
+      }, 
+      "url": {
+        "noDeviceMsg": {
+          "jp": "http://www.sony.co.jp/dpt-rp1/connect-dp", 
+          "us": "http://www.sony.net/dpt-rp1/connect-dp"
+        }
+      }
+    }, 
+    "list": {
+      "caption": {
+        "noItemDV": "There are no documents.", 
+        "noItemFV": "There are no folders or documents.", 
+        "noItemSearch": "Sorry, your search returned no results."
+      }, 
+      "header": {
+        "author": "Author", 
+        "dateAdded": "Date created", 
+        "dateModified": "Date modified", 
+        "dateRead": "Date read", 
+        "file": "Filename", 
+        "size": "File size", 
+        "title": "Title"
+      }
+    }, 
+    "navi": {
+      "abbrev": "...", 
+      "allDoc": "All documents", 
+      "label": {
+        "closeSearchResult": "Close search results", 
+        "searchPath": "Search location", 
+        "searchTarget": "Search target"
+      }, 
+      "root": "System storage"
+    }, 
+    "sub": {
+      "label": {
+        "abort": "Abort", 
+        "exporting": "Transferring to Digital Paper", 
+        "importing": "Transferring to computer", 
+        "sep": "/", 
+        "sync": "Syncing with computer", 
+        "syncstate": {
+          "abort": "Sync aborted.", 
+          "complete": "Sync successful.", 
+          "error": "Sync aborted due to an error.", 
+          "finish": "Sync finished, but with one or more errors.", 
+          "unsynced": "The device was not synced after the Digital Paper App was started."
+        }, 
+        "unit": "File"
+      }
+    }
+  }, 
+  "desc": {
+    "func": {
+      "app": {
+        "launchSupportSite": "Here the latest information and useful tips for using the Digital Paper are introduced."
+      }
+    }
+  }, 
+  "dialog": {
+    "autoclose": {
+      "exportOnDocView": {
+        "message": "Click the [Folders] from the toolbar, change the display mode and try again.", 
+        "title": "Transfer Documents to Digital Paper"
+      }
+    }, 
+    "choice": {
+      "button": {
+        "applyAll": "Apply to all"
+      }, 
+      "copy": {
+        "button": {
+          "keepBoth": "Keep both files", 
+          "replace": "Replace existing file", 
+          "skip": "Skip this file"
+        }
+      }, 
+      "description": {
+        "copy": "A file with the same name already exists in the destination folder.<br/>\n<br/>\nFilename<br/>\n{{fileName}}", 
+        "move": "A file with the same name already exists in the destination folder.<br/>\n<br/>\nFilename<br/>\n{{fileName}}"
+      }, 
+      "move": {
+        "button": {
+          "keepBoth": "Keep both files", 
+          "replace": "Replace existing file", 
+          "skip": "Skip this file"
+        }
+      }, 
+      "title": {
+        "copy": "Copy", 
+        "move": "Move"
+      }
+    }, 
+    "choice2": {
+      "confirmDpPairing": {
+        "b1": "Reset connection information", 
+        "b2": "Close", 
+        "message": "Unable to connect to Digital Paper.\nIf the network connection is unstable, select [Close] and reconnect in a place where communication is stable or connect with the USB.\n\nWhen establishing a connection for the first time after initializing the Digital Paper, select [Reset connection information].", 
+        "title": "Digital Paper App"
+      }
+    }, 
+    "confirm": {
+      "abortExit": {
+        "message": "Cancel file transfer to the Digital Paper and exit from the Digital Paper App?", 
+        "title": "Quit"
+      }, 
+      "abortExporting": {
+        "message": "Do you want to abort the transfer to the Digital Paper?", 
+        "title": "Confirmation"
+      }, 
+      "abortImporting": {
+        "message": "Do you want to abort the transfer to the computer?", 
+        "title": "Confirmation"
+      }, 
+      "abortSync": {
+        "message": "Abort syncing with the computer?", 
+        "title": "Confirmation"
+      }, 
+      "abortTransferByUpdate": {
+        "message": "Update the Digital Paper system software?\nFile transfer will be stopped when updating starts.", 
+        "title": "Software Update"
+      }, 
+      "cancelDPAUpdate": {
+        "message": "Abort the software update for the Digital Paper App?", 
+        "title": "Software Update"
+      }, 
+      "cancelDPUpdate": {
+        "message": "Abort the software update for the Digital Paper system software?", 
+        "title": "Software Update"
+      }, 
+      "delete": {
+        "message": "Do you really want to delete the selected item(s)?"
+      }, 
+      "deleteTemplate": {
+        "message": "Are you sure you want to delete the selected item?", 
+        "title": "Delete"
+      }, 
+      "deleteWifi": {
+        "message": "Are you sure you want to delete the settings for the following Wi-Fi network?\nSSID: {{ssid}}", 
+        "title": "Delete"
+      }, 
+      "pairingCancel": {
+        "message": "Cancel Digital Paper pairing?\n\nTo restart pairing, either reconnect the USB cable, or perform a restart via the [Tools] - [Settings] menu.", 
+        "title": "Connect to Digital Paper"
+      }, 
+      "rePairing": {
+        "message": "Would you like to setup a Digital Paper connection?\n\nAfter selecting a Digital Paper for pairing, connection information for all previously connected Digital Paper devices will be reset.\nIf files are being transferred, transfer will be aborted.", 
+        "title": "Re-pair Device"
+      }, 
+      "releaseSyncFolder": {
+        "message": "Delete sync setting?\nIf deleted the folders and files contained in this folder will stop syncing with the computer. \nEven if deleted folders and files will not be deleted.", 
+        "title": "Delete Sync Setting"
+      }, 
+      "releaseSyncSettingByOperation": {
+        "message": "This folder or subfolder was previously designated to sync with Digital Paper. Deleting or renaming this folder will delete the sync settings.  Do you want to continue?"
+      }, 
+      "resetAndExit": {
+        "message": "Reset connection information for the currently connected Digital Paper?\n\nResetting connection information will also delete sync folder settings.\n\nSelecting [Yes] will close Digital Paper App.\nRestart the app to conduct pairing with the Digital Paper.", 
+        "title": "Reset Connection Information"
+      }, 
+      "syncNow": {
+        "message": "Sync folder has been set.\nStart syncing now?", 
+        "title": "Set Sync Folder"
+      }
+    }, 
+    "edit": {
+      "fileName": {
+        "message": "Enter the filename.", 
+        "title": "Rename"
+      }, 
+      "folderName": {
+        "message": "Enter the folder name.", 
+        "title": "Rename"
+      }, 
+      "installCertName": {
+        "message": "Enter the name of the certificate.", 
+        "title": "Install Certificates"
+      }, 
+      "installCertPass": {
+        "message": "Enter the password of the certificate.", 
+        "title": "Install Certificates"
+      }, 
+      "newFolder": {
+        "message": "Enter the folder name.", 
+        "title": "Create a New Folder"
+      }, 
+      "templateName": {
+        "message": "Enter the note template name.", 
+        "title": "Rename"
+      }
+    }, 
+    "error": {
+      "message": {
+        "1": "An unknown error has occurred.\n\nError code {{errorCode}}", 
+        "10": "The certificate installation has failed. \nThe certificate must be installed in order to pair the Digital Paper with the computer. \n\nError code {{errorCode}}", 
+        "11": "Cannot add Wi-Fi network. \nThe number of Wi-Fi networks saved on the Digital Paper has reached the maximum limit. \nDelete unused Wi-Fi networks.\n\nError code {{errorCode}}", 
+        "12": "Cannot register the Wi-Fi network.\nThe value has not been configured correctly. \nCheck the value you have entered.\n\nError code {{errorCode}}", 
+        "14": "The transfer will be cancelled. \nThe following file to be transferred cannot be found.\n\nFile name\n{{file}}\n\nError code {{errorCode}}", 
+        "16": "A file name cannot contain the following characters:\n    /\nEnter another name.\n\nError code {{errorCode}}", 
+        "18": "A folder name cannot contain the following characters:\n    /\nEnter another name.\n\nError code {{errorCode}}", 
+        "19": "The transfer will be cancelled. \nThe length of the file path has exceeded the maximum limit.\nShorten the file name or save to a different folder.\n\nFile name\n{{file}}\n\nError code {{errorCode}}", 
+        "2": "The application is broken and cannot be started. \nUninstall and reinstall the Digital Paper App.\n\nError code {{errorCode}}", 
+        "20": "The transfer will be cancelled. \nThe length of the folder path has exceeded the maximum limit.\nShorten the folder name or save to a different folder.\n\nFolder name\n{{folder}}\n\nError code {{errorCode}}", 
+        "21": "A file with the same name already exists. \nSelect a different file name. \n\nError code {{errorCode}}", 
+        "22": "A folder with the same name already exists. \nSelect a different folder name. \n\nError code {{errorCode}}", 
+        "23": "The file transfer will be cancelled. \nThere is not enough space on the destination folder.\nDelete unused files or select a different destination folder. \n\nError code {{errorCode}}", 
+        "24": "The operation cannot be performed.\nThere is not enough space on the Digital Paper. \nDelete unused files.\n\nError code {{errorCode}}", 
+        "26": "Pairing with the Digital Paper has failed.\nThe process has timed out after a period of time has passed.\nTry again.\n\nError code {{errorCode}}", 
+        "27": "The transfer will be cancelled. \nThe following file is being used by another application.\nExit from the application and try again.\n\nFile name\n{{file}}\n\nError code {{errorCode}}", 
+        "28": "The transfer will be cancelled. \nThe following file cannot be accessed.\nCheck the file access permissions.\n\nFile name\n{{file}}\n\nError code {{errorCode}}", 
+        "29": "The transfer will be cancelled. \nCannot write into the following folder.\nCheck the folder access permissions or select a different destination folder.\n\nFolder name\n{{file}}\n\nError code {{errorCode}}", 
+        "3": "An operation for the Digital Paper cannot be executed.\n\nError code {{errorCode}}", 
+        "31": "The file name cannot be changed.\nThe length of the file name has exceeded the maximum limit.\nSelect a different name.\n\nError code {{errorCode}}", 
+        "32": "The operation cannot be performed.\nA file with the same name already exists.\nChange the template name.\n\nError code {{errorCode}}", 
+        "33": "Cannot check for updates.\nUnable to connect to the Internet.\nCheck the network connection of the computer.\n\nError code {{errorCode}}", 
+        "34": "The update has failed.\nUnable to connect to the Internet.\nCheck the network connection of the computer and try again.\n\nError code {{errorCode}}", 
+        "35": "The transfer has failed.\nCheck that the computer is connected correctly to the Digital Paper.\n\nError code {{errorCode}}", 
+        "36": "Cannot update Digital Paper.\nThe device does not have enough battery left.\nRecharge the device for a while and try again.\n\nError code {{errorCode}}", 
+        "37": "Cannot register the Wi-Fi network.\n\nError code {{errorCode}}", 
+        "38": "Cannot register the Wi-Fi network.\nThe process has timed out after a period of time has passed.\nReconfigure the Wi-Fi network.\n\nError code {{errorCode}}", 
+        "39": "Cannot register the Wi Fi connection.\nThe wireless router that you are trying to register is using an unsupported security method.\nChange the security method of the wireless router or choose a supported Wi-Fi network.\n\nError code {{errorCode}}", 
+        "4": "You are using an old version of Digital Paper software that needs to be updated.\nConnect to the Digital Paper with a USB cable and select [Help] - [Software update] from the menu.\n\nError code {{errorCode}}", 
+        "40": "Cannot register the Wi-Fi network.\nThe Wi-Fi Protected Setup™ button may have been pressed on multiple wireless routers.\n\nError code {{errorCode}}", 
+        "41": "Cannot register the Wi-Fi network.\nAnother process is already running on the Digital Paper.\nWait a while and try again.\n\nError code {{errorCode}}", 
+        "42": "Cannot connect to the Digital Paper.\nInvalid pairing of the connected Digital Paper.\nRestart pairing of the device.\n\nError code {{errorCode}}", 
+        "43": "Cannot turn on the Wi-Fi on the Digital Paper.\nThe device does not have enough battery left.\nRecharge the device for a while and try again.\n\nError code {{errorCode}}", 
+        "44": "Cannot turn on the Wi-Fi on the Digital Paper.\nAnother process is already running on the Digital Paper.\nWait a while and try again.\n\nError code {{errorCode}}", 
+        "45": "Cannot turn on the Wi-Fi on the Digital Paper.\nWait a while and try again.\n\nError code {{errorCode}}", 
+        "46": "Cannot install the certificate.\nThe certificate is using a file format that is not supported with Digital Paper.\nSelect a certificate that has a supported file format.\n\nError code {{errorCode}}", 
+        "47": "Cannot install the certificate.\nThe content of the certificate is incorrect.\nSend an enquiry to your certificate vendor.\n\nError code {{errorCode}}", 
+        "48": "Cannot install the certificate.\n\nError code {{errorCode}}", 
+        "49": "The certificate installation has failed.\nThe certificate password is incorrect.\n\nError code {{errorCode}}", 
+        "5": "You need a new version of the Digital Paper App to connect with the Digital Paper.\nDownload and install the latest version of the application from the following URL.\n\nwww.sony.co.jp/dpapp\n\nError code {{errorCode}}", 
+        "51": "Cannot start software update.\nAnother process is already running on the Digital Paper.\nWait a while and try again.\n\nError code {{errorCode}}", 
+        "52": "Cannot register note template.\nThe number of note templates has exceeded the maximum limit.\nDelete unused templates.\n\nError code {{errorCode}}", 
+        "54": "The operation cannot be performed.\nThe selected note template cannot be found.\n\nError code {{errorCode}}", 
+        "57": "The operation cannot be performed.\nThe specified folder cannot be found. \nClick on the current folder from the list to refresh the display. \n\nFolder name\n{{folder}}\n\nError code\n{{errorCode}}", 
+        "58": "The transfer will be cancelled. \nThe following folder to be transferred cannot be found:\n\nFolder name\n{{folder}}\n\nError code {{errorCode}}", 
+        "59": "The folder name cannot be changed.\nThe length of the folder name has exceeded the maximum limit.\nSelect a different name.\n\nError code {{errorCode}}", 
+        "6": "You need a new version of the Digital Paper App to connect with the Digital Paper.\nDownload and install the latest version of the application from the following URL.\n\nwww.sony.net/dpapp\n\nError code {{errorCode}}", 
+        "60": "Cannot add note template.\nMake sure that the file is not password-protected and that it can be displayed on the Digital Paper.\n\nError code {{errorCode}}", 
+        "61": "Cannot add note template.\nThis PDF file cannot be edited due to its security settings.\n\nError code {{errorCode}}", 
+        "62": "Cannot add note template.\nThe file size has exceeded the maximum limit.\n\nError code {{errorCode}}", 
+        "63": "Cannot paste folder.\nThe folder you are trying to paste is a subfolder of the original folder.\n\nError code {{errorCode}}", 
+        "65": "Cannot connect to the Digital Paper.\nCheck that the computer is connected correctly to the Digital Paper.\n\nError code {{errorCode}}", 
+        "66": "Cannot print to Digital Paper. \nTo print to Digital Paper, pair the device with the computer.\n\nError code {{errorCode}}", 
+        "67": "Cannot print to Digital Paper. \nUnable to find data to print.\n\nError code {{errorCode}}", 
+        "68": "Cannot print to Digital Paper. \nUnable to find Digital Paper App.\n\nError code {{errorCode}}", 
+        "69": "The file paste will be cancelled. \nThe following file to be transferred cannot be found.\n\nFile name\n{{fileFolder}}\n\nError code {{errorCode}}", 
+        "7": "Cannot connect to the Digital Paper.\nGo to [Settings] - [Re-pair device] to pair with the Digital Paper.\n\nError code {{errorCode}}", 
+        "70": "The file paste will be cancelled. \nThe following folder to be transferred cannot be found.\n\nFolder name\n{{fileFolder}}\n\nError code {{errorCode}}", 
+        "71": "The file paste will be cancelled. \nThe following destination folder cannot be found.\n\nFolder name\n{{folder}}\n\nError code {{errorCode}}", 
+        "72": "The process cannot be completed.\nDigital Paper has timed out.\n\nError code {{errorCode}}", 
+        "73": "The transfer will be cancelled.\nThe following destination folder cannot be found.\n\nFolder name\n{{folder}}\n\nError code {{errorCode}}", 
+        "74": "The transfer has failed.\nOnly PDF files can be transferred to the Digital Paper.\n\nError code {{errorCode}}", 
+        "75": "The operation cannot be performed.\n\nError code {{errorCode}}", 
+        "76": "The operation cannot be performed.\nFile cannot be loaded. \n\nFile name\n{{file}}\n\nError code\n{{errorCode}}", 
+        "77": "The operation cannot be performed.\nCannot be written. \n\nError code {{errorCode}}", 
+        "78": "The operation cannot be performed.\nFile cannot be loaded. \n\nFile name\n{{file}}\n\nError code\n{{errorCode}}", 
+        "79": "The operation cannot be performed.\nFile cannot be written. \n\nFile name\n{{file}}\n\nError code\n{{errorCode}}", 
+        "8": "The pairing with the Digital Paper has failed.\nRestart pairing of the device.\n\nError code {{errorCode}}", 
+        "80": "The sync folder cannot be set.\nThe specified folder is included in the sync folder.\nSelect another folder.\n\nError code {{errorCode}}", 
+        "81": "The sync folder cannot be set.\nThe selected folder cannot be set as the sync folder.\nSelect another folder.\n\nError code {{errorCode}}", 
+        "82": "Sync settings cannot be deleted.\nSelect the folder specified when the sync folder was set.\n\nError code {{errorCode}}", 
+        "83": "The sync folder cannot be set.\nThe selected folder is included in the sync folder.\n\nError code {{errorCode}}", 
+        "84": "The sync folder cannot be set.\nThe number of folders set as the sync folder has reached the limit.\n\nError code {{errorCode}}", 
+        "85": "The sync folder cannot be set.\nThe selected folder is already set as the sync folder.\n\nError code {{errorCode}}", 
+        "86": "Syncing will be aborted.\n\nError code {{errorCode}}", 
+        "87": "Update is not possible.\nDownloading of update file failed.\n\nError code {{errorCode}}", 
+        "88": "Update cannot be confirmed.\nWait a while and try again.\n\nError code {{errorCode}}", 
+        "89": "The operation cannot be performed.\nA folder containing the folder set for syncing cannot be operated while syncing.\nPerform the operation after syncing is complete.\n\nError code {{errorCode}}", 
+        "9": "The authentication code is incorrect.\nRestart pairing of the device.\n\nError code {{errorCode}}", 
+        "90": "Unable to establish a Bluetooth connection.\nMultiple Digital Paper devices are registered to this computer as Bluetooth devices.\nOn the computer, delete the registrations of Digital Paper units other than the one you wish to connect.\n\nError code {{errorCode}}", 
+        "91": "An operation for the Digital Paper cannot be executed.\n\nError code {{errorCode}}", 
+        "92": "Cannot turn on the Wi-Fi on the Digital Paper.\nRestore the device from sleep mode and try again.\n\nError code {{errorCode}}", 
+        "93": "Cannot turn on the Wi-Fi on the Digital Paper.\n\nError code {{errorCode}}", 
+        "94": "The operation cannot be performed.\nThe software update is in progress.\n\nError code {{errorCode}}"
+      }
+    }, 
+    "nobtn": {
+      "wait": {
+        "message": "Connecting to Digital Paper...", 
+        "title": "Digital Paper App"
+      }
+    }, 
+    "notice": {
+      "addedSyncFolder": {
+        "title": "Set Sync Folder"
+      }, 
+      "btUnrecoverableError": {
+        "message": "An error occurred while connecting through the Bluetooth function.\nPlease try the following after exiting from the Digital Paper App.\n\n - Turn off the Bluetooth function of the computer, and turn on again.\n - Turn off the Bluetooth function of the Digital Paper, and turn on again.\n - Restart the computer.", 
+        "title": "Digital Paper App"
+      }, 
+      "exportOnDocView": {
+        "message": "Click [Folders] from the toolbar and change the display mode before running the program.", 
+        "title": "Transfer Documents to Digital Paper"
+      }, 
+      "foundMultiBtDps": {
+        "message": "Multiple Digital Paper devices are registered to this computer as Bluetooth devices.\nOn the computer, delete the registrations of Digital Paper units other than the one you wish to connect.", 
+        "title": "Connect"
+      }, 
+      "latestSoftware": {
+        "message": "Your software is up to date."
+      }, 
+      "newerAppFound": {
+        "message": "There is a newer version of Digital Paper App.\nTo update, download and install the latest version from the following URL.\nwww.sony.net/dpapp", 
+        "title": "Software Update"
+      }, 
+      "newerSoftwareFoundByWiFi": {
+        "message": "A new version of the Digital Paper system software is available.\n\nTo update the system software, connect the USB cable and select [{{menu.category.help}}] - [{{func.app.softwareUpdate}}]."
+      }, 
+      "syncAborted": {
+        "message": "Sync aborted.", 
+        "title": "Sync"
+      }, 
+      "syncAddDuplicate": {
+        "message": "The sync folder cannot be set.\nThe selected folder is already set as the sync folder.", 
+        "title": "Set sync folder"
+      }, 
+      "syncAddIncludeSyncFolder": {
+        "message": "The sync folder cannot be set.\nThe specified folder is included in the sync folder.\nSelect another folder.", 
+        "title": "Set sync folder"
+      }, 
+      "syncAddMax": {
+        "message": "The sync folder cannot be set.\nThe number of folders set as the sync folder has reached the limit.", 
+        "title": "Set sync folder"
+      }, 
+      "syncAddSyncSubfolder": {
+        "message": "The sync folder cannot be set.\nThe selected folder is included in the sync folder.", 
+        "title": "Set sync folder"
+      }, 
+      "syncAddSyncing": {
+        "message": "The sync folder cannot be set.\nTry again after syncing is complete.", 
+        "title": "Set sync folder"
+      }, 
+      "syncComplete": {
+        "message": "Sync successful.", 
+        "title": "Sync"
+      }, 
+      "syncError": {
+        "message": "Sync aborted due to an error.", 
+        "title": "Sync"
+      }, 
+      "syncMissingDpFolder": {
+        "message": "The folder set for syncing could not be found on Digital Paper. \nDelete sync setting for this folder. \n\nFolder\n{{folderPath}}", 
+        "title": "Sync"
+      }, 
+      "syncMissingPcFolder": {
+        "message": "The folder set for syncing could not be found on the computer. \nDelete sync setting for this folder. \n\nFolder\n{{folderPath}}", 
+        "title": "Sync"
+      }, 
+      "syncNoPcFolder": {
+        "message": "The sync folder could not be found on the computer. \n\nFolder\n{{folderPath}}", 
+        "title": "Open Sync Folder"
+      }, 
+      "syncSettingCondition": {
+        "message": "Try again after selecting a folder.", 
+        "title": "Set sync folder"
+      }, 
+      "unsynced": {
+        "message": "The device was not synced after the Digital Paper App was started.", 
+        "title": "Sync"
+      }, 
+      "updateTransfered": {
+        "message": "Transfer of update file to Digital Paper has been completed and the update process has started.\nPlease wait until the update is complete and the device is reconnected.\nIf the window is not updated, restart Digital Paper App."
+      }
+    }, 
+    "title": {
+      "error": "Digital Paper App", 
+      "softwareUpdate": "Software Update"
+    }, 
+    "wait": {
+      "connectingWifi": {
+        "message": "Connecting to Wi-Fi network..."
+      }, 
+      "message": "Please wait...", 
+      "title": "Digital Paper App"
+    }
+  }, 
+  "func": {
+    "app": {
+      "about": "About Digital Paper App", 
+      "launchSupportSite": "Support site", 
+      "onlineHelp": "Help guide", 
+      "quit": "Exit", 
+      "softwareUpdate": "Software update"
+    }, 
+    "config": {
+      "showConfig": "Settings"
+    }, 
+    "dp": {
+      "screenshot": "Screenshot"
+    }, 
+    "edit": {
+      "copy": "Copy", 
+      "cut": "Cut", 
+      "paste": "Paste", 
+      "selectall": "Select All"
+    }, 
+    "fileDP": {
+      "copy": "Copy (within Digital Paper)", 
+      "cut": "Cut (within Digital Paper)", 
+      "delete": "Delete", 
+      "import": "Transfer documents to computer", 
+      "moveToFileFolder": "Open file location", 
+      "open": "Open", 
+      "openOnDP": "Open on Digital Paper", 
+      "paste": "Paste (within Digital Paper)", 
+      "rename": "Rename"
+    }, 
+    "fileManage": {
+      "createFolder": "New folder", 
+      "selectAll": "Select all"
+    }, 
+    "filePC": {
+      "export": "Transfer documents to Digital Paper"
+    }, 
+    "mac": {
+      "displayAll": "Display all", 
+      "hideMe": "Hide Digital Paper App", 
+      "hideOther": "Hide other apps", 
+      "quit": "Quit Digital Paper App"
+    }, 
+    "search": {
+      "execSearch": "Search", 
+      "typeMark": "Mark", 
+      "typeText": "File information", 
+      "typeTextBody": "Text body", 
+      "typeTextMeta": "Filename, title, author"
+    }, 
+    "sync": {
+      "add": "Set sync folder", 
+      "exec": "Sync", 
+      "openDst": "Open sync folder", 
+      "remove": "Delete sync setting"
+    }, 
+    "view": {
+      "changeFolder": "Change folder", 
+      "document": "All documents", 
+      "folder": "Folders", 
+      "refresh": "Refresh", 
+      "showUpperFolder": "Up one level", 
+      "sort": {
+        "asc": "Ascending order", 
+        "changeSortKey": "Sort", 
+        "desc": "Descending order"
+      }
+    }
+  }, 
+  "help": {
+    "launchSupportSite": {
+      "url": {
+        "jp": "http://www.sony.co.jp/dpt-rp1/start", 
+        "us": "http://www.sony.net/dpt-rp1/start"
+      }
+    }, 
+    "onlineHelp": {
+      "url": "http://www.sony.net/dpt-rp1/help"
+    }
+  }, 
+  "menu": {
+    "category": {
+      "display": "View", 
+      "edit": "Edit", 
+      "file": "File", 
+      "help": "Help", 
+      "tool": "Tools"
+    }
+  }, 
+  "page": {
+    "installCert": {
+      "description": "In order to securely connect to the Digital Paper, a certificate must be installed on the computer.<br/>\n<br/>\nPress [Next] to install a certificate issued by Digital Paper.<br/>\nYour operating system may require confirmation from you before installation is completed.<br/>\nThe certificate to be installed will not be used for any purpose other than communication with the paired Digital Paper."
+    }, 
+    "pairing": {
+      "description": "Enter the authentication code that is displayed on the Digital Paper.<br/>\n<br/>\nEnter into the following text box the authentication code that is displayed on the screen of the Digital Paper you wish to pair. Then press the [Next] button to continue.", 
+      "label": {
+        "authCode": "Authentication code"
+      }
+    }, 
+    "setupComplete": {
+      "button": {
+        "close": "Finished"
+      }, 
+      "description": "The procedure for pairing the Digital Paper App to your computer is complete.<br/>\n<br/>\nWe will now continue to product registration.<br/>\n<br/>\nIn order for us to provide the best support for the product you have purchased, we recommend you register the product. Customers who register their products are able to receive useful tips and promotional product information.", 
+      "header": "Complete", 
+      "intro": {
+        "jp": "The procedure for pairing the Digital Paper App to your computer is complete.<br/>\n<br/>\nVisit the Digital Paper support site for the latest information and useful tips.", 
+        "us": "The procedure for pairing the Digital Paper App to your computer is complete."
+      }, 
+      "url": {
+        "jp": "http://www.sony.co.jp/dpt-rp1/start", 
+        "regjp": "http://www.sony.jp/digital-paper/support/touroku/", 
+        "us": ""
+      }
+    }, 
+    "welcomeConnection": {
+      "description": "Pairing with the Digital Paper.<br/>\n<br/>\nWhen the Digital Paper is paired, it is possible to transfer documents between devices.", 
+      "header": "Pairing with the Digital Paper"
+    }, 
+    "wifiConf": {
+      "bt": {
+        "message": "The Digital Paper can also connect to a computer using the Bluetooth function. Please refer to the URL below for details.", 
+        "url": {
+          "jp": "http://www.sony.co.jp/dpt-rp1/bt", 
+          "us": "http://www.sony.net/dpt-rp1/bt"
+        }
+      }, 
+      "description": "Setup the Digital Paper Wi-Fi network.<br/>\nIn order for the Digital Paper to communicate with a computer over Wi-Fi, both devices must be on the same network.", 
+      "header": "Wi-Fi network settings", 
+      "manual": {
+        "label": "Setup the Wi-Fi network manually"
+      }, 
+      "message": {
+        "wait": "Please wait..."
+      }, 
+      "select": {
+        "description": "Select the Wi-Fi network used by the Digital Paper from the list of available networks.", 
+        "label": "Select from the list", 
+        "refresh": "Refresh the list"
+      }, 
+      "wps": {
+        "description": "Setup using the Wi-Fi Protected Setup™ push button method or the Wi-Fi Protected Setup™ PIN method.", 
+        "label": "Use Wi-Fi Protected Setup™"
+      }
+    }, 
+    "wifiDetail": {
+      "connected": "Wi-Fi network configured.", 
+      "description": {
+        "manual": "Setup the Wi-Fi network.<br/>\nEnter all required items, and press the [Next] button.", 
+        "wps": "Select the Wi-Fi Protected Setup™ method.", 
+        "wpsPin": "Setup using the Wi-Fi Protected Setup™ PIN method.<br/>\nPress the [Next] button to generate a PIN code.<br/>\nUse the displayed PIN code for the wireless router within two minutes.", 
+        "wpsPush": "Setup using the Wi-Fi Protected Setup™ push button method.<br/>\nPress the Wi-Fi Protected Setup™ button on the wireless router, and then press the [Next] button within two minutes."
+      }, 
+      "dpStatus": {
+        "label": "Wi-Fi connection status of Digital Paper", 
+        "ssid": {
+          "label": "SSID", 
+          "none": ""
+        }, 
+        "status": {
+          "connect": "Connected", 
+          "connecting": "Connecting", 
+          "disconnect": "Disconnected", 
+          "label": "Connection status"
+        }
+      }, 
+      "label": {
+        "connectFailed": "Failed", 
+        "connectSucceeded": "Succeeded", 
+        "resultConnect": "Connection result:", 
+        "savedInfo": "Saved Wi-Fi network information", 
+        "wpsPin": "Wi-Fi Protected Setup™ PIN method", 
+        "wpsPush": "Wi-Fi Protected Setup™ push-button configuration"
+      }, 
+      "manual": {
+        "caCert": {
+          "button": {
+            "install": "Install certificates"
+          }
+        }, 
+        "eapMethod": {
+          "peap": "PEAP", 
+          "tls": "TLS"
+        }, 
+        "label": {
+          "anonymousIdentity": "Anonymous identity", 
+          "caCert": "CA certificate", 
+          "dns1": "DNS 1", 
+          "dns2": "DNS 2", 
+          "eapMethod": "EAP method", 
+          "gateway": "Gateway", 
+          "identity": "Identity", 
+          "ipAddr": "IP Address", 
+          "macAddr": "Digital Paper MAC address", 
+          "noDhcp": "Manually set the IP address", 
+          "password": "Password", 
+          "phase2auth": "Phase 2 authentication", 
+          "secMethod": "Security method", 
+          "ssid": "SSID", 
+          "subnetmask": "Netmask", 
+          "userCert": "User certificate"
+        }, 
+        "password": {
+          "button": {
+            "show": "Show password"
+          }
+        }, 
+        "phase2auth": {
+          "gtc": "GTC", 
+          "mschapv2": "MSCHAPV2", 
+          "none": "None"
+        }, 
+        "secMethod": {
+          "8021xEap": "802.1x EAP (AES)", 
+          "open": "Open system authentication", 
+          "wpa2Psk": "WPA2-PSK (AES)"
+        }, 
+        "userCert": {
+          "button": {
+            "install": "Install certificates"
+          }, 
+          "install": "User certificate"
+        }
+      }, 
+      "result": {
+        "prompt": "Press the [Back] button to try again.<br/>\nPress the [Next] button to leave this unchanged."
+      }, 
+      "status": {
+        "description": "Even if the Digital Paper is within range of radio waves, if the Wi-Fi connection status remains as \"Disconnected\" or \"Connecting\", it is possible that the saved information is not correct. Press \"Back\" and confirm settings.<br/>\n<br/>\nTo exit, press \"Next\". Setting of Wi-Fi networks can be performed later on the \"Settings\" screen."
+      }, 
+      "wpsPin": {
+        "countDown": "Enter the following PIN code on the wireless router in the next two minutes.", 
+        "label": {
+          "PinCode": "PIN"
+        }, 
+        "remainTime": "Remaining {{time}} seconds"
+      }, 
+      "wpsPush": {
+        "countDown": "Press the Wi-Fi Protected Setup™ button of the wireless router in the next two minutes.", 
+        "remainTime": "Remaining {{time}} seconds"
+      }
+    }
+  }, 
+  "print2dp": {
+    "menu": {
+      "mac": "Print PDF to Digital Paper"
+    }
+  }, 
+  "searchDp": {
+    "connect": {
+      "usb": "USB", 
+      "usbWifi": "USB, Wireless", 
+      "wifi": "Wireless"
+    }, 
+    "description": "Select the Digital Paper you wish to pair. The device ID can be confirmed from [Settings] - [System Information] - [Device Details] of the Digital Paper.", 
+    "label": {
+      "connect": "Connection type", 
+      "pairingStatus": "Pairing status", 
+      "serialNo": "Device ID"
+    }, 
+    "noDp": "No Digital Paper found.", 
+    "paired": "Paired", 
+    "title": "Digital Paper App"
+  }, 
+  "state": {
+    "dp": {
+      "capacity": {
+        "mid": "/", 
+        "unit": {
+          "giga": "GB", 
+          "mega": "MB"
+        }
+      }, 
+      "connected": "Connected", 
+      "disconnected": "Disconnected", 
+      "noRegist": "Unregistered", 
+      "sync": {
+        "guide": "How to perform sync settings", 
+        "last": {
+          "label": "updated", 
+          "nodata": "-"
+        }, 
+        "urlGuide": "http://www.sony.net/dpt-rp1/sync"
+      }
+    }
+  }, 
+  "sync": {
+    "introduce": {
+      "goNext": "Select the folder", 
+      "message": "The selected Digital Paper folder can be synced with a folder on your computer. Documents placed in either folder will be transferred to the other and both folders will be synchronized.", 
+      "title": "Set Sync Folder"
+    }, 
+    "ngResult": {
+      "message": "The folders and files below could not be synced.", 
+      "proc": {
+        "DPadd": "Unable to add to Digital Paper.", 
+        "DPdelete": "Unable to delete file in Digital Paper.", 
+        "DPnewFolder": "Unable to create folder in Digital Paper.", 
+        "DPnoRoot": "Unable to find folder set for syncing on Digital Paper.", 
+        "DPupdate": "Unable to update file in Digital Paper.", 
+        "PCadd": "Unable to add to the computer.", 
+        "PCdelete": "Unable to delete file in the computer.", 
+        "PCnewFolder": "Unable to create folder in the computer.", 
+        "PCnoRoot": "Unable to find folder set for syncing in the computer.", 
+        "PCupdate": "Unable to update file in the computer.", 
+        "add": "Transfer (new)", 
+        "delete": "Delete", 
+        "newFolder": "Create folder", 
+        "noRoot": "Confirmation of sync folder", 
+        "update": "Transfer (overwrite)"
+      }, 
+      "title": "Sync", 
+      "toDP": {
+        "caption": "Computer files that failed to sync to Digital Paper", 
+        "label": {
+          "fileList": "Computer files", 
+          "process": "Error Message"
+        }
+      }, 
+      "toPC": {
+        "caption": "Digital Paper files that failed to sync to computer", 
+        "label": {
+          "fileList": "Digital Paper files", 
+          "process": "Error Message"
+        }
+      }
+    }
+  }, 
+  "toolbar": {
+    "bluetooth": {
+      "connect": "Connect"
+    }, 
+    "sync": {
+      "exec": "Sync"
+    }
+  }, 
+  "tooltip": {
+    "sync": {
+      "pcpath": "Sync location"
+    }, 
+    "toolbar": {
+      "createFolder": "New folder", 
+      "delete": "Delete", 
+      "import": "Transfer documents to computer", 
+      "sync": "Sync with computer", 
+      "syncadd": "Set sync folder"
+    }
+  }, 
+  "update": {
+    "button": {
+      "agreeUpdate": "Agree to the above and update", 
+      "execUpdate": "Update now", 
+      "later": "Later"
+    }, 
+    "currentVersion": {
+      "value": "{{versionCurrent}}"
+    }, 
+    "eula": {
+      "cancel": "Cancel", 
+      "description": "Please read the following license agreement carefully.", 
+      "next": "Download", 
+      "radio": {
+        "accept": "I accept the terms of the license agreement.", 
+        "deny": "I do not accept the terms of the license agreement."
+      }, 
+      "title": "License Agreement"
+    }, 
+    "label": {
+      "currentVersion": "Current version", 
+      "disclaimer": "Disclaimer", 
+      "updateInfo": "Update description"
+    }, 
+    "message": {
+      "newApp": "A new Digital Paper App version {{versionNew}} is available.", 
+      "newDp": "A new Digital Paper system software (version {{versionNew}}) is available."
+    }, 
+    "progress": {
+      "downloadFile": "Downloading update file...", 
+      "remainTime": "Remaining time (estimated)", 
+      "slash": "/", 
+      "title": "Software Update", 
+      "transferFile": "Transferring update file to Digital Paper..."
+    }, 
+    "title": "Digital Paper App"
+  }, 
+  "wifi": {
+    "netmask": {
+      "list": {
+        "mask0": "0.0.0.0", 
+        "mask1": "128.0.0.0", 
+        "mask10": "255.192.0.0", 
+        "mask11": "255.224.0.0", 
+        "mask12": "255.240.0.0", 
+        "mask13": "255.248.0.0", 
+        "mask14": "255.252.0.0", 
+        "mask15": "255.254.0.0", 
+        "mask16": "255.255.0.0", 
+        "mask17": "255.255.128.0", 
+        "mask18": "255.255.192.0", 
+        "mask19": "255.255.224.0", 
+        "mask2": "192.0.0.0", 
+        "mask20": "255.255.240.0", 
+        "mask21": "255.255.248.0", 
+        "mask22": "255.255.252.0", 
+        "mask23": "255.255.254.0", 
+        "mask24": "255.255.255.0", 
+        "mask25": "255.255.255.128", 
+        "mask26": "255.255.255.192", 
+        "mask27": "255.255.255.224", 
+        "mask28": "255.255.255.240", 
+        "mask29": "255.255.255.248", 
+        "mask3": "224.0.0.0", 
+        "mask30": "255.255.255.252", 
+        "mask31": "255.255.255.254", 
+        "mask32": "255.255.255.255", 
+        "mask4": "240.0.0.0", 
+        "mask5": "248.0.0.0", 
+        "mask6": "252.0.0.0", 
+        "mask7": "254.0.0.0", 
+        "mask8": "255.0.0.0", 
+        "mask9": "255.128.0.0"
+      }
+    }, 
+    "secMethod": {
+      "8021xEap": "802.1x EAP (AES)", 
+      "open": "Open system authentication", 
+      "wpa2Psk": "WPA2-PSK (AES)"
+    }, 
+    "ssid": "SSID", 
+    "status": {
+      "connect": "Connected", 
+      "connecting": "Connecting", 
+      "disconnect": "Disconnected"
+    }
+  }, 
+  "wizard": {
+    "connect": {
+      "header": "Connect to Digital Paper"
+    }
+  }
+}

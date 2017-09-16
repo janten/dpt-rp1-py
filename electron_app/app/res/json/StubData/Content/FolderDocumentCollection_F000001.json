@@ -1,0 +1,41 @@
+﻿{
+    "count": 2,
+    "entry_list": [
+        {
+            "entry_id": "000003",
+            "entry_name": "Name-000003",
+            "entry_path": "document/Folder0001/Name-000003.pdf",
+            "entry_type": "document",
+            "created_date": "2016-01-01T00:03:00Z",
+            "modified_date": "2016-01-01T02:03:00Z",
+            "mime_type": "",
+            "file_size": "1003",
+            "document_type": "normal",
+            "author": "Author-000003",
+            "title": "Title-000003",
+            "total_page": "10",
+            "reading_date": "2016-01-01T01:03:00Z",
+            "parent_folder_id": "F000001",
+            "is_new": "false",
+            "document_source": ""
+        },
+        {
+            "entry_id": "000004",
+            "entry_name": "Name-000004",
+            "entry_path": "document/Folder0001/Name-000004.pdf",
+            "entry_type": "document",
+            "created_date": "2016-01-01T00:04:00Z",
+            "modified_date": "2016-01-01T02:04:00Z",
+            "mime_type": "",
+            "file_size": "1003",
+            "document_type": "note",
+            "author": "Author-000004",
+            "title": "Title-000004",
+            "total_page": "10",
+            "reading_date": "2016-01-01T01:04:00Z",
+            "parent_folder_id": "F000001",
+            "is_new": "false",
+            "document_source": ""
+        }
+    ]
+}

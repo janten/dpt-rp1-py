@@ -1,0 +1,207 @@
+/* line 1, _base.scss */
+body {
+  height: 100%;
+  font-family: Arial,Helvetica,sans-serif;
+  overflow: auto;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+/* line 16, _base.scss */
+body article .ui-btn, body article .ui-slider {
+  z-index: 2;
+}
+/* line 20, _base.scss */
+body article section.normal-screen {
+  padding: 0;
+}
+/* line 23, _base.scss */
+body article section.fullscreen {
+  position: absolute;
+  padding: 0;
+  margin: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+/* line 32, _base.scss */
+body article section.fixed-screen {
+  position: absolute;
+  padding: 0;
+  top: 45px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+/* line 50, _dialog_base.scss */
+label {
+  font-size: 12px;
+  color: #333333;
+}
+
+/* line 55, _dialog_base.scss */
+input[type=textbox],
+input[type=text],
+input[type=password] {
+  border: solid 1px;
+  border-color: #CCCCCC;
+  background-color: #FFFFFF;
+  height: 22px;
+  text-indent: 8px;
+  font-size: 12px;
+  padding: 0;
+}
+
+/* line 67, _dialog_base.scss */
+input[type=text]:focus {
+  outline: 2px solid #49D2FF;
+}
+
+/* line 71, _dialog_base.scss */
+button,
+input[type=button] {
+  font-size: 12px;
+  background-color: #FAFAFA;
+  border-color: #CCCCCC;
+  color: #333333;
+  width: 160px;
+  margin-left: 8px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 2px;
+  outline: none;
+}
+
+/* line 84, _dialog_base.scss */
+button:focus,
+input[type=button]:focus {
+  outline: 2px solid #49D2FF;
+}
+
+/* line 88, _dialog_base.scss */
+button:hover,
+input[type=button]:hover {
+  background-color: #FBFBFB;
+  border-color: #DBDBDB;
+  color: #5C5C5C;
+}
+
+/* line 94, _dialog_base.scss */
+button:active,
+input[type=button]:active {
+  background-color: #D9D9D9;
+  border-color: #BBBBBB;
+  color: #1A1A1A;
+}
+
+/* line 100, _dialog_base.scss */
+button[disabled],
+input[type=button][disabled] {
+  opacity: .2;
+}
+
+/* line 105, _dialog_base.scss */
+select {
+  border: solid 1px;
+  border-color: #CCCCCC;
+  background-color: #FFFFFF;
+  text-indent: 4px;
+  outline: none;
+}
+
+/* line 113, _dialog_base.scss */
+select:focus {
+  outline: 2px solid #49D2FF;
+}
+
+/* line 117, _dialog_base.scss */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  cursor: default;
+}
+/* line 123, _dialog_base.scss */
+html article,
+body article {
+  outline: none;
+}
+
+/* line 3, dialog_edit.scss */
+article {
+  padding: 32px;
+  outline: none;
+}
+/* line 6, dialog_edit.scss */
+article .main {
+  overflow: hidden;
+  margin-top: -3px;
+  padding: 0;
+}
+/* line 10, dialog_edit.scss */
+article .main .message-area {
+  width: 350px;
+  overflow: hidden;
+}
+/* line 14, dialog_edit.scss */
+article .main .input-area {
+  margin-top: 28px;
+}
+/* line 16, dialog_edit.scss */
+article .main .input-area #editbox {
+  width: 416px;
+}
+/* line 20, dialog_edit.scss */
+article .main .outline-set:focus {
+  outline: 2px solid #49D2FF;
+}
+/* line 23, dialog_edit.scss */
+article .main .outline-clear:focus {
+  outline: none;
+}
+/* line 27, dialog_edit.scss */
+article .btn-area {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding-right: 16px;
+  height: 48px;
+  border-top: solid 1px;
+  border-top-color: #E5E5E5;
+}
+/* line 36, dialog_edit.scss */
+article .btn-area .btn-line {
+  height: 24px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding-right: 16px;
+}
+/* line 46, dialog_edit.scss */
+article .btn-area .btn-line button {
+  height: 24px;
+  float: right;
+  margin-left: 8px;
+}
+/* line 52, dialog_edit.scss */
+article .btn-area .outline-set:focus {
+  outline: 2px solid #49D2FF;
+}
+/* line 55, dialog_edit.scss */
+article .btn-area .outline-clear:focus {
+  outline: none;
+}

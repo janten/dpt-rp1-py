@@ -1,0 +1,9 @@
+﻿{ 
+    "deviceId":  "1234567890",
+    "name":  "Digital Paper Stub",
+    "phyType":  "USB",
+    "remoteIp":  "",
+    "remotePort":  "",
+    "localIp": "",
+    "baseUrl":  ""
+}

@@ -1,0 +1,32 @@
+﻿[
+    {
+        "deviceId": "11111111111",
+        "name": "Digital Paper Stub",
+        "phyType": "OTHER",
+        "remoteIp": "",
+        "remotePort": "",
+        "localIp": "",
+        "baseUrl": "",
+        "connectionState":  "disconnected"
+    },
+    {
+        "deviceId": "22222222222",
+        "name": "Digital Paper Stub",
+        "phyType": "OTHER",
+        "remoteIp": "",
+        "remotePort": "",
+        "localIp": "",
+        "baseUrl": "",
+        "connectionState":  "disconnected"
+    },
+    {
+        "deviceId": "1234567890",
+        "name": "Digital Paper Stub",
+        "phyType": "USB",
+        "remoteIp": "",
+        "remotePort": "",
+        "localIp": "",
+        "baseUrl": "",
+        "connectionState":  "disconnected"
+    }
+]

@@ -1,0 +1,244 @@
+/* line 1, _base.scss */
+body {
+  height: 100%;
+  font-family: Arial,Helvetica,sans-serif;
+  overflow: auto;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+/* line 16, _base.scss */
+body article .ui-btn, body article .ui-slider {
+  z-index: 2;
+}
+/* line 20, _base.scss */
+body article section.normal-screen {
+  padding: 0;
+}
+/* line 23, _base.scss */
+body article section.fullscreen {
+  position: absolute;
+  padding: 0;
+  margin: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+/* line 32, _base.scss */
+body article section.fixed-screen {
+  position: absolute;
+  padding: 0;
+  top: 45px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+/* line 50, _dialog_base.scss */
+label {
+  font-size: 12px;
+  color: #333333;
+}
+
+/* line 55, _dialog_base.scss */
+input[type=textbox],
+input[type=text],
+input[type=password] {
+  border: solid 1px;
+  border-color: #CCCCCC;
+  background-color: #FFFFFF;
+  height: 22px;
+  text-indent: 8px;
+  font-size: 12px;
+  padding: 0;
+}
+
+/* line 67, _dialog_base.scss */
+input[type=text]:focus {
+  outline: 2px solid #49D2FF;
+}
+
+/* line 71, _dialog_base.scss */
+button,
+input[type=button] {
+  font-size: 12px;
+  background-color: #FAFAFA;
+  border-color: #CCCCCC;
+  color: #333333;
+  width: 160px;
+  margin-left: 8px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 2px;
+  outline: none;
+}
+
+/* line 84, _dialog_base.scss */
+button:focus,
+input[type=button]:focus {
+  outline: 2px solid #49D2FF;
+}
+
+/* line 88, _dialog_base.scss */
+button:hover,
+input[type=button]:hover {
+  background-color: #FBFBFB;
+  border-color: #DBDBDB;
+  color: #5C5C5C;
+}
+
+/* line 94, _dialog_base.scss */
+button:active,
+input[type=button]:active {
+  background-color: #D9D9D9;
+  border-color: #BBBBBB;
+  color: #1A1A1A;
+}
+
+/* line 100, _dialog_base.scss */
+button[disabled],
+input[type=button][disabled] {
+  opacity: .2;
+}
+
+/* line 105, _dialog_base.scss */
+select {
+  border: solid 1px;
+  border-color: #CCCCCC;
+  background-color: #FFFFFF;
+  text-indent: 4px;
+  outline: none;
+}
+
+/* line 113, _dialog_base.scss */
+select:focus {
+  outline: 2px solid #49D2FF;
+}
+
+/* line 117, _dialog_base.scss */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  cursor: default;
+}
+/* line 123, _dialog_base.scss */
+html article,
+body article {
+  outline: none;
+}
+
+/* line 3, dialog_general_setting.scss */
+body,
+html {
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+/* line 10, dialog_general_setting.scss */
+.main {
+  padding: 32px;
+  overflow: hidden;
+  outline: none;
+  font-size: 12px;
+  position: absolute;
+  top: 0;
+  bottom: 48px;
+  left: 0;
+  right: 0;
+}
+/* line 20, dialog_general_setting.scss */
+.main ul {
+  display: none;
+}
+/* line 23, dialog_general_setting.scss */
+.main select,
+.main input {
+  width: 300px;
+  height: 24px;
+}
+/* line 28, dialog_general_setting.scss */
+.main .detail-form {
+  margin-left: -8px;
+  margin-top: -16px;
+  font-size: 12px;
+  border-collapse: separate;
+  border-spacing: 8px 15px;
+}
+/* line 34, dialog_general_setting.scss */
+.main .detail-form .detail-label {
+  margin-top: -10px;
+}
+/* line 36, dialog_general_setting.scss */
+.main .detail-form .detail-label span {
+  vertical-align: top;
+  color: #808080;
+}
+/* line 41, dialog_general_setting.scss */
+.main .detail-form .lbl {
+  white-space: nowrap;
+}
+/* line 44, dialog_general_setting.scss */
+.main .detail-form .nolbl {
+  width: 1px;
+}
+/* line 47, dialog_general_setting.scss */
+.main .detail-form .short {
+  margin-top: -10px;
+  vertical-align: middle;
+}
+/* line 52, dialog_general_setting.scss */
+.main .outline-set:focus {
+  outline: 2px solid #49D2FF;
+}
+/* line 55, dialog_general_setting.scss */
+.main .outline-clear:focus {
+  outline: none;
+}
+
+/* line 60, dialog_general_setting.scss */
+.btn-area {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding-right: 16px;
+  height: 48px;
+  border-top: solid 1px;
+  border-top-color: #E5E5E5;
+}
+/* line 69, dialog_general_setting.scss */
+.btn-area .btn-line {
+  height: 24px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding-right: 16px;
+}
+/* line 79, dialog_general_setting.scss */
+.btn-area .btn-line input[type="button"] {
+  height: 24px;
+  float: right;
+  margin-left: 8px;
+}
+/* line 85, dialog_general_setting.scss */
+.btn-area .outline-set:focus {
+  outline: 2px solid #49D2FF;
+}
+/* line 88, dialog_general_setting.scss */
+.btn-area .outline-clear:focus {
+  outline: none;
+}

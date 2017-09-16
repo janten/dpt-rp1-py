@@ -1,0 +1,115 @@
+<div id="document-list">
+    <div class="list-view-img-box" id="list-view-waitting-icon" style="z-index: 1; position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%,-50%);
+        margin: auto;
+        width: 60px;
+        display: none;
+        ">
+        <object data="../res/image/svg/Asset_Altair_Dialog_Processing.svg" type="image/svg+xml" id="list-view-wait" class="list-view-wait-img" data-role="none">
+        </object>
+    </div>
+    <div id="tablecaptain">
+        <div class="tr" id="columns">
+            <div class="th" id="colMark" col-name="mark">
+                <span> </span>
+            </div>
+            <div class="th" id="tablename" col-name="documentName">
+                <span id="header_tablename" data-i18n="content.list.header.file"></span>
+                <div class="resizer"></div>
+                <div class="img">
+                    <img src="../res/image/svg/Asset_Altair_Main_List_Sort_Down_Selected_Rest.svg" />
+                </div>
+            </div>
+            <div class="th" id="tabletitle" col-name="documentTitle">
+                <span id="header_tabletitle" data-i18n="content.list.header.title"></span>
+                <div class="resizer"></div>
+                <div class="img">
+                    <img src="../res/image/svg/Asset_Altair_Main_List_Sort_Down_Selected_Rest.svg" />
+                </div>
+            </div>
+            <div class="th" id="tableauthor" col-name="documentAuthor">
+                <span id="header_tableauthor" data-i18n="content.list.header.author"></span>
+                <div class="resizer"></div>
+                <div class="img">
+                    <img src="../res/image/svg/Asset_Altair_Main_List_Sort_Down_Selected_Rest.svg" />
+                </div>
+            </div>
+            <div class="th" id="tableupdateddate" col-name="modifiedDate">
+                <span id="header_tableupdateddate" data-i18n="content.list.header.dateModified"></span>
+                <div class="resizer"></div>
+                <div class="img">
+                    <img src="../res/image/svg/Asset_Altair_Main_List_Sort_Down_Selected_Rest.svg" />
+                </div>
+            </div>
+            <div class="th" id="tableaddeddate" col-name="addedDate">
+                <span id="header_tableaddeddate" data-i18n="content.list.header.dateAdded"></span>
+                <div class="resizer"></div>
+                <div class="img">
+                    <img src="../res/image/svg/Asset_Altair_Main_List_Sort_Down_Selected_Rest.svg" />
+                </div>
+            </div>
+            <div class="th" id="tablereaddate" col-name="readDate">
+                <span id="header_tablereaddate" data-i18n="content.list.header.dateRead"></span>
+                <div class="resizer"></div>
+                <div class="img">
+                    <img src="../res/image/svg/Asset_Altair_Main_List_Sort_Down_Selected_Rest.svg" />
+                </div>
+            </div>
+            <div class="th" id="filesize" col-name="documentSize">
+                <span id="header_filesize" data-i18n="content.list.header.size"></span>
+                <div class="resizer"></div>
+                <div class="img">
+                    <img src="../res/image/svg/Asset_Altair_Main_List_Sort_Down_Selected_Rest.svg" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="scrolltable">
+        <div id="list-no-data">
+            <label id="no-data-text"></label>
+        </div>
+        <div id="tablelist" data-role="none">
+            <div id="tbody" data-role="none">
+                <div id="topBlock" class="displayBlock"></div>
+                <div id="midBlock" class="displayBlock"></div>
+                <div id="btmBlock" class="displayBlock"></div>
+            </div>
+        </div>
+    </div>
+    <script type="text/template" id="template_document">
+        {{#document}}
+        <div class="document{{selected}}" data-entry-id="{{dataEntryId}}" data-entry-index="{{dataEntryIndex}}" data-entry-type="{{dataEntryType}}" entry-path="{{entryPath}}" style="top:{{positionTop}}px" data-role="none" draggable="true">
+            <div class="cell mark" data-role="none">
+                <!--                        {{#isFolder}}
+                        <img class="documenticon" src="../res/image/svg/Asset_Altair_Main_List_File_Type_Folder.svg" data-role="none">
+                        {{/isFolder}}
+                        {{#isNote}}
+                        <img class="documenticon" src="../res/image/svg/Asset_Altair_Main_List_File_Type_Note.svg" data-role="none">
+                        {{/isNote}}
+                        {{#isNotNote}}
+                        <img class="documenticon" src="../res/image/svg/Asset_Altair_Main_List_File_Type_Document.svg" data-role="none">
+                        {{/isNotNote}} -->
+                <!--                        {{#isNew}}
+                        <img class="newicon" src="../res/image/svg/Asset_Altair_Main_List_File_New.svg" data-role="none">
+                        {{/isNew}}
+                        <img class="documenticon" src="{{fileTypeImg}}" data-role="none"> -->
+                <div class="newicon {{isNew}}"></div>
+                <div class="documenticon {{fileTypeImg}}">
+                    <span class="tooltiptext" style="line-height:12px;">{{tooltip}}</span>
+                </div>
+                <!-- <img src="../res/image/svg/Asset_Altair_Main_List_File_Type_Folder.svg" data-role="none" /> -->
+            </div>
+            <div class="cell documentName" data-role="none" style="white-space:pre;">{{documentName}}</div>
+            <div class="cell documentTitle" data-role="none" style="white-space:pre;">{{documentTitle}}</div>
+            <div class="cell documentAuthor" data-role="none" style="white-space:pre;">{{documentAuthor}}</div>
+            <div class="cell modifiedDate" data-role="none">{{modifiedDate}}</div>
+            <div class="cell addedDate" data-role="none">{{addedDate}}</div>
+            <div class="cell readDate" data-role="none">{{readDate}}</div>
+            <div class="cell documentSize" data-role="none">{{documentSize}}</div>
+            <!-- <hr class="line"> -->
+            <div class="line2"></div>
+        </div>
+        {{/document}}
+    </script>
+</div>

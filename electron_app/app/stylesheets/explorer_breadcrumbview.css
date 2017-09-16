@@ -1,0 +1,78 @@
+/* line 6, explorer_breadcrumbview.scss */
+#breadcrumb {
+  width: 100%;
+  height: 32px;
+}
+/* line 9, explorer_breadcrumbview.scss */
+#breadcrumb div {
+  margin-left: 8px;
+  height: 32px;
+  padding-top: 10px;
+  display: inline-flex;
+  width: auto;
+  min-width: 250px;
+  text-shadow: none;
+}
+/* line 17, explorer_breadcrumbview.scss */
+#breadcrumb div img {
+  height: 24px;
+  width: 24px;
+  margin-top: -5px;
+}
+/* line 22, explorer_breadcrumbview.scss */
+#breadcrumb div label {
+  font-size: 12px;
+  color: #808080;
+}
+/* line 26, explorer_breadcrumbview.scss */
+#breadcrumb div a {
+  font-size: 12px;
+  color: #808080;
+  cursor: pointer;
+  text-decoration: underline;
+  font-weight: normal;
+  text-shadow: none;
+  display: inline-table;
+}
+/* line 35, explorer_breadcrumbview.scss */
+#breadcrumb div a.ui-state-disabled {
+  opacity: 1;
+  cursor: default !important;
+  pointer-events: none;
+  font-weight: normal;
+  text-shadow: none;
+  text-decoration: none;
+}
+/* line 43, explorer_breadcrumbview.scss */
+#breadcrumb div span.dispFolder {
+  font-size: 12px;
+  color: #808080;
+  cursor: default;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+/* line 51, explorer_breadcrumbview.scss */
+#breadcrumb div span {
+  font-size: 12px;
+  color: #808080;
+}
+/* line 55, explorer_breadcrumbview.scss */
+#breadcrumb div span.sign {
+  font-size: 12px;
+  color: #808080;
+}
+/* line 59, explorer_breadcrumbview.scss */
+#breadcrumb div span.space {
+  font-size: 12px;
+  color: #808080;
+  width: 8px;
+}
+/* line 64, explorer_breadcrumbview.scss */
+#breadcrumb div a:hover {
+  color: #D9D9D9;
+}
+/* line 67, explorer_breadcrumbview.scss */
+#breadcrumb div a:active {
+  color: #333333;
+}

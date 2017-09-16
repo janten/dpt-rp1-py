@@ -1,0 +1,32 @@
+<article data-role="page" id="page-software-update" data-theme="a">
+    <div id='update-detect'>
+        <section id="update-message-area" data-role="none">
+            <li>
+                <label data-i18n="update.message.newDp" id="new-version-message"></label>
+            </li>
+            <li>
+                <label data-i18n="update.label.currentVersion" id="current-version-message">
+                </label>
+                <span data-i18n="update.currentVersion.value" id="current-version"></span>
+            </li>
+        </section>
+        <section id="update-overview-sec" data-role="none">
+            <h1 data-i18n="update.label.updateInfo"></h1>
+            <div id="description" rows="4" cols="80" readonly data-role="none"></div>
+        </section>
+        <section id="disclaimer-sec" data-role="none">
+            <h1 data-i18n="update.label.disclaimer"></h1>
+            <div id="disclaimer" rows="4" cols="80" readonly data-role="none"></div>
+        </section>
+        <div id="accept-update-area" data-role="none">
+            <input type="checkbox" id="accept-checkbox" value="" data-role="none">
+            <label id="accept-checkbox-lbl" data-i18n="update.button.agreeUpdate" for="accept-checkbox" data-role="none" class="rest" tabindex="1"></label>
+        </div>
+        <div id="footer-area">
+            <input type="button" id="cancel-button" value="" data-i18n="[value]update.button.later" data-role="none" tabindex="99"/>
+            <input type="button" id="update-button" value="" data-i18n="[value]update.button.execUpdate" disabled data-role="none" tabindex="98"/>
+        </div>
+    </div>
+    <div id='update-eula'>
+    </div>
+</article>

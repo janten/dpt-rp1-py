@@ -1,0 +1,20 @@
+{
+    "ssid": "ssid111111111",
+    "security": "eap",
+    "passwd": "passwd",
+    "dhcp": "dhcp",
+    "static_address": "192.168.151.124",
+    "gateway": "192.168.151.100",
+    "network_mask": "255.255.255.0",
+    "dns1": "192.168.1.1",
+    "dns2": "192.168.1.2",
+    "proxy": "proxy",
+    "proxy_host": "proxy_host",
+    "proxy_port": "proxy_port",
+    "eap": "tls",
+    "eap_phase2": "mschapv2",
+    "eap_id": "eap_id",
+    "eap_anid": "eap_anid",
+    "eap_cacert": "ca2",
+    "eap_cert": "client1"
+}

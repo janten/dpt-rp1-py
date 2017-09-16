@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <!-- <title>Digital Paper App</title> -->
+
+    <!-- style sheet entry -->
+    <link rel="stylesheet" href="modules/jquery/stylesheets/jquery.mobile.css" />
+
+    <!-- application: stylesheets -->
+    <link rel="stylesheet" href="stylesheets/explorer.css" />
+
+    <!-- application: utils entry -->
+    <script defer type="lazy" src="scripts/Utils/WindowUtils.js"></script>
+    <script defer type="lazy" src="scripts/Utils/StringUtils.js"></script>
+    <script defer type="lazy" src="scripts/Utils/PathUtils.js"></script>
+    <script defer type="lazy" src="scripts/Utils/LocalFileUtils.js"></script>
+    <script defer type="lazy" src="scripts/Utils/LocalFilePromiseUtils.js"></script>
+    <script defer type="lazy" src="scripts/Utils/DatabaseUtils.js"></script>
+    <script defer type="lazy" src="scripts/Utils/TestRunner.js"></script>
+    <script defer type="lazy" src="scripts/Utils/LocalStorageUtils.js"></script>
+
+     <!-- application: model entry -->
+    <script type="lazy" src="scripts/Model/Common/_module_scripts.html"></script>
+    <script type="lazy" src="scripts/Model/Content/_module_scripts.html"></script>
+    <script type="lazy" src="scripts/Model/Device/_module_scripts.html"></script>
+    <script type="lazy" src="scripts/Model/DeviceSetting/_module_scripts.html"></script>
+    <script type="lazy" src="scripts/Model/NoteTemplate/_module_scripts.html"></script>
+    <script type="lazy" src="scripts/Model/WiFiSetting/_module_scripts.html"></script>
+    <script type="lazy" src="scripts/Model/FolderSync/_module_scripts.html"></script>
+
+    <!-- application: common entry -->
+    <script defer type="lazy" src="scripts/AppCtrl/_module_scripts.html"></script>
+
+    <!-- application: view.dialog entry -->
+    <script defer type="lazy" src="scripts/View/Dialog/DialogDefs.js"></script>
+    <script defer type="lazy" src="scripts/View/Dialog/DialogBase.js"></script>
+    <script defer type="lazy" src="scripts/View/Dialog/OpenChildDialogs.js"></script>
+    <script defer type="lazy" src="scripts/View/Dialog/OpenDialogs.js"></script>
+    <script defer type="lazy" src="scripts/View/SoftwareUpdate/SoftwareUpdateDefs.js"></script>
+
+    <!-- application: view entry -->
+    <script defer type="lazy" src="scripts/View/Explorer/ExplorerDefs.js"></script>
+    <script defer type="lazy" src="scripts/View/Explorer/Status/_module_scripts.html"></script>
+    <script defer type="lazy" src="scripts/View/Explorer/Handler/_module_scripts.html"></script>
+    <script defer type="lazy" src="scripts/View/Explorer/ExplorerUtils.js"></script>
+    <script defer type="lazy" src="scripts/View/Explorer/ExplorerMenu.js"></script>
+    <script defer type="lazy" src="scripts/View/Explorer/ExplorerUnconnectedView.js"></script>
+    <script defer type="lazy" src="scripts/View/Explorer/ExplorerBreadcrumbView.js"></script>
+    <script defer type="lazy" src="scripts/View/Explorer/ExplorerToolbarView.js"></script>
+    <script defer type="lazy" src="scripts/View/Explorer/ExplorerOperationView.js"></script>
+    <script defer type="lazy" src="scripts/View/Explorer/ExplorerSearchStatusView.js"></script>
+    <script defer type="lazy" src="scripts/View/Explorer/ExplorerListView.js"></script>
+    <script defer type="lazy" src="scripts/View/Explorer/ExplorerFooterView.js"></script>
+    <script defer type="lazy" src="scripts/View/Explorer/ExplorerBaseView.js"></script>
+    <script defer type="lazy" src="scripts/View/Explorer/ExplorerPage.js"></script>
+    <script defer type="lazy" src="scripts/View/Explorer/FsPromise.js"></script>
+</head>
+<body>
+    <div data-role="page" id="splash"></div>
+    <!-- foundation script entry -->
+    <script src="scripts/config.js"></script>
+    <script src="modules/requirejs/scripts/require.js" data-main="scripts/init_explorer"></script>
+    <div style="width: 100%; height: 100%; z-index: 100; position: absolute; visibility: hidden;" id="modal-lock-panel"></div>
+</body>
+</html>

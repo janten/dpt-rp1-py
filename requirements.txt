@@ -1,0 +1,8 @@
+certifi==2017.7.27.1
+chardet==3.0.4
+httpsig==1.1.2
+idna==2.6
+pycrypto==2.6.1
+requests==2.18.4
+six==1.10.0
+urllib3==1.22

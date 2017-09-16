@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <!-- <title data-i18n='sync.introduce.title'></title> -->
+    <!-- <ATELIERMARKUP type="load-stylesheet" /> -->
+    <link rel="stylesheet" href="stylesheets/dialog_sync_introduction.css" />
+    <!-- <ATELIERMARKUP type="load-library-script" /> -->
+    <!-- application: model entry -->
+    <!-- <ATELIERMARKUP type="load-model-script" /> -->
+    <!-- <ATELIERMARKUP type="load-collection-script" /> -->
+    <!-- application: view entry -->
+    <!-- <ATELIERMARKUP type="load-view-script" /> -->
+    <script defer type="lazy" src="scripts/View/Dialog/DialogDefs.js"></script>
+    <script defer type="lazy" src="scripts/View/Dialog/DialogBase.js"></script>
+    <script defer type="lazy" src="scripts/View/Dialog/OpenChildDialogs.js"></script>
+    <script defer type="lazy" src="scripts/View/Dialog/DialogSyncIntroduction.js"></script>
+    <!-- <ATELIERMARKUP type="load-page-script" /> -->
+</head>
+
+<body style="display: none;">
+    <article id="dialog-sync-result" data-role="page" data-corners="false" data-theme="none" data-overlay-theme="b">
+        <div id="title-list" class="main">
+            <p data-i18n='[html]sync.introduce.message'></p>
+            <div class="img">
+                <img src="res/image/svg/Asset_Altair_Setup_Instruction_Sync.svg" width="676px" height="320px">
+            </div>
+        </div>
+        <div class="btn-area" data-role="none">
+            <div class="btn-line" data-role="none">
+                <input type="button" id="cancel-button" data-role="none" data-i18n="[value]sync.introduce.goNext" tabindex="1"/>
+            </div>
+        </div>
+    </article>
+    <script src="scripts/config.js"></script>
+    <script src="modules/requirejs/scripts/require.js" data-main="scripts/init_dialog_sync_introduction"></script>
+    <div style="width: 100%; height: 100%; z-index: 100; position: absolute; visibility: hidden;" id="modal-lock-panel"></div>
+</body>
+
+</html>

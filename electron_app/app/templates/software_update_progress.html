@@ -1,0 +1,17 @@
+<article data-role="page" id="page-software-update-progress" data-theme="a">
+    <p id="download_transfer_progress"></p>
+    <div class='progress transfer_progress'>
+        <div id='download_progress_bar' class='bar'/></div>
+    </div>
+    <div class='transfer_finish'>
+        <span id='download_current'>0</span> <span data-i18n="update.progress.slash"></span> <span id='download_total'>0</span> <span data-i18n="app.format.fileSize.mega"/>
+    </div>
+    <div class='remaining_time'>
+        <label data-i18n="update.progress.remainTime"></label>
+        <span id='limit_time'></span>
+        <span id='remaining_time_unit' class='unit' ></span>
+    </div>
+    <div id="footer-area">
+        <input type="button" id="progress-cancel-button" value="" data-i18n="[value]app.words.cancel" data-role="none" tabindex="1"/>
+    </div>
+</article>

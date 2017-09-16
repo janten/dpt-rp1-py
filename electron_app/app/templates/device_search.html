@@ -1,0 +1,52 @@
+<!-- <article id="page-device-search-view" data-role="page" data-corners="false" data-theme="none" data-overlay-theme="b">
+ -->
+<article data-role="page" id="page-device-search-view" data-theme="a">
+    <header data-role="none" data-position="inline" data-i18n="searchDp.description">
+        <!-- デジタルペーパーとつなぐ -->
+    </header>
+    <header id="nodp" data-i18n="searchDp.noDp" style="display:none">
+    </header>
+    <div id="search-result-title" class="title">
+        <table>
+            <tr>
+                <td style="width: 52px"></td>
+                <td data-i18n="searchDp.label.serialNo" id="tdserialno">
+                    <!-- シリアル番号 -->
+                </td>
+                <td data-i18n="searchDp.label.connect" style="padding-left: 30px" id="tdconnect">
+                    <!-- 接続 -->
+                    searchDp.label.connectsearchDp.label.connectsearchDp.label.connect
+                </td>
+                <td data-i18n="searchDp.label.pairingStatus" style="padding-left:  30px" id="tdpairingStatus">
+                    <!-- ペアリング状況 -->
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="search-result-area" class="list" data-role="none">
+        <ul id="device-list" class="detail-list">
+        </ul>
+    </div>
+    <footer>
+        <div class="btn-area">
+            <button data-role="none" id="submit-button" data-inline="true" class="button" data-i18n="app.words.ok" disabled tabindex="-1">
+            </button>
+            <button data-role="none" id="cancel-button" data-inline="true" class="button" data-i18n="app.words.cancel" tabindex="99">
+            </button>
+        </div>
+    </footer>
+    <!-- Templates -->
+    <script type="text/template" id="device-template">
+        {{#device}}
+        <li id="{{deviceId}}">
+            <!-- <img src="../res/images/DP_Black.png" alt="Digital Paper" /> -->
+            <div class="img-box" data-role="none">
+                <object data="{{deviceIconUrl}}" type="image/svg+xml" id="device-black" class="device-img" data-role="none"></object>
+            </div>
+            <div class="deviceId" style="margin-left: 0px;display: inline-block;">{{deviceId}}</div>
+            <div class="phyType" style="padding-left: 28px;display: inline-block;">{{phyType}}</div>
+            <div class="connected" style="padding-left: 30px;display: inline-block;">{{connected}}</div>
+        </li>
+        {{/device}}
+    </script>
+</article>

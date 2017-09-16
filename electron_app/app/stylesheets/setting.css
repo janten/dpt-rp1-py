@@ -1,0 +1,824 @@
+/* line 1, _base.scss */
+body {
+  height: 100%;
+  font-family: Arial,Helvetica,sans-serif;
+  overflow: auto;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+/* line 16, _base.scss */
+body article .ui-btn, body article .ui-slider {
+  z-index: 2;
+}
+/* line 20, _base.scss */
+body article section.normal-screen {
+  padding: 0;
+}
+/* line 23, _base.scss */
+body article section.fullscreen {
+  position: absolute;
+  padding: 0;
+  margin: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+/* line 32, _base.scss */
+body article section.fixed-screen {
+  position: absolute;
+  padding: 0;
+  top: 45px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+/* line 3, setting.scss */
+html,
+body {
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  cursor: default;
+}
+
+/* line 11, setting.scss */
+#page-setting-view {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0;
+  width: inherit;
+  margin: 0;
+  background-color: #FFFFFF;
+  overflow: hidden;
+}
+/* line 84, _setting_base.scss */
+#page-setting-view h1 {
+  margin: 0;
+  font-size: 12px;
+  color: #333333;
+  font-weight: bold;
+}
+/* line 91, _setting_base.scss */
+#page-setting-view li {
+  list-style-type: none;
+  padding: 0;
+  background-color: #FFFFFF;
+}
+/* line 96, _setting_base.scss */
+#page-setting-view li:hover {
+  background-color: #F4FCFE;
+}
+/* line 99, _setting_base.scss */
+#page-setting-view li.selected {
+  background-color: #C8F0FA;
+}
+/* line 102, _setting_base.scss */
+#page-setting-view li.subselected {
+  background-color: #E1F5FA;
+}
+/* line 105, _setting_base.scss */
+#page-setting-view ul.disabled li {
+  opacity: .2;
+  background-color: #FFFFFF;
+}
+/* line 110, _setting_base.scss */
+#page-setting-view hr {
+  size: 1px;
+  color: #E5E5E5;
+}
+/* line 115, _setting_base.scss */
+#page-setting-view label {
+  font-size: 12px;
+  color: #333333;
+}
+/* line 120, _setting_base.scss */
+#page-setting-view input[type=password],
+#page-setting-view input[type=text],
+#page-setting-view input[type=textbox] {
+  border: solid 1px;
+  border-color: #CCCCCC;
+  background-color: #FFFFFF;
+  height: 22px;
+  text-indent: 8px;
+  font-size: 12px;
+  padding: 0;
+  outline: none;
+}
+/* line 133, _setting_base.scss */
+#page-setting-view button,
+#page-setting-view input[type=button] {
+  font-size: 12px;
+  background-color: #FAFAFA;
+  border-color: #CCCCCC;
+  color: #333333;
+  width: 160px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 2px;
+  outline: none;
+}
+/* line 145, _setting_base.scss */
+#page-setting-view input[type=button]:focus {
+  outline: 2px solid #49D2FF;
+}
+/* line 148, _setting_base.scss */
+#page-setting-view button:hover,
+#page-setting-view input[type=button]:hover {
+  background-color: #FBFBFB;
+  border-color: #DBDBDB;
+  color: #5C5C5C;
+}
+/* line 154, _setting_base.scss */
+#page-setting-view button:active,
+#page-setting-view input[type=button]:active {
+  background-color: #D9D9D9;
+  border-color: #BBBBBB;
+  color: #1A1A1A;
+}
+/* line 160, _setting_base.scss */
+#page-setting-view button[disabled],
+#page-setting-view input[type=button][disabled] {
+  opacity: .2;
+}
+/* line 165, _setting_base.scss */
+#page-setting-view select {
+  border: solid 1px;
+  border-color: #CCCCCC;
+  text-indent: 8px;
+  background-color: #FFFFFF;
+}
+/* line 172, _setting_base.scss */
+#page-setting-view input[type=checkbox],
+#page-setting-view input[type=radio] {
+  display: inline-block;
+  margin-right: 4px;
+}
+/* line 177, _setting_base.scss */
+#page-setting-view input[type=checkbox] + label,
+#page-setting-view input[type=radio] + label {
+  position: relative;
+  display: inline-block;
+  margin-right: 12px;
+  cursor: pointer;
+}
+@media (min-width: 1px) {
+  /* line 186, _setting_base.scss */
+  #page-setting-view input[type=checkbox],
+  #page-setting-view input[type=radio] {
+    display: none;
+    margin: 0;
+  }
+  /* line 191, _setting_base.scss */
+  #page-setting-view input[type=checkbox] + label,
+  #page-setting-view input[type=radio] + label {
+    padding: 0 0 0 20px;
+    font-size: 12px;
+    color: #333333;
+    margin: 0;
+    outline: none;
+  }
+  /* line 200, _setting_base.scss */
+  #page-setting-view input[type=checkbox] + label.radio-border-clear::before,
+  #page-setting-view input[type=radio] + label.radio-border-clear::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 210, _setting_base.scss */
+  #page-setting-view input[type=radio] + label.radio-border-clear::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FAFAFA;
+    border: 1px solid #CCCCCC;
+    border-radius: 30px;
+  }
+  /* line 218, _setting_base.scss */
+  #page-setting-view input[type=checkbox] + label.radio-border-clear::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FAFAFA;
+    border: 1px solid #CCCCCC;
+  }
+  /* line 225, _setting_base.scss */
+  #page-setting-view input[type=checkbox]:checked + label.radio-border-clear::after,
+  #page-setting-view input[type=radio]:checked + label.radio-border-clear::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 234, _setting_base.scss */
+  #page-setting-view input[type=radio]:checked + label.radio-border-clear::after {
+    display: block;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    margin-top: -5px;
+    background: #333333;
+    border-radius: 8px;
+  }
+  /* line 243, _setting_base.scss */
+  #page-setting-view input[type=checkbox]:checked + label.radio-border-clear::after {
+    left: 3px;
+    width: 12px;
+    height: 8px;
+    margin-top: -8px;
+    border-left: 2px solid #333333;
+    border-bottom: 2px solid #333333;
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+  }
+  /* line 255, _setting_base.scss */
+  #page-setting-view input[type=checkbox] + label.rest::before,
+  #page-setting-view input[type=radio] + label.rest::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 265, _setting_base.scss */
+  #page-setting-view input[type=radio] + label.rest::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FAFAFA;
+    border: 1px solid #CCCCCC;
+    border-radius: 30px;
+  }
+  /* line 273, _setting_base.scss */
+  #page-setting-view input[type=radio] + label.rest:focus::before {
+    border: 2px solid #49D2FF;
+  }
+  /* line 276, _setting_base.scss */
+  #page-setting-view input[type=radio] + label.disable:focus::before {
+    border: 2px solid #CCCCCC;
+    opacity: .8;
+  }
+  /* line 280, _setting_base.scss */
+  #page-setting-view input[type=checkbox] + label.rest::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FAFAFA;
+    border: 1px solid #CCCCCC;
+  }
+  /* line 287, _setting_base.scss */
+  #page-setting-view input[type=checkbox]:checked + label.rest::after,
+  #page-setting-view input[type=radio]:checked + label.rest::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 296, _setting_base.scss */
+  #page-setting-view input[type=radio]:checked + label.rest::after {
+    display: block;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    margin-top: -5px;
+    background: #333333;
+    border-radius: 8px;
+  }
+  /* line 305, _setting_base.scss */
+  #page-setting-view input[type=checkbox]:checked + label.rest::after {
+    left: 3px;
+    width: 12px;
+    height: 8px;
+    margin-top: -8px;
+    border-left: 2px solid #333333;
+    border-bottom: 2px solid #333333;
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+  }
+  /* line 317, _setting_base.scss */
+  #page-setting-view input[type=checkbox] + label.hover::before,
+  #page-setting-view input[type=radio] + label.hover::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 327, _setting_base.scss */
+  #page-setting-view input[type=radio] + label.hover::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FBFBFB;
+    border: 1px solid #DBDBDB;
+    border-radius: 30px;
+  }
+  /* line 335, _setting_base.scss */
+  #page-setting-view input[type=checkbox] + label.hover::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FBFBFB;
+    border: 1px solid #DBDBDB;
+  }
+  /* line 342, _setting_base.scss */
+  #page-setting-view input[type=checkbox]:checked + label.hover::after,
+  #page-setting-view input[type=radio]:checked + label.hover::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 351, _setting_base.scss */
+  #page-setting-view input[type=radio]:checked + label.hover::after {
+    display: block;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    margin-top: -5px;
+    background: #5C5C5C;
+    border-radius: 8px;
+  }
+  /* line 360, _setting_base.scss */
+  #page-setting-view input[type=checkbox]:checked + label.hover::after {
+    left: 3px;
+    width: 12px;
+    height: 8px;
+    margin-top: -8px;
+    border-left: 2px solid #5C5C5C;
+    border-bottom: 2px solid #5C5C5C;
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+  }
+  /* line 372, _setting_base.scss */
+  #page-setting-view input[type=checkbox] + label.hover-outline-appear::before,
+  #page-setting-view input[type=radio] + label.hover-outline-appear::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 382, _setting_base.scss */
+  #page-setting-view input[type=radio] + label.hover-outline-appear::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FBFBFB;
+    border: 2px solid #49D2FF;
+    border-radius: 30px;
+  }
+  /* line 390, _setting_base.scss */
+  #page-setting-view input[type=checkbox] + label.hover-outline-appear::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FBFBFB;
+    border: 2px solid #49D2FF;
+  }
+  /* line 397, _setting_base.scss */
+  #page-setting-view input[type=checkbox]:checked + label.hover-outline-appear::after,
+  #page-setting-view input[type=radio]:checked + label.hover-outline-appear::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 406, _setting_base.scss */
+  #page-setting-view input[type=radio]:checked + label.hover-outline-appear::after {
+    display: block;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    margin-top: -5px;
+    background: #5C5C5C;
+    border-radius: 8px;
+  }
+  /* line 415, _setting_base.scss */
+  #page-setting-view input[type=checkbox]:checked + label.hover-outline-appear::after {
+    left: 3px;
+    width: 12px;
+    height: 8px;
+    margin-top: -8px;
+    border-left: 2px solid #5C5C5C;
+    border-bottom: 2px solid #5C5C5C;
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+  }
+  /* line 427, _setting_base.scss */
+  #page-setting-view input[type=checkbox] + label.pressed::before,
+  #page-setting-view input[type=radio] + label.pressed::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 437, _setting_base.scss */
+  #page-setting-view input[type=radio] + label.pressed::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #D9D9D9;
+    border: 1px solid #BBBBBB;
+    border-radius: 30px;
+  }
+  /* line 445, _setting_base.scss */
+  #page-setting-view input[type=checkbox] + label.pressed::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #D9D9D9;
+    border: 1px solid #BBBBBB;
+  }
+  /* line 452, _setting_base.scss */
+  #page-setting-view input[type=checkbox]:checked + label.pressed::after,
+  #page-setting-view input[type=radio]:checked + label.pressed::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 461, _setting_base.scss */
+  #page-setting-view input[type=radio]:checked + label.pressed::after {
+    display: block;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    margin-top: -5px;
+    background: #333333;
+    border-radius: 8px;
+  }
+  /* line 470, _setting_base.scss */
+  #page-setting-view input[type=checkbox]:checked + label.pressed::after {
+    left: 3px;
+    width: 12px;
+    height: 8px;
+    margin-top: -8px;
+    border-left: 2px solid #333333;
+    border-bottom: 2px solid #333333;
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+  }
+}
+/* line 23, setting.scss */
+#page-setting-view div.customScrollbar {
+  /*hide button*/
+  /* Handle */
+}
+/* line 45, _setting_base.scss */
+#page-setting-view div.customScrollbar ::-webkit-scrollbar {
+  width: 6px;
+  opacity: 0.8;
+}
+/* line 49, _setting_base.scss */
+#page-setting-view div.customScrollbar ::-webkit-scrollbar:horizontal {
+  height: 6px;
+  opacity: 0.8;
+}
+/* line 54, _setting_base.scss */
+#page-setting-view div.customScrollbar ::-webkit-scrollbar-button {
+  width: 4px;
+  height: 4px;
+  background: #FFFFFF;
+}
+/* line 60, _setting_base.scss */
+#page-setting-view div.customScrollbar ::-webkit-scrollbar-thumb {
+  border-radius: 12px;
+  background: rgba(51, 51, 51, 0.8);
+  opacity: 0.8;
+  border-width: 1px 1px 1px 6px;
+  min-height: 24px;
+  padding-left: 2px;
+  opacity: 0.8;
+}
+/* line 70, _setting_base.scss */
+#page-setting-view div.customScrollbar ::-webkit-scrollbar-thumb:hover {
+  background: rgba(92, 92, 92, 0.8);
+  opacity: 0.8;
+}
+/* line 75, _setting_base.scss */
+#page-setting-view div.customScrollbar ::-webkit-scrollbar-thumb:active {
+  background: #333333;
+  opacity: 1;
+}
+/* line 26, setting.scss */
+#page-setting-view div.setting-sections {
+  position: absolute;
+  top: 0px;
+  bottom: 48px;
+  left: 0;
+  right: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 32px;
+}
+/* line 37, setting.scss */
+#page-setting-view div.setting-sections hr {
+  margin: 31px 0 0 0;
+  width: 100%;
+  border-bottom-width: 0px;
+  border-top-width: 1px;
+  border-left-width: 0px;
+  border-right-width: 0px;
+}
+/* line 45, setting.scss */
+#page-setting-view div.setting-sections div.hrline {
+  margin: 31px 0 0 0;
+  height: 1px;
+  background-color: #E5E5E5;
+}
+/* line 50, setting.scss */
+#page-setting-view div.setting-sections button,
+#page-setting-view div.setting-sections input[type=button] {
+  margin-right: 4px;
+  margin-left: 0;
+  height: 24px;
+}
+/* line 57, setting.scss */
+#page-setting-view div.setting-sections div.bttitle-row {
+  width: 497px;
+}
+/* line 59, setting.scss */
+#page-setting-view div.setting-sections div.bttitle-row div.bttitle-area {
+  margin-top: 32px;
+  display: inline-block;
+  width: 300px;
+}
+/* line 64, setting.scss */
+#page-setting-view div.setting-sections div.bttitle-row div.bt-switch-area {
+  margin-top: 30px;
+  float: right;
+  display: inline-block;
+  width: 150px;
+  margin-right: 0;
+}
+/* line 70, setting.scss */
+#page-setting-view div.setting-sections div.bttitle-row div.bt-switch-area label,
+#page-setting-view div.setting-sections div.bttitle-row div.bt-switch-area input[type=radio] {
+  margin-left: 8px;
+  float: right;
+}
+/* line 77, setting.scss */
+#page-setting-view div.setting-sections div.btdescription-row {
+  width: 497px;
+  display: inline-block;
+  margin-top: 13px;
+  margin-left: 12px;
+  font-size: 12px;
+  color: #808080;
+}
+/* line 85, setting.scss */
+#page-setting-view div.setting-sections div.synctitle-row {
+  width: 497px;
+}
+/* line 87, setting.scss */
+#page-setting-view div.setting-sections div.synctitle-row div.synctitle-area {
+  margin-top: 32px;
+  display: inline-block;
+  width: 300px;
+}
+/* line 92, setting.scss */
+#page-setting-view div.setting-sections div.synctitle-row div.sync-switch-area {
+  margin-top: 30px;
+  float: right;
+  display: inline-block;
+  width: 150px;
+  margin-right: 0;
+}
+/* line 98, setting.scss */
+#page-setting-view div.setting-sections div.synctitle-row div.sync-switch-area label,
+#page-setting-view div.setting-sections div.synctitle-row div.sync-switch-area input[type=radio] {
+  margin-left: 8px;
+  float: right;
+}
+/* line 105, setting.scss */
+#page-setting-view div.setting-sections div.syncdescription-row {
+  display: inline-block;
+  margin-top: 34px;
+  margin-left: 12px;
+}
+/* line 109, setting.scss */
+#page-setting-view div.setting-sections div.syncdescription-row label {
+  font-size: 12px;
+  color: #808080;
+}
+/* line 114, setting.scss */
+#page-setting-view div.setting-sections div.syncinterval-row {
+  display: inline-block;
+  margin-top: 13px;
+}
+/* line 117, setting.scss */
+#page-setting-view div.setting-sections div.syncinterval-row div.syncinterval-title {
+  position: absolute;
+  right: 200px;
+  text-align: right;
+  width: 100px;
+}
+/* line 123, setting.scss */
+#page-setting-view div.setting-sections div.syncinterval-row select,
+#page-setting-view div.setting-sections div.syncinterval-row input {
+  width: 160px;
+  height: 24px;
+}
+/* line 128, setting.scss */
+#page-setting-view div.setting-sections div.syncinterval-row div.val {
+  height: 24px;
+  position: absolute;
+  right: 32px;
+  font-size: 12px;
+}
+/* line 133, setting.scss */
+#page-setting-view div.setting-sections div.syncinterval-row div.val #autosync-interval:focus {
+  outline: 2px solid #49D2FF;
+}
+/* line 139, setting.scss */
+#page-setting-view div.setting-sections .disable {
+  opacity: .2;
+  cursor: default;
+}
+/* line 144, setting.scss */
+#page-setting-view div.setting-sections section {
+  position: relative;
+  margin-top: 32px;
+}
+/* line 147, setting.scss */
+#page-setting-view div.setting-sections section .section-detail {
+  margin-top: 14px;
+  width: 497px;
+}
+/* line 150, setting.scss */
+#page-setting-view div.setting-sections section .section-detail .detail-list {
+  margin: 0;
+  padding: 0;
+  height: 150px;
+  border: solid 1px;
+  border-color: #E5E5E5;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+/* line 158, setting.scss */
+#page-setting-view div.setting-sections section .section-detail .detail-list li {
+  height: 24px;
+  position: relative;
+}
+/* line 161, setting.scss */
+#page-setting-view div.setting-sections section .section-detail .detail-list li label {
+  width: 476px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto 8px;
+  display: inline-block;
+  height: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* line 176, setting.scss */
+#page-setting-view div.setting-sections section footer {
+  margin-top: 8px;
+  margin-right: -12px;
+}
+/* line 180, setting.scss */
+#page-setting-view div.setting-sections section #form-btn {
+  margin-top: 8px;
+}
+/* line 184, setting.scss */
+#page-setting-view div.setting-sections table.detail-form {
+  margin-left: -16px;
+  margin-top: 8px;
+  font-size: 12px;
+  border-collapse: separate;
+  border-spacing: 16px 6px;
+}
+/* line 190, setting.scss */
+#page-setting-view div.setting-sections table.detail-form td {
+  padding: 0;
+  vertical-align: middle;
+}
+/* line 195, setting.scss */
+#page-setting-view div.setting-sections .device-info-sec {
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 0;
+}
+/* line 202, setting.scss */
+#page-setting-view div.setting-sections .device-info-sec #pairing-button {
+  margin-top: 8px;
+  height: 24px;
+  width: 160px;
+}
+/* line 209, setting.scss */
+#page-setting-view div.setting-sections #wifi-list-sec div.title-row {
+  position: relative;
+  width: 497px;
+}
+/* line 212, setting.scss */
+#page-setting-view div.setting-sections #wifi-list-sec div.title-row div.title-area {
+  height: 16px;
+  position: relative;
+  left: 0;
+  width: 300px;
+}
+/* line 218, setting.scss */
+#page-setting-view div.setting-sections #wifi-list-sec div.title-row div.wifi-switch-area {
+  height: 16px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 150px;
+}
+/* line 224, setting.scss */
+#page-setting-view div.setting-sections #wifi-list-sec div.title-row div.wifi-switch-area label,
+#page-setting-view div.setting-sections #wifi-list-sec div.title-row div.wifi-switch-area input[type=radio] {
+  margin-left: 8px;
+  float: right;
+}
+/* line 231, setting.scss */
+#page-setting-view div.setting-sections #wifi-list-sec div.wifi-list-title {
+  position: relative;
+  top: 28px;
+  left: 0;
+  font-size: 12px;
+}
+/* line 237, setting.scss */
+#page-setting-view div.setting-sections #wifi-list-sec div#wifi-list-div {
+  margin-top: 33px;
+}
+/* line 240, setting.scss */
+#page-setting-view div.setting-sections #wifi-list-sec div#wifi-note {
+  margin-top: 12px;
+  margin-bottom: -2px;
+  font-size: 12px;
+  color: #808080;
+}
+/* line 247, setting.scss */
+#page-setting-view div.setting-sections .outline-set:focus {
+  outline: 2px solid #49D2FF;
+}
+/* line 250, setting.scss */
+#page-setting-view div.setting-sections .outline-clear:focus {
+  outline: none;
+}
+/* line 254, setting.scss */
+#page-setting-view #page-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  overflow: hidden;
+  border-top: solid 1px;
+  border-top-color: #E5E5E5;
+}
+/* line 263, setting.scss */
+#page-setting-view #page-footer #close-button {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 16px;
+  height: 24px;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 0;
+}

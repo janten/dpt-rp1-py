@@ -1,0 +1,22 @@
+﻿{
+    "template_list": [
+        { 
+            "note_template_id": "NT0000",
+            "template_name": "Name-NT0000",
+            "created_date": "2016-02-01T00:00:00Z",
+            "is_modifiable": "false"
+        },
+        { 
+            "note_template_id": "NT0001",
+            "template_name": "Name-NT0001",
+            "created_date": "2016-02-01T00:01:00Z",
+            "is_modifiable": "false"
+        },
+        { 
+            "note_template_id": "NT0002",
+            "template_name": "Name-NT0002",
+            "created_date": "2016-02-01T00:02:00Z",
+            "is_modifiable": "false"
+        }
+    ]
+}

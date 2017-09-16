@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <!-- <title data-i18n="Add Template"></title> -->
+    <!-- application: stylesheets -->
+    <link rel="stylesheet" href="stylesheets/dialog_add_note_template.css" />
+    <!-- application: model entry -->
+    <!-- application: view entry -->
+    <script defer type="lazy" src="scripts/View/Dialog/DialogDefs.js"></script>
+    <script defer type="lazy" src="scripts/View/Dialog/DialogBase.js"></script>
+    <script defer type="lazy" src="scripts/View/Dialog/OpenChildDialogs.js"></script>
+    <script defer type="lazy" src="scripts/View/Setting/DialogAddNoteTemplate.js"></script>
+</head>
+
+<body style="display: none;">
+    <article id="dialog-add-note-template" data-role="page" data-corners="false" data-theme="none" data-overlay-theme="b">
+        <form action="" data-role="none">
+            <div id="template-block" class="main" data-role="none">
+                <div id="message" data-role="none" class="message-area">
+                    <label id="dialog-message" data-i18n="config.addTemplate.description" data-role="none" data-i18n="config.addTemplate.description">
+                        <!-- *ノートを作成するときに使用するテンプレートを追加します。PDF ファイルを選択し、テンプレート名を入力してください。 -->
+                    </label>
+                </div>
+                <li id="file" data-role="none" class="file-area">
+                    <input type="button" id="select-button" data-i18n="[value]config.addTemplate.button.file" data-role="none" tabindex="1"/>
+                    <div id="dispTemplate-name"></div>
+                </li>
+                <li id="name" data-role="none" class="name-area">
+                    <label for="template-name" data-i18n="config.addTemplate.label.templateName" data-role="none" data-i18n="config.addTemplate.label.templateName">
+                        <!-- *テンプレート名: -->
+                    </label>
+                    <input type="text" id="template-name" data-role="none" tabindex="2"/>
+                </li>
+            </div>
+            <div class="btn-area" data-role="none">
+                <div class="btn-line" data-role="none">
+                    <input type="button" id="cancel-button" data-role="none" data-i18n="[value]app.words.cancel" tabindex="99"/>
+                    <input type="button" id="submit-button" data-i18n="[value]app.words.ok" disabled data-role="none" tabindex="98"/>
+                </div>
+            </div>
+        </form>
+    </article>
+    <script src="scripts/config.js"></script>
+    <script src="modules/requirejs/scripts/require.js" data-main="scripts/init_dialog_add_note_template"></script>
+    <div style="width: 100%; height: 100%; z-index: 100; position: absolute; visibility: hidden;" id="modal-lock-panel"></div>
+</body>
+
+</html>

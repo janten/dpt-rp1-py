@@ -1,0 +1,824 @@
+/* line 51, _init_setup_base.scss */
+body {
+  height: 100%;
+  overflow: auto;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  text-shadow: none;
+  /*article*/
+}
+/* line 65, _init_setup_base.scss */
+body label {
+  font-size: 12px;
+  font-color: #333333;
+  text-shadow: none;
+  outline: none;
+}
+/* line 72, _init_setup_base.scss */
+body input[type=textbox],
+body input[type=text],
+body input[type=password] {
+  border: solid 1px;
+  border-color: #CCCCCC;
+  background-color: #FFFFFF;
+  height: 22px;
+  text-indent: 8px;
+  font-size: 12px;
+  padding: 0 8px 0 0;
+  outline: none;
+}
+/* line 84, _init_setup_base.scss */
+body input[type=textbox]:focus,
+body input[type=text]:focus,
+body input[type=password]:focus {
+  outline: 2px solid #49D2FF;
+}
+/* line 90, _init_setup_base.scss */
+body button,
+body input[type=button] {
+  font-size: 12px;
+  background-color: #FAFAFA;
+  border-color: #CCCCCC;
+  color: #333333;
+  width: 160px;
+  margin-left: 8px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 2px;
+  height: 24px;
+  outline: none;
+}
+/* line 104, _init_setup_base.scss */
+body button:focus,
+body input[type=button]:focus {
+  outline: 2px solid #49D2FF;
+}
+/* line 108, _init_setup_base.scss */
+body button:hover,
+body input[type=button]:hover {
+  background-color: #FBFBFB;
+  border-color: #DBDBDB;
+  color: #5C5C5C;
+}
+/* line 114, _init_setup_base.scss */
+body button:active,
+body input[type=button]:active {
+  background-color: #D9D9D9;
+  border-color: #BBBBBB;
+  color: #1A1A1A;
+}
+/* line 121, _init_setup_base.scss */
+body select {
+  border: solid 1px;
+  border-color: #CCCCCC;
+  text-indent: 8px;
+  background-color: #FFFFFF;
+  outline: none;
+}
+/* line 129, _init_setup_base.scss */
+body input[type=radio],
+body input[type=checkbox] {
+  display: inline-block;
+  margin-right: 4px;
+}
+/* line 134, _init_setup_base.scss */
+body input[type=radio] + label,
+body input[type=checkbox] + label {
+  position: relative;
+  display: inline-block;
+  margin-right: 12px;
+  cursor: pointer;
+}
+@media (min-width: 1px) {
+  /* line 143, _init_setup_base.scss */
+  body input[type=radio],
+  body input[type=checkbox] {
+    display: none;
+    margin: 0;
+  }
+  /* line 148, _init_setup_base.scss */
+  body input[type=radio] + label,
+  body input[type=checkbox] + label {
+    padding: 0 0 0 19px;
+    font-size: 12px;
+    font-color: #333333;
+    margin: 0 0 0 0;
+  }
+  /* line 156, _init_setup_base.scss */
+  body input[type=checkbox] + label.radio-border-clear::before,
+  body input[type=radio] + label.radio-border-clear::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 166, _init_setup_base.scss */
+  body input[type=radio] + label.radio-border-clear::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FAFAFA;
+    border: 1px solid #CCCCCC;
+    border-radius: 30px;
+  }
+  /* line 174, _init_setup_base.scss */
+  body input[type=checkbox] + label.radio-border-clear::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FAFAFA;
+    border: 1px solid #CCCCCC;
+  }
+  /* line 181, _init_setup_base.scss */
+  body input[type=checkbox]:checked + label.radio-border-clear::after,
+  body input[type=radio]:checked + label.radio-border-clear::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 190, _init_setup_base.scss */
+  body input[type=radio]:checked + label.radio-border-clear::after {
+    display: block;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    margin-top: -5px;
+    background: #333333;
+    border-radius: 8px;
+  }
+  /* line 199, _init_setup_base.scss */
+  body input[type=checkbox]:checked + label.radio-border-clear::after {
+    left: 3px;
+    width: 10px;
+    height: 7px;
+    margin-top: -6px;
+    border-left: 2px solid #333333;
+    border-bottom: 2px solid #333333;
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+  }
+  /* line 211, _init_setup_base.scss */
+  body input[type=radio] + label.rest::before,
+  body input[type=checkbox] + label.rest::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 221, _init_setup_base.scss */
+  body input[type=radio] + label.rest::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FAFAFA;
+    border: 1px solid #CCCCCC;
+    border-radius: 30px;
+  }
+  /* line 229, _init_setup_base.scss */
+  body input[type=radio] + label.rest:focus::before,
+  body input[type=checkbox] + label.rest:focus::before {
+    border: 2px solid #49D2FF;
+  }
+  /* line 233, _init_setup_base.scss */
+  body input[type=checkbox] + label.rest::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FAFAFA;
+    border: 1px solid #CCCCCC;
+  }
+  /* line 240, _init_setup_base.scss */
+  body input[type=radio]:checked + label.rest::after,
+  body input[type=checkbox]:checked + label.rest::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 249, _init_setup_base.scss */
+  body input[type=radio]:checked + label.rest::after {
+    display: block;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    margin-top: -5px;
+    background: #333333;
+    border-radius: 8px;
+  }
+  /* line 258, _init_setup_base.scss */
+  body input[type=checkbox]:checked + label.rest::after {
+    left: 3px;
+    width: 10px;
+    height: 7px;
+    margin-top: -6px;
+    border-left: 2px solid #333333;
+    border-bottom: 2px solid #333333;
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+  }
+  /* line 270, _init_setup_base.scss */
+  body input[type=radio] + label.hover::before,
+  body input[type=checkbox] + label.hover::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 280, _init_setup_base.scss */
+  body input[type=radio] + label.hover::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FBFBFB;
+    border: 1px solid #DBDBDB;
+    border-radius: 30px;
+  }
+  /* line 288, _init_setup_base.scss */
+  body input[type=checkbox] + label.hover::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FBFBFB;
+    border: 1px solid #DBDBDB;
+  }
+  /* line 295, _init_setup_base.scss */
+  body input[type=radio]:checked + label.hover::after,
+  body input[type=checkbox]:checked + label.hover::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 304, _init_setup_base.scss */
+  body input[type=radio]:checked + label.hover::after {
+    display: block;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    margin-top: -5px;
+    background: #5C5C5C;
+    border-radius: 8px;
+  }
+  /* line 313, _init_setup_base.scss */
+  body input[type=checkbox]:checked + label.hover::after {
+    left: 3px;
+    width: 10px;
+    height: 7px;
+    margin-top: -6px;
+    border-left: 2px solid #5C5C5C;
+    border-bottom: 2px solid #5C5C5C;
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+  }
+  /* line 325, _init_setup_base.scss */
+  body input[type=radio] + label.hover-outline-appear::before,
+  body input[type=checkbox] + label.hover-outline-appear::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 335, _init_setup_base.scss */
+  body input[type=radio] + label.hover-outline-appear::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FBFBFB;
+    border: 2px solid #49D2FF;
+    border-radius: 30px;
+  }
+  /* line 343, _init_setup_base.scss */
+  body input[type=checkbox] + label.hover-outline-appear::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FBFBFB;
+    border: 2px solid #49D2FF;
+  }
+  /* line 350, _init_setup_base.scss */
+  body input[type=radio]:checked + label.hover-outline-appear::after,
+  body input[type=checkbox]:checked + label.hover-outline-appear::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 359, _init_setup_base.scss */
+  body input[type=radio]:checked + label.hover-outline-appear::after {
+    display: block;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    margin-top: -5px;
+    background: #5C5C5C;
+    border-radius: 8px;
+  }
+  /* line 368, _init_setup_base.scss */
+  body input[type=checkbox]:checked + label.hover-outline-appear::after {
+    left: 3px;
+    width: 10px;
+    height: 7px;
+    margin-top: -6px;
+    border-left: 2px solid #5C5C5C;
+    border-bottom: 2px solid #5C5C5C;
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+  }
+  /* line 380, _init_setup_base.scss */
+  body input[type=radio] + label.pressed::before,
+  body input[type=checkbox] + label.pressed::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 390, _init_setup_base.scss */
+  body input[type=radio] + label.pressed::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #D9D9D9;
+    border: 1px solid #BBBBBB;
+    border-radius: 30px;
+  }
+  /* line 398, _init_setup_base.scss */
+  body input[type=checkbox] + label.pressed::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #D9D9D9;
+    border: 1px solid #BBBBBB;
+  }
+  /* line 405, _init_setup_base.scss */
+  body input[type=radio]:checked + label.pressed::after,
+  body input[type=checkbox]:checked + label.pressed::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 414, _init_setup_base.scss */
+  body input[type=radio]:checked + label.pressed::after {
+    display: block;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    margin-top: -5px;
+    background: #333333;
+    border-radius: 8px;
+  }
+  /* line 423, _init_setup_base.scss */
+  body input[type=checkbox]:checked + label.pressed::after {
+    left: 3px;
+    width: 10px;
+    height: 7px;
+    margin-top: -6px;
+    border-left: 2px solid #333333;
+    border-bottom: 2px solid #333333;
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+  }
+}
+/* line 437, _init_setup_base.scss */
+body article .ui-btn,
+body article .ui-slider {
+  z-index: 2;
+}
+/* line 442, _init_setup_base.scss */
+body article section .outline-clear:focus {
+  outline: none;
+}
+/* line 445, _init_setup_base.scss */
+body article section.normal-screen {
+  padding: 0;
+}
+/* line 448, _init_setup_base.scss */
+body article section.fullscreen {
+  position: absolute;
+  padding: 0;
+  margin: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+/* line 457, _init_setup_base.scss */
+body article section.fixed-screen {
+  position: absolute;
+  padding: 0;
+  top: 45px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+/* line 4, wifi_setting.scss */
+#page-wifi-setting #menu {
+  background-color: #FFFFFF;
+  color: #333333;
+  width: 10%;
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+}
+/* line 12, wifi_setting.scss */
+#page-wifi-setting section {
+  padding: 0px;
+}
+/* line 14, wifi_setting.scss */
+#page-wifi-setting section #bluetooth {
+  color: #808080;
+  position: absolute;
+  bottom: 80px;
+}
+/* line 18, wifi_setting.scss */
+#page-wifi-setting section #bluetooth a {
+  cursor: default;
+  font-weight: normal;
+  text-decoration: underline;
+}
+/* line 23, wifi_setting.scss */
+#page-wifi-setting section #bluetooth a:focus {
+  outline: 2px solid #49D2FF;
+}
+/* line 27, wifi_setting.scss */
+#page-wifi-setting section .detail {
+  font-size: 12px;
+  font-color: #333333;
+  background-color: #FFFFFF;
+  color: #000000;
+  width: 100%;
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  /**  data list */
+  /*hide button*/
+  /* Handle */
+}
+/* line 36, wifi_setting.scss */
+#page-wifi-setting section .detail p {
+  margin: 0 0 0 0;
+}
+/* line 39, wifi_setting.scss */
+#page-wifi-setting section .detail label {
+  font-size: 12px;
+  font-color: #333333;
+}
+/* line 43, wifi_setting.scss */
+#page-wifi-setting section .detail section {
+  margin-top: 32px;
+  margin-right: 32px;
+  margin-left: 32px;
+  margin-bottom: 32px;
+}
+/* line 50, wifi_setting.scss */
+#page-wifi-setting section .detail .search-bar-img-box {
+  display: inline-flex;
+  padding-top: 64px;
+  padding-bottom: 64px;
+  margin-left: 186px;
+  height: 22px;
+}
+/* line 56, wifi_setting.scss */
+#page-wifi-setting section .detail .search-bar-img-box .search-bar-wait-img {
+  animation: spin 2s linear infinite;
+  height: 22px;
+  width: 22px;
+}
+/* line 62, wifi_setting.scss */
+#page-wifi-setting section .detail .search-bar-img-box span {
+  margin-top: 5px;
+  margin-left: 8px;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+/* line 75, wifi_setting.scss */
+#page-wifi-setting section .detail div.list {
+  width: 500px;
+  margin-left: 19px;
+  border: solid 1px;
+  border-color: #E5E5E5;
+  /**/
+  /*hide button*/
+  /* Handle */
+}
+/* line 83, wifi_setting.scss */
+#page-wifi-setting section .detail div.list ::-webkit-scrollbar {
+  width: 6px;
+  opacity: 0.8;
+}
+/* line 87, wifi_setting.scss */
+#page-wifi-setting section .detail div.list ::-webkit-scrollbar:horizontal {
+  height: 6px;
+  opacity: 0.8;
+}
+/* line 92, wifi_setting.scss */
+#page-wifi-setting section .detail div.list ::-webkit-scrollbar-button {
+  width: 4px;
+  height: 4px;
+  background: #FFFFFF;
+}
+/* line 98, wifi_setting.scss */
+#page-wifi-setting section .detail div.list ::-webkit-scrollbar-thumb {
+  border-radius: 12px;
+  background: rgba(51, 51, 51, 0.8);
+  opacity: 0.8;
+  border-width: 1px 1px 1px 6px;
+  min-height: 24px;
+  padding-left: 2px;
+  opacity: 0.8;
+}
+/* line 108, wifi_setting.scss */
+#page-wifi-setting section .detail div.list ::-webkit-scrollbar-thumb:hover {
+  background: rgba(92, 92, 92, 0.8);
+  opacity: 0.8;
+}
+/* line 113, wifi_setting.scss */
+#page-wifi-setting section .detail div.list ::-webkit-scrollbar-thumb:active {
+  background: #333333;
+  opacity: 1;
+}
+/* line 118, wifi_setting.scss */
+#page-wifi-setting section .detail div.list ul.detail-list {
+  margin: 0;
+  padding: 0;
+  height: 150px;
+  overflow: auto;
+  list-style: none;
+  text-shadow: none;
+  display: none;
+}
+/* line 126, wifi_setting.scss */
+#page-wifi-setting section .detail div.list ul.detail-list li {
+  font-size: 12px;
+  padding: 0;
+  height: 24px;
+  text-indent: 8px;
+  line-height: 24px;
+}
+/* line 133, wifi_setting.scss */
+#page-wifi-setting section .detail div.list ul.detail-list li:hover {
+  background-color: #F4FCFE;
+}
+/* line 136, wifi_setting.scss */
+#page-wifi-setting section .detail div.list ul.detail-list li:active {
+  background-color: #C8F0FA;
+}
+/* line 139, wifi_setting.scss */
+#page-wifi-setting section .detail div.list ul.detail-list li.selected {
+  background-color: #C8F0FA;
+}
+/* line 144, wifi_setting.scss */
+#page-wifi-setting section .detail ::-webkit-scrollbar {
+  width: 6px;
+  opacity: 0.8;
+}
+/* line 148, wifi_setting.scss */
+#page-wifi-setting section .detail ::-webkit-scrollbar:horizontal {
+  height: 6px;
+  opacity: 0.8;
+}
+/* line 153, wifi_setting.scss */
+#page-wifi-setting section .detail ::-webkit-scrollbar-button {
+  width: 4px;
+  height: 4px;
+  background: #FFFFFF;
+}
+/* line 159, wifi_setting.scss */
+#page-wifi-setting section .detail ::-webkit-scrollbar-thumb {
+  border-radius: 12px;
+  background: rgba(51, 51, 51, 0.8);
+  opacity: 0.8;
+  border-width: 1px 1px 1px 6px;
+  min-height: 24px;
+  padding-left: 2px;
+  opacity: 0.8;
+}
+/* line 169, wifi_setting.scss */
+#page-wifi-setting section .detail ::-webkit-scrollbar-thumb:hover {
+  background: rgba(92, 92, 92, 0.8);
+  opacity: 0.8;
+}
+/* line 174, wifi_setting.scss */
+#page-wifi-setting section .detail ::-webkit-scrollbar-thumb:active {
+  background: #333333;
+  opacity: 1;
+}
+/* line 179, wifi_setting.scss */
+#page-wifi-setting section .detail #page-pc-wifi-setup-manual-section {
+  padding: 0 0 0 0;
+  overflow: auto;
+  margin-top: 0px;
+  margin-right: 0px;
+}
+/* line 185, wifi_setting.scss */
+#page-wifi-setting section .detail #page-pc-wifi-setup-manual-section #wifiManualSetup {
+  border-collapse: separate;
+  border-spacing: 0px 6px;
+  text-shadow: none;
+  overflow: auto;
+}
+/* line 190, wifi_setting.scss */
+#page-wifi-setting section .detail #page-pc-wifi-setup-manual-section #wifiManualSetup tr {
+  padding: 0 0 0 0;
+}
+/* line 193, wifi_setting.scss */
+#page-wifi-setting section .detail #page-pc-wifi-setup-manual-section #wifiManualSetup input[type=text],
+#page-wifi-setting section .detail #page-pc-wifi-setup-manual-section #wifiManualSetup input[type=password] {
+  width: 230px;
+  height: 22px;
+  list-style: none;
+  text-shadow: none;
+}
+/* line 200, wifi_setting.scss */
+#page-wifi-setting section .detail #page-pc-wifi-setup-manual-section #wifiManualSetup input[type=text]:focus,
+#page-wifi-setting section .detail #page-pc-wifi-setup-manual-section #wifiManualSetup input[type=password]:focus {
+  outline: 2px solid #49D2FF;
+}
+/* line 204, wifi_setting.scss */
+#page-wifi-setting section .detail #page-pc-wifi-setup-manual-section #wifiManualSetup input[type=text].outline-clear:focus,
+#page-wifi-setting section .detail #page-pc-wifi-setup-manual-section #wifiManualSetup input[type=password].outline-clear:focus {
+  outline: none;
+}
+/* line 208, wifi_setting.scss */
+#page-wifi-setting section .detail #page-pc-wifi-setup-manual-section #wifiManualSetup select {
+  width: 240px;
+  height: 24px;
+  list-style: none;
+  text-shadow: none;
+}
+/* line 213, wifi_setting.scss */
+#page-wifi-setting section .detail #page-pc-wifi-setup-manual-section #wifiManualSetup select option {
+  text-shadow: none;
+}
+/* line 217, wifi_setting.scss */
+#page-wifi-setting section .detail #page-pc-wifi-setup-manual-section #wifiManualSetup select:focus {
+  outline: 2px solid #49D2FF;
+}
+/* line 220, wifi_setting.scss */
+#page-wifi-setting section .detail #page-pc-wifi-setup-manual-section #wifiManualSetup button,
+#page-wifi-setting section .detail #page-pc-wifi-setup-manual-section #wifiManualSetup input[type=button] {
+  margin-right: 3px;
+  padding: 0 0 0 0;
+}
+/* line 225, wifi_setting.scss */
+#page-wifi-setting section .detail #page-pc-wifi-setup-manual-section #wifiManualSetup label {
+  margin: 0 0 0 0;
+}
+/* line 230, wifi_setting.scss */
+#page-wifi-setting section .detail .invisible {
+  display: none;
+}
+/* line 239, wifi_setting.scss */
+#page-wifi-setting section .detail #saved-wifi-setting #wifiInfoTitle {
+  margin-top: 29px;
+}
+/* line 242, wifi_setting.scss */
+#page-wifi-setting section .detail #saved-wifi-setting table#wifiFinishInfo {
+  clear: both;
+  border: solid 1px;
+  border-color: #E5E5E5;
+  padding: 11px 9px;
+  border-collapse: separate;
+  border-spacing: 6px 3px;
+}
+/* line 251, wifi_setting.scss */
+#page-wifi-setting section .detail #saved-wifi-setting table#wifiFinishInfo tr td {
+  padding: 0;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+/* line 256, wifi_setting.scss */
+#page-wifi-setting section .detail #saved-wifi-setting table#wifiFinishInfo tr td.td-value {
+  max-width: 300px;
+  min-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* line 265, wifi_setting.scss */
+#page-wifi-setting section .detail #WiFi-Status {
+  position: absolute;
+  bottom: 77px;
+  left: 32px;
+  right: 32px;
+  padding: 0;
+  margin-top: 64px;
+}
+/* line 272, wifi_setting.scss */
+#page-wifi-setting section .detail #WiFi-Status .supplemental {
+  color: #808080;
+}
+/* line 275, wifi_setting.scss */
+#page-wifi-setting section .detail #WiFi-Status div.empty-area {
+  height: 64px;
+  width: 500px;
+}
+/* line 279, wifi_setting.scss */
+#page-wifi-setting section .detail #WiFi-Status div.separator-line {
+  clear: both;
+  margin: 0 0 15px 0;
+  height: 1px;
+  background-color: #E5E5E5;
+}
+/* line 285, wifi_setting.scss */
+#page-wifi-setting section .detail #WiFi-Status #status-detail {
+  border-collapse: separate;
+  border-spacing: 15px 7px;
+  margin-left: -15px;
+  margin-top: 20px;
+  margin-bottom: 17px;
+}
+/* line 292, wifi_setting.scss */
+#page-wifi-setting section .detail #WiFi-Status #status-detail tr td {
+  padding: 0;
+  vertical-align: middle;
+}
+/* line 293, wifi_setting.scss */
+#page-wifi-setting section .detail #WiFi-Status #status-detail tr td .status-conn-img-box {
+  display: inline-block;
+  padding-top: 3px;
+  height: 20px;
+  width: 20px;
+}
+/* line 298, wifi_setting.scss */
+#page-wifi-setting section .detail #WiFi-Status #status-detail tr td .status-conn-img-box .spin-img {
+  animation: spin 2s linear infinite;
+  height: 16px;
+  width: 16px;
+}
+/* line 304, wifi_setting.scss */
+#page-wifi-setting section .detail #WiFi-Status #status-detail tr td .status-conn-img-box .static-img {
+  height: 16px;
+  width: 16px;
+}
+/* line 309, wifi_setting.scss */
+#page-wifi-setting section .detail #WiFi-Status #status-detail tr td #status-conn-label {
+  position: relative;
+  left: -3px;
+  bottom: 3px;
+  display: inline;
+  vertical-align: middle;
+}
+/* line 322, wifi_setting.scss */
+#page-wifi-setting section .detail footer {
+  bottom: 0px;
+  overflow: hidden;
+  position: absolute;
+  width: 100%;
+  height: 48px;
+  vertical-align: middle;
+  border-top: solid 1px;
+  border-top-color: #E5E5E5;
+}
+/* line 331, wifi_setting.scss */
+#page-wifi-setting section .detail footer .btn-area {
+  margin-right: 16px;
+  float: right;
+  display: table-cell;
+  vertical-align: middle;
+  line-height: 48px;
+}

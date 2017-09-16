@@ -1,0 +1,268 @@
+/* line 50, _dialog_base.scss */
+label {
+  font-size: 12px;
+  color: #333333;
+}
+
+/* line 55, _dialog_base.scss */
+input[type=textbox],
+input[type=text],
+input[type=password] {
+  border: solid 1px;
+  border-color: #CCCCCC;
+  background-color: #FFFFFF;
+  height: 22px;
+  text-indent: 8px;
+  font-size: 12px;
+  padding: 0;
+}
+
+/* line 67, _dialog_base.scss */
+input[type=text]:focus {
+  outline: 2px solid #49D2FF;
+}
+
+/* line 71, _dialog_base.scss */
+button,
+input[type=button] {
+  font-size: 12px;
+  background-color: #FAFAFA;
+  border-color: #CCCCCC;
+  color: #333333;
+  width: 160px;
+  margin-left: 8px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 2px;
+  outline: none;
+}
+
+/* line 84, _dialog_base.scss */
+button:focus,
+input[type=button]:focus {
+  outline: 2px solid #49D2FF;
+}
+
+/* line 88, _dialog_base.scss */
+button:hover,
+input[type=button]:hover {
+  background-color: #FBFBFB;
+  border-color: #DBDBDB;
+  color: #5C5C5C;
+}
+
+/* line 94, _dialog_base.scss */
+button:active,
+input[type=button]:active {
+  background-color: #D9D9D9;
+  border-color: #BBBBBB;
+  color: #1A1A1A;
+}
+
+/* line 100, _dialog_base.scss */
+button[disabled],
+input[type=button][disabled] {
+  opacity: .2;
+}
+
+/* line 105, _dialog_base.scss */
+select {
+  border: solid 1px;
+  border-color: #CCCCCC;
+  background-color: #FFFFFF;
+  text-indent: 4px;
+  outline: none;
+}
+
+/* line 113, _dialog_base.scss */
+select:focus {
+  outline: 2px solid #49D2FF;
+}
+
+/* line 117, _dialog_base.scss */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  cursor: default;
+}
+/* line 123, _dialog_base.scss */
+html article,
+body article {
+  outline: none;
+}
+
+/* line 4, dialog_sync_result.scss */
+#dialog-sync-result {
+  padding: 32px;
+  outline: none;
+  font-size: 12px;
+  background-color: #FFFFFF;
+  color: #333333;
+  font-family: sans-serif;
+  /* Handle */
+  /**/
+  /*hide button*/
+  /* Handle */
+}
+/* line 11, dialog_sync_result.scss */
+#dialog-sync-result p.title {
+  margin-top: 0px;
+  margin-bottom: 27px;
+}
+/* line 15, dialog_sync_result.scss */
+#dialog-sync-result p.subtitle {
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+/* line 19, dialog_sync_result.scss */
+#dialog-sync-result div.titlesroll::-webkit-scrollbar {
+  height: 0px;
+}
+/* line 22, dialog_sync_result.scss */
+#dialog-sync-result div.titlesroll::-webkit-scrollbar:horizontal {
+  height: 0px;
+  width: 0px;
+}
+/* line 27, dialog_sync_result.scss */
+#dialog-sync-result div.titlesroll::-webkit-scrollbar-thumb {
+  background: #FFFFFF;
+}
+/* line 31, dialog_sync_result.scss */
+#dialog-sync-result div.titlesroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  width: 800px;
+  border-top: solid 1px;
+  border-left: solid 1px;
+  border-right: solid 1px;
+  border-bottom: 0px;
+  border-color: #E5E5E5;
+}
+/* line 40, dialog_sync_result.scss */
+#dialog-sync-result div.titlesroll #title-list {
+  height: 22px;
+}
+/* line 42, dialog_sync_result.scss */
+#dialog-sync-result div.titlesroll #title-list div.resizer {
+  display: inherit;
+  width: 5px;
+  cursor: e-resize;
+  height: 16px;
+  top: 2px;
+  z-index: 5;
+  position: relative;
+  float: right;
+  border-left: solid 1px;
+  border-left-color: #808080;
+}
+/* line 54, dialog_sync_result.scss */
+#dialog-sync-result div.titlesroll #title-list .line {
+  display: inline-flex;
+  height: 20px;
+  box-sizing: border-box;
+}
+/* line 58, dialog_sync_result.scss */
+#dialog-sync-result div.titlesroll #title-list .line .path,
+#dialog-sync-result div.titlesroll #title-list .line .message {
+  width: 384px;
+  padding-left: 8px;
+  color: #808080;
+  padding-top: 2px;
+}
+/* line 69, dialog_sync_result.scss */
+#dialog-sync-result ::-webkit-scrollbar {
+  width: 6px;
+  opacity: 0.8;
+}
+/* line 73, dialog_sync_result.scss */
+#dialog-sync-result ::-webkit-scrollbar:horizontal {
+  height: 6px;
+  opacity: 0.8;
+}
+/* line 78, dialog_sync_result.scss */
+#dialog-sync-result ::-webkit-scrollbar-button {
+  width: 4px;
+  height: 4px;
+  background: #FFFFFF;
+}
+/* line 84, dialog_sync_result.scss */
+#dialog-sync-result ::-webkit-scrollbar-thumb {
+  border-radius: 12px;
+  background: rgba(51, 51, 51, 0.8);
+  opacity: 0.8;
+  border-width: 1px 1px 1px 6px;
+  min-height: 24px;
+  padding-left: 2px;
+  opacity: 0.8;
+}
+/* line 93, dialog_sync_result.scss */
+#dialog-sync-result ::-webkit-scrollbar-thumb:hover {
+  background: rgba(92, 92, 92, 0.8);
+  opacity: 0.8;
+}
+/* line 98, dialog_sync_result.scss */
+#dialog-sync-result ::-webkit-scrollbar-thumb:active {
+  background: #333333;
+  opacity: 1;
+}
+/* line 103, dialog_sync_result.scss */
+#dialog-sync-result div.sroll {
+  overflow: auto;
+  height: 160px;
+  border: solid 1px;
+  border-color: #E5E5E5;
+  width: 800px;
+}
+/* line 111, dialog_sync_result.scss */
+#dialog-sync-result div.sroll #local-result-list .line,
+#dialog-sync-result div.sroll #remote-result-list .line {
+  display: inline-flex;
+  height: 24px;
+  box-sizing: border-box;
+}
+/* line 115, dialog_sync_result.scss */
+#dialog-sync-result div.sroll #local-result-list .line .path,
+#dialog-sync-result div.sroll #local-result-list .line .message,
+#dialog-sync-result div.sroll #remote-result-list .line .path,
+#dialog-sync-result div.sroll #remote-result-list .line .message {
+  color: #808080;
+  padding-top: 8px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: inline-block;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+/* line 130, dialog_sync_result.scss */
+#dialog-sync-result .btn-area {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding-right: 16px;
+  height: 48px;
+  border-top: solid 1px;
+  border-top-color: #E5E5E5;
+}
+/* line 139, dialog_sync_result.scss */
+#dialog-sync-result .btn-area .btn-line {
+  height: 24px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding-right: 16px;
+}
+/* line 149, dialog_sync_result.scss */
+#dialog-sync-result .btn-area .btn-line input[type="button"] {
+  height: 24px;
+  float: right;
+  margin-left: 8px;
+}

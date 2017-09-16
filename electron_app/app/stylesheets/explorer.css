@@ -1,0 +1,2084 @@
+/* line 1, _base.scss */
+body {
+  height: 100%;
+  font-family: Arial,Helvetica,sans-serif;
+  overflow: auto;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+/* line 16, _base.scss */
+body article .ui-btn, body article .ui-slider {
+  z-index: 2;
+}
+/* line 20, _base.scss */
+body article section.normal-screen {
+  padding: 0;
+}
+/* line 23, _base.scss */
+body article section.fullscreen {
+  position: absolute;
+  padding: 0;
+  margin: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+/* line 32, _base.scss */
+body article section.fixed-screen {
+  position: absolute;
+  padding: 0;
+  top: 45px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+/* line 1, _splash.scss */
+#splash {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #FFFFFF;
+}
+
+/* line 1, _explorer_baseview.scss */
+html,
+body {
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  cursor: default;
+}
+
+/* line 9, _explorer_baseview.scss */
+#page-main-function {
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+/* line 14, _explorer_baseview.scss */
+#page-main-function section {
+  padding: 0px;
+  bottom: 0px;
+  top: 0px;
+  position: absolute;
+  width: 100%;
+  overflow: hidden;
+  background-color: #FFFFFF;
+}
+/* line 24, _explorer_baseview.scss */
+#page-main-function section #tool-bar,
+#page-main-function section #search-status,
+#page-main-function section #breadcrumb,
+#page-main-function section #operation,
+#page-main-function section #footerspace,
+#page-main-function section #uninitsetup,
+#page-main-function section #unconnected {
+  margin: 0;
+  width: 100%;
+}
+/* line 35, _explorer_baseview.scss */
+#page-main-function section .hide {
+  display: none;
+}
+/* line 39, _explorer_baseview.scss */
+#page-main-function section #content-list {
+  position: absolute;
+  top: 168px;
+  bottom: 0;
+  padding: 0px;
+  margin: 0;
+  width: 100%;
+}
+
+/* line 37, _explorer_toolbar.scss */
+#tool-bar {
+  width: 100%;
+  height: 104px;
+  min-width: 920px;
+  background-color: #EBEBEB;
+  background-image: url("../res/image/svg/Asset_Altair_Main_Header_Texture.svg");
+  background-repeat: repeat;
+  text-shadow: none;
+  border-bottom: solid 0.5px;
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+/* line 49, _explorer_toolbar.scss */
+#tool-bar button,
+#tool-bar input[type=button] {
+  font-size: 12px;
+  background-color: #FAFAFA;
+  border-color: #CCCCCC;
+  color: #333333;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 2px;
+  outline: none;
+  height: 24px;
+}
+/* line 61, _explorer_toolbar.scss */
+#tool-bar button:focus,
+#tool-bar input[type=button]:focus {
+  outline: 2px solid #49D2FF;
+}
+/* line 65, _explorer_toolbar.scss */
+#tool-bar button:hover,
+#tool-bar input[type=button]:hover {
+  background-color: #FBFBFB;
+  border-color: #DBDBDB;
+  color: #5C5C5C;
+}
+/* line 71, _explorer_toolbar.scss */
+#tool-bar button:active,
+#tool-bar input[type=button]:active {
+  background-color: #D9D9D9;
+  border-color: #BBBBBB;
+  color: #1A1A1A;
+}
+/* line 77, _explorer_toolbar.scss */
+#tool-bar button[disabled],
+#tool-bar input[type=button][disabled] {
+  opacity: .2;
+}
+/* line 81, _explorer_toolbar.scss */
+#tool-bar button.outline-clear,
+#tool-bar input[type=button].outline-clear {
+  outline: none;
+}
+/* line 85, _explorer_toolbar.scss */
+#tool-bar .ui-state-disabled {
+  opacity: 0.2;
+  cursor: default !important;
+  pointer-events: none;
+}
+/* line 90, _explorer_toolbar.scss */
+#tool-bar label {
+  font-size: 12px;
+  color: #333333;
+  margin-top: 14px;
+  margin-right: 8px;
+}
+/* line 96, _explorer_toolbar.scss */
+#tool-bar div.top {
+  height: 39px;
+  border-top: solid 1px;
+  border-top-color: rgba(0, 0, 0, 0.1);
+  border-bottom: solid 1px;
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+/* line 103, _explorer_toolbar.scss */
+#tool-bar div.top div.sta {
+  float: left;
+  display: flex;
+  margin-left: 4px;
+}
+/* line 108, _explorer_toolbar.scss */
+#tool-bar div.top div.sta button {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  padding: 4px 16px;
+}
+/* line 115, _explorer_toolbar.scss */
+#tool-bar div.top div.sta button img {
+  float: left;
+  margin-right: 0;
+  height: 12px;
+  width: 12px;
+}
+/* line 121, _explorer_toolbar.scss */
+#tool-bar div.top div.sta button label {
+  margin: 0;
+  float: left;
+  height: 12px;
+}
+/* line 128, _explorer_toolbar.scss */
+#tool-bar div.top div.btn {
+  height: 38px;
+  margin-right: 4px;
+  float: right;
+  vertical-align: middle;
+  right: 0px;
+  display: flex;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+/* line 140, _explorer_toolbar.scss */
+#tool-bar div.top div.btn #syncBtnDiv {
+  margin-right: 2px;
+  padding-right: 4px;
+}
+/* line 144, _explorer_toolbar.scss */
+#tool-bar div.top div.btn #syncDatetime {
+  color: #808080;
+  margin-right: 13px;
+}
+/* line 148, _explorer_toolbar.scss */
+#tool-bar div.top div.btn #fileimportBtnDiv, #tool-bar div.top div.btn #screenshotDiv, #tool-bar div.top div.btn #settingDiv {
+  margin-right: 4px;
+}
+/* line 151, _explorer_toolbar.scss */
+#tool-bar div.top div.btn #syncSettingDiv {
+  margin-right: 2px;
+  padding-left: 3px;
+}
+/* line 155, _explorer_toolbar.scss */
+#tool-bar div.top div.btn #syncSetting {
+  color: #808080;
+  font-size: 12px;
+  text-decoration: underline;
+}
+/* line 160, _explorer_toolbar.scss */
+#tool-bar div.top div.btn .outline-clear:focus {
+  outline: none;
+}
+/* line 163, _explorer_toolbar.scss */
+#tool-bar div.top div.btn #syncSetting:hover {
+  color: #999999;
+  font-size: 12px;
+  text-decoration: underline;
+}
+/* line 169, _explorer_toolbar.scss */
+#tool-bar div.top div.btn #fileimportBtnDiv,
+#tool-bar div.top div.btn #screenshotDiv,
+#tool-bar div.top div.btn #settingDiv,
+#tool-bar div.top div.btn #syncBtnDiv {
+  display: flex;
+}
+/* line 176, _explorer_toolbar.scss */
+#tool-bar div.top div.btn #toolbarSyncResultDiv {
+  display: none;
+  margin-right: 2px;
+  padding-right: 8px;
+}
+/* line 180, _explorer_toolbar.scss */
+#tool-bar div.top div.btn #toolbarSyncResultDiv label {
+  margin-right: 0;
+  margin-left: 3px;
+}
+/* line 184, _explorer_toolbar.scss */
+#tool-bar div.top div.btn #toolbarSyncResultDiv #syncErrorIcon {
+  cursor: pointer;
+  width: 15px;
+  height: 38px;
+  margin: 0;
+}
+/* line 191, _explorer_toolbar.scss */
+#tool-bar div.top div.btn .syncBtnDiv:focus,
+#tool-bar div.top div.btn .syncErrorIcon:focus,
+#tool-bar div.top div.btn .syncSettingDiv:focus,
+#tool-bar div.top div.btn .fileimportBtnDiv:focus,
+#tool-bar div.top div.btn .screenshotDiv:focus,
+#tool-bar div.top div.btn .settingDiv:focus,
+#tool-bar div.top div.btn .helpDiv:focus {
+  outline: 2px solid #49D2FF;
+}
+/* line 201, _explorer_toolbar.scss */
+#tool-bar div.top div.btn #syncBtnDiv.outline-clear:focus {
+  outline: none;
+}
+/* line 204, _explorer_toolbar.scss */
+#tool-bar div.top div.btn #syncSettingDiv.outline-clear:focus {
+  outline: none;
+}
+/* line 207, _explorer_toolbar.scss */
+#tool-bar div.top div.btn #syncErrorIcon.outline-clear:focus {
+  outline: none;
+}
+/* line 210, _explorer_toolbar.scss */
+#tool-bar div.top div.btn #fileimportBtnDiv.outline-clear:focus {
+  outline: none;
+}
+/* line 213, _explorer_toolbar.scss */
+#tool-bar div.top div.btn #screenshotDiv.outline-clear:focus {
+  outline: none;
+}
+/* line 216, _explorer_toolbar.scss */
+#tool-bar div.top div.btn #settingDiv.outline-clear:focus {
+  outline: none;
+}
+/* line 219, _explorer_toolbar.scss */
+#tool-bar div.top div.btn #helpDiv.outline-clear:focus {
+  outline: none;
+}
+/* line 223, _explorer_toolbar.scss */
+#tool-bar div.top div.btn .helpDiv {
+  position: relative;
+  display: inline-block;
+}
+/* line 226, _explorer_toolbar.scss */
+#tool-bar div.top div.btn .helpDiv img {
+  cursor: pointer;
+}
+/* line 229, _explorer_toolbar.scss */
+#tool-bar div.top div.btn .helpDiv .dropdown-content {
+  display: none;
+  position: absolute;
+  min-width: 160px;
+  background-color: #ffffff;
+  right: 0px;
+  z-index: 9999 !important;
+  border: solid 1px;
+  border-color: #CCCCCC;
+  width: 165px;
+}
+/* line 240, _explorer_toolbar.scss */
+#tool-bar div.top div.btn .helpDiv .dropdown-content hr {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 4px;
+  margin-right: 4px;
+  border-color: #E5E5E5;
+  border-top: 0px;
+  border-left: 0px;
+  border-right: 0px;
+  border-bottom-width: 1px;
+}
+/* line 251, _explorer_toolbar.scss */
+#tool-bar div.top div.btn .helpDiv .dropdown-content #helpGuide {
+  margin-top: 10px;
+  margin-bottom: 0;
+  margin-left: 0px;
+  margin-right: 0px;
+  padding-right: 8px;
+  padding-left: 8px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  cursor: pointer;
+}
+/* line 262, _explorer_toolbar.scss */
+#tool-bar div.top div.btn .helpDiv .dropdown-content #helpGuide:hover {
+  background-color: #3399ff;
+  color: white;
+}
+/* line 266, _explorer_toolbar.scss */
+#tool-bar div.top div.btn .helpDiv .dropdown-content #helpGuide:focus {
+  outline: none;
+  background-color: #3399ff;
+  color: white;
+}
+/* line 271, _explorer_toolbar.scss */
+#tool-bar div.top div.btn .helpDiv .dropdown-content #helpSupport {
+  margin-top: 0px;
+  margin-bottom: 6px;
+  margin-left: 0px;
+  margin-right: 0px;
+  padding-right: 8px;
+  padding-left: 8px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  cursor: pointer;
+}
+/* line 283, _explorer_toolbar.scss */
+#tool-bar div.top div.btn .helpDiv .dropdown-content #helpSupport:hover {
+  background-color: #3399ff;
+  color: white;
+}
+/* line 287, _explorer_toolbar.scss */
+#tool-bar div.top div.btn .helpDiv .dropdown-content #helpSupport:focus {
+  outline: none;
+  background-color: #3399ff;
+  color: white;
+}
+/* line 292, _explorer_toolbar.scss */
+#tool-bar div.top div.btn .helpDiv .dropdown-content #helpSuppl {
+  margin-top: 8px;
+  margin-bottom: 12px;
+  margin-right: 8px;
+  margin-left: 8px;
+  color: #808080;
+}
+/* line 301, _explorer_toolbar.scss */
+#tool-bar div.top div.btn img {
+  width: 24px;
+  height: 24px;
+  margin-top: 8px;
+}
+/* line 306, _explorer_toolbar.scss */
+#tool-bar div.top div.btn label.btn-lbl {
+  font-size: 12px;
+  color: #333333;
+  margin-right: 8px;
+  margin-top: 14px;
+  cursor: pointer;
+}
+/* line 313, _explorer_toolbar.scss */
+#tool-bar div.top div.btn label.btn-lbl:hover {
+  font-size: 12px;
+  color: #5C5C5C;
+}
+/* line 317, _explorer_toolbar.scss */
+#tool-bar div.top div.btn label.btn-lbl:active {
+  font-size: 12px;
+  color: #1A1A1A;
+}
+/* line 322, _explorer_toolbar.scss */
+#tool-bar div.top .deviceConnSta {
+  width: 40px;
+  height: 40px;
+}
+/* line 327, _explorer_toolbar.scss */
+#tool-bar div.bottom {
+  height: 64px;
+}
+/* line 329, _explorer_toolbar.scss */
+#tool-bar div.bottom hr {
+  display: inline-block;
+  width: 0px;
+  height: 48px;
+  border-right: solid 1px;
+  border-color: rgba(255, 255, 255, 0.2);
+  margin-left: 36%;
+}
+/* line 337, _explorer_toolbar.scss */
+#tool-bar div.bottom #viewTypeDiv {
+  float: left;
+  display: flex;
+  width: 296px;
+  margin-left: 16px;
+  margin-top: 10px;
+}
+/* line 343, _explorer_toolbar.scss */
+#tool-bar div.bottom #viewTypeDiv input {
+  display: none;
+}
+/* line 346, _explorer_toolbar.scss */
+#tool-bar div.bottom #viewTypeDiv label {
+  display: block;
+  float: left;
+  width: 148px;
+  margin: 0;
+  padding-right: 10px;
+  padding-left: 10px;
+  color: #333333;
+  font-size: 12px;
+  text-align: center;
+  line-height: 1;
+  cursor: pointer;
+  border: solid 1px;
+  border-color: #BABABA;
+  height: 40px;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+/* line 364, _explorer_toolbar.scss */
+#tool-bar div.bottom #viewTypeDiv label:first-of-type {
+  border-radius: 2px 0 0 2px;
+  border-right: 0px;
+}
+/* line 368, _explorer_toolbar.scss */
+#tool-bar div.bottom #viewTypeDiv label:last-of-type {
+  border-radius: 0 2px 2px 0;
+}
+/* line 371, _explorer_toolbar.scss */
+#tool-bar div.bottom #viewTypeDiv input[type="radio"]:checked + label {
+  background-color: #FAFAFA;
+  color: #333333;
+  font-weight: bold;
+}
+/* line 376, _explorer_toolbar.scss */
+#tool-bar div.bottom #viewTypeDiv input[type="radio"] + label:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+/* line 379, _explorer_toolbar.scss */
+#tool-bar div.bottom #viewTypeDiv input[type="radio"]:checked + label:hover {
+  background-color: #FAFAFA;
+  opacity: 1.0;
+  color: #333333;
+}
+/* line 384, _explorer_toolbar.scss */
+#tool-bar div.bottom #viewTypeDiv .folderLbl::before {
+  content: "";
+  background-image: url("../res/image/svg/Asset_Altair_Main_Header_View_Folder_Rest.svg");
+  background-repeat: no-repeat;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  top: 8px;
+}
+/* line 394, _explorer_toolbar.scss */
+#tool-bar div.bottom #viewTypeDiv input[type="radio"]:checked + label.folderLbl::before {
+  content: "";
+  background-image: url("../res/image/svg/Asset_Altair_Main_Header_View_Folder_Selected.svg");
+  background-repeat: no-repeat;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  top: 8px;
+}
+/* line 404, _explorer_toolbar.scss */
+#tool-bar div.bottom #viewTypeDiv .folderLbl-Hover::before {
+  content: "";
+  background-image: url("../res/image/svg/Asset_Altair_Main_Header_View_Folder_Hover.svg");
+  background-repeat: no-repeat;
+  position: relative;
+  width: 24px;
+  height: 25px;
+  display: inline-block;
+  top: 8px;
+}
+/* line 414, _explorer_toolbar.scss */
+#tool-bar div.bottom #viewTypeDiv .folderLbl-Pressed::before {
+  content: "";
+  background-image: url("../res/image/svg/Asset_Altair_Main_Header_View_Folder_Pressed.svg");
+  background-repeat: no-repeat;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  top: 8px;
+}
+/* line 424, _explorer_toolbar.scss */
+#tool-bar div.bottom #viewTypeDiv .docLbl::before {
+  content: "";
+  background-image: url("../res/image/svg/Asset_Altair_Main_Header_View_Document_Rest.svg");
+  background-repeat: no-repeat;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  top: 8px;
+}
+/* line 434, _explorer_toolbar.scss */
+#tool-bar div.bottom #viewTypeDiv .folderLbl:focus {
+  outline: 2px solid #49D2FF;
+  z-index: 2;
+}
+/* line 438, _explorer_toolbar.scss */
+#tool-bar div.bottom #viewTypeDiv .docLbl:focus {
+  outline: 2px solid #49D2FF;
+  z-index: 1;
+}
+/* line 442, _explorer_toolbar.scss */
+#tool-bar div.bottom #viewTypeDiv input[type="radio"]:checked + label.docLbl::before {
+  content: "";
+  background-image: url("../res/image/svg/Asset_Altair_Main_Header_View_Document_Selected.svg");
+  background-repeat: no-repeat;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  top: 8px;
+}
+/* line 452, _explorer_toolbar.scss */
+#tool-bar div.bottom #viewTypeDiv .docLbl-Hover::before {
+  content: "";
+  background-image: url("../res/image/svg/Asset_Altair_Main_Header_View_Document_Hover.svg");
+  background-repeat: no-repeat;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  top: 8px;
+}
+/* line 462, _explorer_toolbar.scss */
+#tool-bar div.bottom #viewTypeDiv .docLbl-Pressed::before {
+  content: "";
+  background-image: url("../res/image/svg/Asset_Altair_Main_Header_View_Document_Pressed.svg");
+  background-repeat: no-repeat;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  top: 8px;
+}
+/* line 472, _explorer_toolbar.scss */
+#tool-bar div.bottom #viewTypeDiv .outline-clear:focus {
+  outline: none;
+}
+/* line 476, _explorer_toolbar.scss */
+#tool-bar div.bottom #searchDiv {
+  float: right;
+  margin-top: 7px;
+  margin-right: 16px;
+  height: 50px;
+  border-left: solid 0.5px;
+  border-left-color: rgba(0, 0, 0, 0.1);
+}
+/* line 483, _explorer_toolbar.scss */
+#tool-bar div.bottom #searchDiv div.line {
+  display: inline-block;
+  width: 0px;
+  height: 48px;
+  margin: 0 0 0 0;
+  border-right: solid 0.5px;
+  border-color: rgba(255, 255, 255, 0.8);
+  float: left;
+}
+/* line 492, _explorer_toolbar.scss */
+#tool-bar div.bottom #searchDiv img {
+  width: 25px;
+  height: 25px;
+  float: left;
+  margin-left: 12px;
+  margin-right: 4px;
+  margin-top: 12px;
+}
+/* line 500, _explorer_toolbar.scss */
+#tool-bar div.bottom #searchDiv #searchTypeDiv {
+  height: 64px;
+  float: left;
+  display: flex;
+  width: 180px;
+  margin-right: 8px;
+  margin-top: 2px;
+}
+/* line 507, _explorer_toolbar.scss */
+#tool-bar div.bottom #searchDiv #searchTypeDiv input {
+  display: none;
+}
+/* line 510, _explorer_toolbar.scss */
+#tool-bar div.bottom #searchDiv #searchTypeDiv label {
+  display: block;
+  width: 90px;
+  float: left;
+  margin: 0;
+  color: #333333;
+  font-size: 12px;
+  text-align: center;
+  line-height: 1;
+  cursor: pointer;
+  border: solid 1px;
+  border-color: #BABABA;
+  height: 12px;
+  margin: 0;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin-top: 10px;
+  padding-left: 8px;
+  padding-right: 8px;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+/* line 532, _explorer_toolbar.scss */
+#tool-bar div.bottom #searchDiv #searchTypeDiv label:first-of-type {
+  border-radius: 2px 0 0 2px;
+  border-right: 0px;
+}
+/* line 536, _explorer_toolbar.scss */
+#tool-bar div.bottom #searchDiv #searchTypeDiv label:last-of-type {
+  border-radius: 0 2px 2px 0;
+}
+/* line 539, _explorer_toolbar.scss */
+#tool-bar div.bottom #searchDiv #searchTypeDiv input[type="radio"]:checked + label {
+  background-color: #FAFAFA;
+  color: #333333;
+  font-weight: bold;
+}
+/* line 544, _explorer_toolbar.scss */
+#tool-bar div.bottom #searchDiv #searchTypeDiv input[type="radio"] + label:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+/* line 547, _explorer_toolbar.scss */
+#tool-bar div.bottom #searchDiv #searchTypeDiv input[type="radio"]:checked + label:hover {
+  background-color: #FAFAFA;
+  opacity: 1.0;
+  color: #333333;
+}
+/* line 552, _explorer_toolbar.scss */
+#tool-bar div.bottom #searchDiv #searchTypeDiv input[type="radio"] + label.outline-clear:focus {
+  outline: none;
+}
+/* line 555, _explorer_toolbar.scss */
+#tool-bar div.bottom #searchDiv #searchTypeDiv .searchTextLbl:focus {
+  outline: 2px solid #49D2FF;
+  z-index: 2;
+}
+/* line 559, _explorer_toolbar.scss */
+#tool-bar div.bottom #searchDiv #searchTypeDiv .searchMarkLbl:focus {
+  outline: 2px solid #49D2FF;
+  z-index: 1;
+}
+/* line 564, _explorer_toolbar.scss */
+#tool-bar div.bottom #searchDiv #serachInputDiv {
+  height: 64px;
+  float: left;
+  display: block;
+  width: 260px;
+  margin-top: 2px;
+}
+/* line 570, _explorer_toolbar.scss */
+#tool-bar div.bottom #searchDiv #serachInputDiv input[type=textbox],
+#tool-bar div.bottom #searchDiv #serachInputDiv input[type=text],
+#tool-bar div.bottom #searchDiv #serachInputDiv input[type=password] {
+  border: solid 1px;
+  border-color: #CCCCCC;
+  background-color: #FFFFFF;
+  height: 22px;
+  text-indent: 8px;
+  font-size: 12px;
+  padding: 0 0 0 0;
+  width: 250px;
+  outline: none;
+  margin-top: 10px;
+}
+/* line 585, _explorer_toolbar.scss */
+#tool-bar div.bottom #searchDiv #serachInputDiv .keyword:focus {
+  outline: 2px solid #49D2FF;
+}
+/* line 588, _explorer_toolbar.scss */
+#tool-bar div.bottom #searchDiv #serachInputDiv .outline-clear:focus {
+  outline: none;
+}
+/* line 592, _explorer_toolbar.scss */
+#tool-bar div.bottom #searchDiv .btnSearch {
+  margin-top: 12px;
+  padding: 5px 0 3px 0;
+  width: 60px;
+}
+/* line 597, _explorer_toolbar.scss */
+#tool-bar div.bottom #searchDiv #markSearchDiv {
+  height: 64px;
+  float: left;
+  display: block;
+  width: 260px;
+  margin-top: 2px;
+}
+/* line 604, _explorer_toolbar.scss */
+#tool-bar div.bottom #searchDiv #markSearchDiv input[type="radio"] {
+  display: none;
+}
+/* line 607, _explorer_toolbar.scss */
+#tool-bar div.bottom #searchDiv #markSearchDiv input[type=radio] {
+  display: inline-block;
+  margin-right: 4px;
+}
+/* line 611, _explorer_toolbar.scss */
+#tool-bar div.bottom #searchDiv #markSearchDiv input[type=radio] + label {
+  position: relative;
+  display: inline-block;
+  margin-right: 12px;
+  cursor: pointer;
+  outline: none;
+}
+@media (min-width: 1px) {
+  /* line 619, _explorer_toolbar.scss */
+  #tool-bar div.bottom #searchDiv #markSearchDiv input[type=radio] {
+    display: none;
+    margin: 0px;
+  }
+  /* line 623, _explorer_toolbar.scss */
+  #tool-bar div.bottom #searchDiv #markSearchDiv input[type=radio] + label {
+    padding: 0px 0px 0px 24px;
+    font-size: 12px;
+    color: #333333;
+    margin: 0px 8px 0px 0px;
+  }
+  /* line 630, _explorer_toolbar.scss */
+  #tool-bar div.bottom #searchDiv #markSearchDiv input[type=radio] + label.radio-border-clear::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0px;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 639, _explorer_toolbar.scss */
+  #tool-bar div.bottom #searchDiv #markSearchDiv input[type=radio] + label.radio-border-clear::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FAFAFA;
+    border: 1px solid #CCCCCC;
+    border-radius: 30px;
+  }
+  /* line 647, _explorer_toolbar.scss */
+  #tool-bar div.bottom #searchDiv #markSearchDiv input[type=radio]:checked + label.radio-border-clear::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 655, _explorer_toolbar.scss */
+  #tool-bar div.bottom #searchDiv #markSearchDiv input[type=radio]:checked + label.radio-border-clear::after {
+    display: block;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    margin-top: -5px;
+    background: #333333;
+    border-radius: 8px;
+  }
+  /* line 665, _explorer_toolbar.scss */
+  #tool-bar div.bottom #searchDiv #markSearchDiv input[type=radio] + label.rest::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0px;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 674, _explorer_toolbar.scss */
+  #tool-bar div.bottom #searchDiv #markSearchDiv input[type=radio] + label.rest::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FAFAFA;
+    border: 1px solid #CCCCCC;
+    border-radius: 30px;
+  }
+  /* line 682, _explorer_toolbar.scss */
+  #tool-bar div.bottom #searchDiv #markSearchDiv input[type=radio] + label.rest:focus::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FAFAFA;
+    border: 2px solid #49D2FF;
+    border-radius: 30px;
+  }
+  /* line 690, _explorer_toolbar.scss */
+  #tool-bar div.bottom #searchDiv #markSearchDiv input[type=radio] + label.rest:focus {
+    outline: none;
+  }
+  /* line 693, _explorer_toolbar.scss */
+  #tool-bar div.bottom #searchDiv #markSearchDiv input[type=radio]:checked + label.rest::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 701, _explorer_toolbar.scss */
+  #tool-bar div.bottom #searchDiv #markSearchDiv input[type=radio]:checked + label.rest::after {
+    display: block;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    margin-top: -5px;
+    background: #333333;
+    border-radius: 8px;
+  }
+  /* line 711, _explorer_toolbar.scss */
+  #tool-bar div.bottom #searchDiv #markSearchDiv input[type=radio] + label.hover::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 720, _explorer_toolbar.scss */
+  #tool-bar div.bottom #searchDiv #markSearchDiv input[type=radio] + label.hover::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FBFBFB;
+    border: 1px solid #DBDBDB;
+    border-radius: 30px;
+  }
+  /* line 728, _explorer_toolbar.scss */
+  #tool-bar div.bottom #searchDiv #markSearchDiv input[type=radio]:checked + label.hover::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 736, _explorer_toolbar.scss */
+  #tool-bar div.bottom #searchDiv #markSearchDiv input[type=radio]:checked + label.hover::after {
+    display: block;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    margin-top: -5px;
+    background: #5C5C5C;
+    border-radius: 8px;
+  }
+  /* line 746, _explorer_toolbar.scss */
+  #tool-bar div.bottom #searchDiv #markSearchDiv input[type=radio] + label.hover-outline-appear::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 755, _explorer_toolbar.scss */
+  #tool-bar div.bottom #searchDiv #markSearchDiv input[type=radio] + label.hover-outline-appear::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #FBFBFB;
+    border: 2px solid #49D2FF;
+    border-radius: 30px;
+  }
+  /* line 763, _explorer_toolbar.scss */
+  #tool-bar div.bottom #searchDiv #markSearchDiv input[type=radio]:checked + label.hover-outline-appear::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 771, _explorer_toolbar.scss */
+  #tool-bar div.bottom #searchDiv #markSearchDiv input[type=radio]:checked + label.hover-outline-appear::after {
+    display: block;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    margin-top: -5px;
+    background: #5C5C5C;
+    border-radius: 8px;
+  }
+  /* line 781, _explorer_toolbar.scss */
+  #tool-bar div.bottom #searchDiv #markSearchDiv input[type=radio] + label.pressed::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 790, _explorer_toolbar.scss */
+  #tool-bar div.bottom #searchDiv #markSearchDiv input[type=radio] + label.pressed::before {
+    width: 16px;
+    height: 16px;
+    margin-top: -9px;
+    background: #D9D9D9;
+    border: 1px solid #BBBBBB;
+    border-radius: 30px;
+  }
+  /* line 798, _explorer_toolbar.scss */
+  #tool-bar div.bottom #searchDiv #markSearchDiv input[type=radio]:checked + label.pressed::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+  }
+  /* line 806, _explorer_toolbar.scss */
+  #tool-bar div.bottom #searchDiv #markSearchDiv input[type=radio]:checked + label.pressed::after {
+    display: block;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    margin-top: -5px;
+    background: #333333;
+    border-radius: 8px;
+  }
+}
+/* line 817, _explorer_toolbar.scss */
+#tool-bar div.bottom #searchDiv #markSearchDiv #lbl-typeMarkStar {
+  background-image: url("../res/image/svg/Asset_Altair_Main_Header_Search_Star.svg");
+  background-repeat: no-repeat;
+  background-position: 20px;
+  width: 25px;
+  height: 25px;
+  margin-top: 10px;
+}
+/* line 825, _explorer_toolbar.scss */
+#tool-bar div.bottom #searchDiv #markSearchDiv #lbl-typeMarkAsterisk {
+  background-image: url("../res/image/svg/Asset_Altair_Main_Header_Search_Asterisk.svg");
+  background-repeat: no-repeat;
+  background-position: 20px;
+  width: 25px;
+  height: 25px;
+}
+
+/* line 12, _explorer_footerview.scss */
+#footerspace {
+  bottom: 0px;
+  position: absolute;
+}
+/* line 15, _explorer_footerview.scss */
+#footerspace .progressbar {
+  width: 100%;
+  height: 0px;
+  flex-grow: 1;
+  visibility: hidden;
+  font-size: 12px;
+  border-color: #E5E5E5;
+  border-width: 1px 0px 0px 0px;
+  border-style: double;
+}
+/* line 26, _explorer_footerview.scss */
+#footerspace .progressbar div {
+  display: inline-block;
+}
+/* line 29, _explorer_footerview.scss */
+#footerspace .progressbar .file_transfer {
+  line-height: 32px;
+  text-align: right;
+}
+/* line 33, _explorer_footerview.scss */
+#footerspace .progressbar .transfer_finish {
+  line-height: 32px;
+  margin-left: 8px;
+}
+/* line 36, _explorer_footerview.scss */
+#footerspace .progressbar .transfer_finish .invisible_number {
+  visibility: hidden;
+}
+/* line 40, _explorer_footerview.scss */
+#footerspace .progressbar .loading_icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+  vertical-align: middle;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+/* line 55, _explorer_footerview.scss */
+#footerspace .progressbar .transfer_cancel {
+  margin-left: 8px;
+}
+/* line 57, _explorer_footerview.scss */
+#footerspace .progressbar .transfer_cancel .button {
+  display: block;
+  font-size: 12px;
+  height: 22px;
+  margin-top: 4px;
+  line-height: 22px;
+  padding-left: 12px;
+  padding-right: 12px;
+  background-color: #FAFAFA;
+  border-color: #CCCCCC;
+  color: #333333;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 2px;
+  cursor: pointer;
+}
+/* line 73, _explorer_footerview.scss */
+#footerspace .progressbar .transfer_cancel .button:hover {
+  background-color: #FBFBFB;
+  border-color: #DBDBDB;
+  color: #5C5C5C;
+}
+/* line 78, _explorer_footerview.scss */
+#footerspace .progressbar .transfer_cancel .button:active {
+  background-color: #D9D9D9;
+  border-color: #BBBBBB;
+  color: #1A1A1A;
+}
+/* line 84, _explorer_footerview.scss */
+#footerspace .progressbar #sync_transfer {
+  position: absolute;
+}
+/* line 86, _explorer_footerview.scss */
+#footerspace .progressbar #sync_transfer .disabled_button {
+  pointer-events: none;
+  cursor: default;
+  opacity: 0.2;
+}
+/* line 92, _explorer_footerview.scss */
+#footerspace .progressbar #footer_auto_sync_result {
+  display: flex;
+  height: 32px;
+  justify-content: center;
+}
+/* line 96, _explorer_footerview.scss */
+#footerspace .progressbar #footer_auto_sync_result #footer_auto_sync_txt {
+  height: 32px;
+  line-height: 32px;
+  font-size: 12px;
+  margin: 0 0 0 0;
+  color: #333333;
+}
+/* line 103, _explorer_footerview.scss */
+#footerspace .progressbar #footer_auto_sync_result label.lbl {
+  pointer-events: none;
+}
+/* line 106, _explorer_footerview.scss */
+#footerspace .progressbar #footer_auto_sync_result label.btn {
+  cursor: pointer;
+  text-decoration: underline;
+  pointer-events: auto;
+}
+/* line 111, _explorer_footerview.scss */
+#footerspace .progressbar #footer_auto_sync_result label.btn:hover {
+  color: #D9D9D9;
+}
+/* line 114, _explorer_footerview.scss */
+#footerspace .progressbar #footer_auto_sync_result label.btn:active {
+  color: #333333;
+}
+/* line 118, _explorer_footerview.scss */
+#footerspace .progressbar .progress {
+  position: relative;
+  margin-left: 8px;
+}
+/* line 122, _explorer_footerview.scss */
+#footerspace .progressbar .transfer_progress {
+  width: 300px;
+  height: 8px;
+  background-color: #ddd;
+  border-radius: 4px;
+}
+/* line 127, _explorer_footerview.scss */
+#footerspace .progressbar .transfer_progress .bar {
+  position: absolute;
+  width: 10%;
+  height: 100%;
+  background-color: #61D5F2;
+  border-radius: 4px;
+}
+
+/* line 1, _explorer_uninitsetupview.scss */
+#uninitsetup {
+  height: 100%;
+  width: 100%;
+}
+/* line 4, _explorer_uninitsetupview.scss */
+#uninitsetup #uninit-screen {
+  position: absolute;
+  top: 104px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 480px;
+}
+/* line 12, _explorer_uninitsetupview.scss */
+#uninitsetup #uninit-screen #uninit-msg {
+  height: auto;
+  font-size: 12px;
+  color: #333333;
+}
+/* line 17, _explorer_uninitsetupview.scss */
+#uninitsetup #uninit-screen #uninit-img {
+  margin-top: 12px;
+  width: 480px;
+  margin-left: -38px;
+}
+
+/* line 1, _explorer_unconnectedview.scss */
+#unconnected-screen::-webkit-scrollbar {
+  width: 6px;
+  opacity: 0.8;
+}
+
+/* line 5, _explorer_unconnectedview.scss */
+#unconnected-screen::-webkit-scrollbar:horizontal {
+  height: 6px;
+  opacity: 0.8;
+}
+
+/*hide button*/
+/* line 10, _explorer_unconnectedview.scss */
+#unconnected-screen::-webkit-scrollbar-button {
+  width: 4px;
+  height: 4px;
+  background: #FFFFFF;
+}
+
+/* Handle */
+/* line 16, _explorer_unconnectedview.scss */
+#unconnected-screen::-webkit-scrollbar-thumb {
+  border-radius: 12px;
+  background: rgba(51, 51, 51, 0.8);
+  opacity: 0.8;
+  border-width: 1px 1px 1px 6px;
+  min-height: 24px;
+  padding-left: 2px;
+  opacity: 0.8;
+}
+
+/* line 26, _explorer_unconnectedview.scss */
+#unconnected-screen::-webkit-scrollbar-thumb:hover {
+  background: rgba(92, 92, 92, 0.8);
+  opacity: 0.8;
+}
+
+/* line 31, _explorer_unconnectedview.scss */
+#unconnected-screen::-webkit-scrollbar-thumb:active {
+  background: #333333;
+  opacity: 1;
+}
+
+/* line 37, _explorer_unconnectedview.scss */
+#unconnected-screen {
+  position: absolute;
+  top: 105px;
+  bottom: 0;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+/* line 45, _explorer_unconnectedview.scss */
+#unconnected-screen #unconnected-message-area {
+  width: 100%;
+  height: 376px;
+  margin: 32px;
+  font-size: 12px;
+  color: #808080;
+}
+/* line 66, _explorer_unconnectedview.scss */
+#unconnected-screen #unconnected-message-area button,
+#unconnected-screen #unconnected-message-area input[type=button] {
+  font-size: 12px;
+  background-color: #FAFAFA;
+  border-color: #CCCCCC;
+  color: #333333;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 2px;
+  outline: none;
+  height: 24px;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+/* line 81, _explorer_unconnectedview.scss */
+#unconnected-screen #unconnected-message-area button:hover,
+#unconnected-screen #unconnected-message-area input[type=button]:hover {
+  background-color: #FBFBFB;
+  border-color: #DBDBDB;
+  color: #5C5C5C;
+}
+/* line 87, _explorer_unconnectedview.scss */
+#unconnected-screen #unconnected-message-area button:active,
+#unconnected-screen #unconnected-message-area input[type=button]:active {
+  background-color: #D9D9D9;
+  border-color: #BBBBBB;
+  color: #1A1A1A;
+}
+/* line 93, _explorer_unconnectedview.scss */
+#unconnected-screen #unconnected-message-area button[disabled],
+#unconnected-screen #unconnected-message-area input[type=button][disabled] {
+  opacity: .2;
+}
+/* line 98, _explorer_unconnectedview.scss */
+#unconnected-screen #unconnected-message-area a {
+  cursor: pointer;
+  border-bottom: solid 1px;
+}
+/* line 103, _explorer_unconnectedview.scss */
+#unconnected-screen #unconnected-message-area .big-label {
+  font-size: 16px;
+}
+/* line 107, _explorer_unconnectedview.scss */
+#unconnected-screen #unconnected-message-area div.indent16 {
+  width: 100%;
+  margin-left: 16px;
+  display: inline-block;
+  line-height: 19px;
+}
+/* line 114, _explorer_unconnectedview.scss */
+#unconnected-screen #unconnected-message-area label {
+  font-size: 12px;
+}
+/* line 118, _explorer_unconnectedview.scss */
+#unconnected-screen #unconnected-message-area img.pause {
+  height: 12px;
+  width: 12px;
+  margin-top: 2px;
+}
+/* line 124, _explorer_unconnectedview.scss */
+#unconnected-screen #unconnected-message-area img.connIcon {
+  height: 16px;
+  width: 16px;
+  float: left;
+  margin-right: 4px;
+}
+/* line 131, _explorer_unconnectedview.scss */
+#unconnected-screen #unconnected-message-area #noDeviceMsgArea {
+  position: relative;
+  top: 0;
+}
+/* line 134, _explorer_unconnectedview.scss */
+#unconnected-screen #unconnected-message-area #noDeviceMsgArea div {
+  width: 100%;
+}
+/* line 137, _explorer_unconnectedview.scss */
+#unconnected-screen #unconnected-message-area #noDeviceMsgArea #noDeviceMsgP1 {
+  color: #333333;
+}
+/* line 140, _explorer_unconnectedview.scss */
+#unconnected-screen #unconnected-message-area #noDeviceMsgArea #noDeviceMsgP2 {
+  margin-top: 12px;
+}
+/* line 145, _explorer_unconnectedview.scss */
+#unconnected-screen #unconnected-message-area #checklistArea {
+  width: 100%;
+  position: relative;
+  top: 53px;
+}
+/* line 149, _explorer_unconnectedview.scss */
+#unconnected-screen #unconnected-message-area #checklistArea #noDeviceMsgP3 {
+  position: relative;
+  margin-bottom: 10px;
+}
+/* line 153, _explorer_unconnectedview.scss */
+#unconnected-screen #unconnected-message-area #checklistArea div.indent16 {
+  position: relative;
+  width: 100%;
+  margin-top: 8px;
+}
+/* line 157, _explorer_unconnectedview.scss */
+#unconnected-screen #unconnected-message-area #checklistArea div.indent16 label.concatenate {
+  float: left;
+}
+/* line 160, _explorer_unconnectedview.scss */
+#unconnected-screen #unconnected-message-area #checklistArea div.indent16 label.num {
+  margin-right: 8px;
+}
+/* line 165, _explorer_unconnectedview.scss */
+#unconnected-screen #unconnected-message-area #checklistArea div.indent34 {
+  position: relative;
+  width: 100%;
+  margin-left: 34px;
+  display: inline-block;
+  line-height: 19px;
+}
+/* line 171, _explorer_unconnectedview.scss */
+#unconnected-screen #unconnected-message-area #checklistArea div.indent34 label {
+  float: left;
+}
+/* line 174, _explorer_unconnectedview.scss */
+#unconnected-screen #unconnected-message-area #checklistArea div.indent34 img {
+  margin-top: 1px;
+}
+/* line 181, _explorer_unconnectedview.scss */
+#unconnected-screen #unconnected-message-area #onlineManualArea {
+  position: relative;
+  top: 74px;
+  width: 100%;
+}
+/* line 185, _explorer_unconnectedview.scss */
+#unconnected-screen #unconnected-message-area #onlineManualArea div {
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+/* line 5, _explorer_searchstatusrview.scss */
+#search-bar {
+  border-bottom: solid 1px;
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+  padding: 0px;
+  height: 31px;
+  width: 100%;
+  font-size: 12px;
+}
+/* line 12, _explorer_searchstatusrview.scss */
+#search-bar .search-bar-keyword-div {
+  display: inline-block;
+  margin-top: 6px;
+}
+/* line 15, _explorer_searchstatusrview.scss */
+#search-bar .search-bar-keyword-div .search-bar-item {
+  margin-left: 8px;
+  width: 160px;
+  vertical-align: super;
+  color: #808080;
+}
+/* line 21, _explorer_searchstatusrview.scss */
+#search-bar .search-bar-keyword-div #search-bar-keyword {
+  margin-left: 8px;
+  line-height: 24px;
+  vertical-align: super;
+  width: auto;
+  color: #808080;
+}
+/* line 28, _explorer_searchstatusrview.scss */
+#search-bar .search-bar-keyword-div #search-bar-img {
+  height: 20px;
+  width: 18px;
+}
+/* line 33, _explorer_searchstatusrview.scss */
+#search-bar .search-bar-img-box {
+  display: inline-block;
+  padding-top: 4px;
+  padding-left: 8px;
+  height: 24px;
+}
+/* line 38, _explorer_searchstatusrview.scss */
+#search-bar .search-bar-img-box .search-bar-wait-img {
+  animation: spin 2s linear infinite;
+  height: 22px;
+  width: 22px;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+/* line 53, _explorer_searchstatusrview.scss */
+#search-bar .search-bar-close-div {
+  float: right;
+}
+/* line 55, _explorer_searchstatusrview.scss */
+#search-bar .search-bar-close-div button,
+#search-bar .search-bar-close-div input[type=button] {
+  font-size: 12px;
+  background-color: #FAFAFA;
+  border-color: #CCCCCC;
+  color: #333333;
+  width: 160px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 2px;
+  height: 22px;
+  margin-top: 5px;
+  margin-right: 8px;
+  padding: 0 0 0 0;
+}
+/* line 70, _explorer_searchstatusrview.scss */
+#search-bar .search-bar-close-div button:focus,
+#search-bar .search-bar-close-div input[type=button]:focus {
+  outline: 2px solid #49D2FF;
+}
+/* line 75, _explorer_searchstatusrview.scss */
+#search-bar .search-bar-close-div button:hover,
+#search-bar .search-bar-close-div input[type=button]:hover {
+  background-color: #FBFBFB;
+  border-color: #DBDBDB;
+  color: #5C5C5C;
+}
+/* line 81, _explorer_searchstatusrview.scss */
+#search-bar .search-bar-close-div button:active,
+#search-bar .search-bar-close-div input[type=button]:active {
+  background-color: #D9D9D9;
+  border-color: #BBBBBB;
+  color: #1A1A1A;
+}
+
+/* line 17, _explorer_operationview.scss */
+#operation {
+  height: 32px;
+  width: 100%;
+}
+/* line 20, _explorer_operationview.scss */
+#operation #folder-pick-delete-bar {
+  height: 32px;
+  width: 100%;
+  display: inline-flex;
+  border: 0px;
+  padding: 4px 0 4px 0;
+}
+/* line 26, _explorer_operationview.scss */
+#operation #folder-pick-delete-bar button,
+#operation #folder-pick-delete-bar input[type=button] {
+  font-size: 12px;
+  background-color: #FAFAFA;
+  border-color: #CCCCCC;
+  color: #333333;
+  width: 48px;
+  margin-left: 8px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 2px;
+  height: 26px;
+  outline: none;
+  position: relative;
+}
+/* line 41, _explorer_operationview.scss */
+#operation #folder-pick-delete-bar button:focus,
+#operation #folder-pick-delete-bar input[type=button]:focus {
+  outline: 2px solid #49D2FF;
+}
+/* line 45, _explorer_operationview.scss */
+#operation #folder-pick-delete-bar button:hover,
+#operation #folder-pick-delete-bar input[type=button]:hover {
+  background-color: #FBFBFB;
+  border-color: #DBDBDB;
+  color: #5C5C5C;
+}
+/* line 50, _explorer_operationview.scss */
+#operation #folder-pick-delete-bar button:hover .tooltiptext,
+#operation #folder-pick-delete-bar input[type=button]:hover .tooltiptext {
+  visibility: visible;
+}
+/* line 54, _explorer_operationview.scss */
+#operation #folder-pick-delete-bar button:active,
+#operation #folder-pick-delete-bar input[type=button]:active {
+  background-color: #D9D9D9;
+  border-color: #BBBBBB;
+  color: #1A1A1A;
+}
+/* line 60, _explorer_operationview.scss */
+#operation #folder-pick-delete-bar .tooltiptext {
+  visibility: hidden;
+  top: 28px;
+  width: auto;
+  font-size: 12px;
+  background-color: #F2F2F2;
+  color: #333333;
+  text-align: center;
+  position: absolute;
+  z-index: 1;
+  border-color: #CCCCCC;
+  border-width: 1px;
+  border-style: solid;
+  padding: 8px 8px 8px 8px;
+}
+/* line 75, _explorer_operationview.scss */
+#operation #folder-pick-delete-bar #new-folder-button-icon,
+#operation #folder-pick-delete-bar #pick-button-icon,
+#operation #folder-pick-delete-bar #delete-button-icon,
+#operation #folder-pick-delete-bar #sync-button-icon {
+  width: 24px;
+  height: 24px;
+  margin-top: -1px;
+}
+/* line 83, _explorer_operationview.scss */
+#operation #folder-pick-delete-bar .outline-clear:focus {
+  outline: none;
+}
+
+/* line 2, _explorer_listview.scss */
+#document-list {
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  background-color: #FFFFFF;
+  text-shadow: none;
+  /* Handle */
+  /*hide button*/
+  /* Handle */
+}
+/* line 11, _explorer_listview.scss */
+#document-list #tablecaptain {
+  height: 32px;
+  font-size: 12px;
+  color: #808080;
+  background: #FFFFFF;
+  position: absolute;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+/* line 20, _explorer_listview.scss */
+#document-list #tablecaptain::-webkit-scrollbar {
+  height: 0px;
+}
+/* line 23, _explorer_listview.scss */
+#document-list #tablecaptain::-webkit-scrollbar:horizontal {
+  height: 0px;
+  width: 0px;
+}
+/* line 28, _explorer_listview.scss */
+#document-list #tablecaptain::-webkit-scrollbar-thumb {
+  background: #FFFFFF;
+}
+/* line 32, _explorer_listview.scss */
+#document-list #scrolltable::-webkit-scrollbar {
+  width: 6px;
+  opacity: 0.8;
+}
+/* line 36, _explorer_listview.scss */
+#document-list #scrolltable::-webkit-scrollbar:horizontal {
+  height: 6px;
+  opacity: 0.8;
+}
+/* line 41, _explorer_listview.scss */
+#document-list #scrolltable::-webkit-scrollbar-button {
+  width: 4px;
+  height: 4px;
+  background: #FFFFFF;
+}
+/* line 47, _explorer_listview.scss */
+#document-list #scrolltable::-webkit-scrollbar-thumb {
+  border-radius: 12px;
+  background: rgba(51, 51, 51, 0.8);
+  opacity: 0.8;
+  border-width: 1px 1px 1px 6px;
+  min-height: 24px;
+  padding-left: 2px;
+  opacity: 0.8;
+}
+/* line 57, _explorer_listview.scss */
+#document-list #scrolltable::-webkit-scrollbar-thumb:hover {
+  background: rgba(92, 92, 92, 0.8);
+  opacity: 0.8;
+}
+/* line 62, _explorer_listview.scss */
+#document-list #scrolltable::-webkit-scrollbar-thumb:active {
+  background: #333333;
+  opacity: 1;
+}
+/* line 67, _explorer_listview.scss */
+#document-list #scrolltable {
+  bottom: 0px;
+  top: 32px;
+  width: 100%;
+  position: absolute;
+  overflow: auto;
+}
+/* line 74, _explorer_listview.scss */
+#document-list #list-no-data {
+  height: 100%;
+  width: 100%;
+}
+/* line 77, _explorer_listview.scss */
+#document-list #list-no-data #no-data-text {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto 0;
+  height: 12px;
+  width: 100%;
+  font-size: 12px;
+  text-align: center;
+  color: #808080;
+}
+/* line 89, _explorer_listview.scss */
+#document-list #tablelist {
+  height: 40px;
+  background-color: #FFFFFF;
+}
+/* line 93, _explorer_listview.scss */
+#document-list #tablelist,
+#document-list #tablecaptain {
+  width: 100%;
+  display: block;
+  font-size: 12px;
+}
+/* line 98, _explorer_listview.scss */
+#document-list #tablelist #tbody,
+#document-list #tablecaptain #tbody {
+  display: block;
+}
+/* line 100, _explorer_listview.scss */
+#document-list #tablelist #tbody .displayBlock,
+#document-list #tablecaptain #tbody .displayBlock {
+  width: 100%;
+  display: block;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+}
+/* line 107, _explorer_listview.scss */
+#document-list #tablelist #tbody .document,
+#document-list #tablecaptain #tbody .document {
+  display: block;
+  height: 40px;
+  position: absolute;
+  margin: 0;
+  width: 100%;
+  letter-spacing: -0.4em;
+  white-space: nowrap;
+}
+/* line 115, _explorer_listview.scss */
+#document-list #tablelist #tbody .document .cell,
+#document-list #tablecaptain #tbody .document .cell {
+  display: inline-block;
+  height: 40px;
+  text-align: left;
+  line-height: 40px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  letter-spacing: normal;
+}
+/* line 125, _explorer_listview.scss */
+#document-list #tablelist #tbody .document .cell span,
+#document-list #tablecaptain #tbody .document .cell span {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 40px;
+}
+/* line 131, _explorer_listview.scss */
+#document-list #tablelist #tbody .document .cellLabel,
+#document-list #tablecaptain #tbody .document .cellLabel {
+  margin: 0;
+  font-size: 12px;
+}
+/* line 135, _explorer_listview.scss */
+#document-list #tablelist #tbody .document .mark,
+#document-list #tablecaptain #tbody .document .mark {
+  width: 54px;
+}
+/* line 138, _explorer_listview.scss */
+#document-list #tablelist #tbody .document .mark .newicon,
+#document-list #tablecaptain #tbody .document .mark .newicon {
+  margin-top: 8px;
+  width: 20px;
+  height: 24px;
+  margin-left: 4px;
+  float: left;
+}
+/* line 145, _explorer_listview.scss */
+#document-list #tablelist #tbody .document .mark .documenticon,
+#document-list #tablecaptain #tbody .document .mark .documenticon {
+  margin-top: 6px;
+  width: 20px;
+  height: 24px;
+  float: right;
+}
+/* line 158, _explorer_listview.scss */
+#document-list #tablelist #tbody .document .mark .isNew,
+#document-list #tablecaptain #tbody .document .mark .isNew {
+  background: url("../res/image/svg/Asset_Altair_Main_List_File_New.svg");
+  background-size: cover;
+}
+/* line 162, _explorer_listview.scss */
+#document-list #tablelist #tbody .document .mark .folder,
+#document-list #tablecaptain #tbody .document .mark .folder {
+  background: url("../res/image/svg/Asset_Altair_Main_List_File_Type_Folder.svg");
+  background-size: cover;
+}
+/* line 166, _explorer_listview.scss */
+#document-list #tablelist #tbody .document .mark .note,
+#document-list #tablecaptain #tbody .document .mark .note {
+  background: url("../res/image/svg/Asset_Altair_Main_List_File_Type_Note.svg");
+  background-size: cover;
+}
+/* line 170, _explorer_listview.scss */
+#document-list #tablelist #tbody .document .mark .normal,
+#document-list #tablecaptain #tbody .document .mark .normal {
+  background: url("../res/image/svg/Asset_Altair_Main_List_File_Type_Document.svg");
+  background-size: cover;
+}
+/* line 174, _explorer_listview.scss */
+#document-list #tablelist #tbody .document .mark .syncfolder,
+#document-list #tablecaptain #tbody .document .mark .syncfolder {
+  background: url("../res/image/svg/Asset_Altair_Main_List_File_Type_Folder_Sync.svg");
+  background-size: cover;
+}
+/* line 178, _explorer_listview.scss */
+#document-list #tablelist #tbody .document .mark .syncNote,
+#document-list #tablecaptain #tbody .document .mark .syncNote {
+  background: url("../res/image/svg/Asset_Altair_Main_List_File_Type_Note_Sync.svg");
+  background-size: cover;
+}
+/* line 182, _explorer_listview.scss */
+#document-list #tablelist #tbody .document .mark .syncNormal,
+#document-list #tablecaptain #tbody .document .mark .syncNormal {
+  background: url("../res/image/svg/Asset_Altair_Main_List_File_Type_Document_Sync.svg");
+  background-size: cover;
+}
+/* line 187, _explorer_listview.scss */
+#document-list #tablelist #tbody .document .mark .syncfolder:hover .tooltiptext,
+#document-list #tablecaptain #tbody .document .mark .syncfolder:hover .tooltiptext {
+  visibility: visible;
+}
+/* line 192, _explorer_listview.scss */
+#document-list #tablelist #tbody .document .mark .syncNote:hover .tooltiptext,
+#document-list #tablecaptain #tbody .document .mark .syncNote:hover .tooltiptext {
+  visibility: visible;
+}
+/* line 197, _explorer_listview.scss */
+#document-list #tablelist #tbody .document .mark .syncNormal:hover .tooltiptext,
+#document-list #tablecaptain #tbody .document .mark .syncNormal:hover .tooltiptext {
+  visibility: visible;
+}
+/* line 202, _explorer_listview.scss */
+#document-list #tablelist #tbody .document .tooltiptext,
+#document-list #tablecaptain #tbody .document .tooltiptext {
+  visibility: hidden;
+  top: 28px;
+  width: auto;
+  font-size: 12px;
+  background-color: #F2F2F2;
+  color: #333333;
+  text-align: center;
+  position: absolute;
+  z-index: 1;
+  border-color: #CCCCCC;
+  border-width: 1px;
+  border-style: solid;
+  padding: 8px 8px 8px 8px;
+}
+/* line 217, _explorer_listview.scss */
+#document-list #tablelist #tbody .document .documentTitle,
+#document-list #tablelist #tbody .document .documentAuthor,
+#document-list #tablelist #tbody .document .modifiedDate,
+#document-list #tablelist #tbody .document .addedDate,
+#document-list #tablelist #tbody .document .readDate,
+#document-list #tablecaptain #tbody .document .documentTitle,
+#document-list #tablecaptain #tbody .document .documentAuthor,
+#document-list #tablecaptain #tbody .document .modifiedDate,
+#document-list #tablecaptain #tbody .document .addedDate,
+#document-list #tablecaptain #tbody .document .readDate {
+  margin-right: 0;
+  padding: 0 11px 0 0;
+  width: 160px;
+}
+/* line 228, _explorer_listview.scss */
+#document-list #tablelist #tbody .document .documentName,
+#document-list #tablecaptain #tbody .document .documentName {
+  margin-right: 0;
+  padding: 0 11px 0 0;
+  width: 240px;
+}
+/* line 234, _explorer_listview.scss */
+#document-list #tablelist #tbody .document .documentSize,
+#document-list #tablecaptain #tbody .document .documentSize {
+  width: auto;
+  text-align: right;
+}
+/* line 238, _explorer_listview.scss */
+#document-list #tablelist #tbody .document hr.line,
+#document-list #tablecaptain #tbody .document hr.line {
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  right: 0;
+  size: 1px;
+  margin: 0 8px;
+  color: #E5E5E5;
+}
+/* line 247, _explorer_listview.scss */
+#document-list #tablelist #tbody .document .line2,
+#document-list #tablecaptain #tbody .document .line2 {
+  position: absolute;
+  top: 39px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  margin: 0 8px 0 8px;
+  background-color: #E5E5E5;
+}
+/* line 258, _explorer_listview.scss */
+#document-list #tablelist .tr,
+#document-list #tablecaptain .tr {
+  display: block;
+  height: 32px;
+  position: absolute;
+  letter-spacing: -.4em;
+  background: #FFFFFF;
+}
+/* line 270, _explorer_listview.scss */
+#document-list #tablelist .tr .th,
+#document-list #tablecaptain .tr .th {
+  display: inline-block;
+  letter-spacing: normal;
+}
+/* line 273, _explorer_listview.scss */
+#document-list #tablelist .tr .th div.img,
+#document-list #tablecaptain .tr .th div.img {
+  display: inherit;
+  height: 16px;
+  float: right;
+}
+/* line 277, _explorer_listview.scss */
+#document-list #tablelist .tr .th div.img img,
+#document-list #tablecaptain .tr .th div.img img {
+  width: 16px;
+  height: 16px;
+  margin-top: 8px;
+  vertical-align: middle;
+  visibility: hidden;
+}
+/* line 285, _explorer_listview.scss */
+#document-list #tablelist .tr .th img,
+#document-list #tablecaptain .tr .th img {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  margin-right: 4px;
+  vertical-align: middle;
+  visibility: hidden;
+}
+/* line 293, _explorer_listview.scss */
+#document-list #tablelist .tr .th span,
+#document-list #tablecaptain .tr .th span {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 32px;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: default;
+}
+/* line 303, _explorer_listview.scss */
+#document-list #tablelist .tr .th span:hover,
+#document-list #tablecaptain .tr .th span:hover {
+  color: #999999;
+}
+/* line 306, _explorer_listview.scss */
+#document-list #tablelist .tr .th span:active,
+#document-list #tablecaptain .tr .th span:active {
+  color: #333333;
+}
+/* line 309, _explorer_listview.scss */
+#document-list #tablelist .tr .th span.selected,
+#document-list #tablecaptain .tr .th span.selected {
+  color: #333333;
+}
+/* line 312, _explorer_listview.scss */
+#document-list #tablelist .tr .th span.selected:hover,
+#document-list #tablecaptain .tr .th span.selected:hover {
+  color: #999999;
+}
+/* line 315, _explorer_listview.scss */
+#document-list #tablelist .tr .th div.resizer,
+#document-list #tablecaptain .tr .th div.resizer {
+  display: inherit;
+  width: 8px;
+  cursor: e-resize;
+  height: 16px;
+  top: 9px;
+  z-index: 5;
+  position: relative;
+  float: right;
+  border-left: solid 1px;
+  border-left-color: #808080;
+}
+/* line 329, _explorer_listview.scss */
+#document-list #tablelist .tr #colMark,
+#document-list #tablecaptain .tr #colMark {
+  width: 54px;
+}
+/* line 332, _explorer_listview.scss */
+#document-list #tablelist .tr #tablename,
+#document-list #tablelist .tr #tabletitle,
+#document-list #tablelist .tr #tableauthor,
+#document-list #tablelist .tr #tableupdateddate,
+#document-list #tablelist .tr #tableaddeddate,
+#document-list #tablelist .tr #tablereaddate,
+#document-list #tablelist .tr #filesize,
+#document-list #tablecaptain .tr #tablename,
+#document-list #tablecaptain .tr #tabletitle,
+#document-list #tablecaptain .tr #tableauthor,
+#document-list #tablecaptain .tr #tableupdateddate,
+#document-list #tablecaptain .tr #tableaddeddate,
+#document-list #tablecaptain .tr #tablereaddate,
+#document-list #tablecaptain .tr #filesize {
+  width: 160px;
+}
+/* line 341, _explorer_listview.scss */
+#document-list #tablelist .tr #tablename,
+#document-list #tablecaptain .tr #tablename {
+  width: 240px;
+}
+/* line 348, _explorer_listview.scss */
+#document-list #tablelist #columns,
+#document-list #tablecaptain #columns {
+  height: 32px;
+}
+/* line 351, _explorer_listview.scss */
+#document-list #tablelist .document:hover,
+#document-list #tablecaptain .document:hover {
+  background-color: #F4FCFE;
+}
+/* line 354, _explorer_listview.scss */
+#document-list #tablelist .document.selected,
+#document-list #tablecaptain .document.selected {
+  background-color: #C8F0FA;
+}
+/* line 358, _explorer_listview.scss */
+#document-list .list-view-img-box {
+  display: inline-block;
+  padding-top: 6px;
+  padding-left: 8px;
+  height: 24px;
+}
+/* line 363, _explorer_listview.scss */
+#document-list .list-view-img-box .list-view-wait-img {
+  animation: spin 2s linear infinite;
+  height: 44px;
+  width: 44px;
+}
+
+/* line 6, explorer_breadcrumbview.scss */
+#breadcrumb {
+  width: 100%;
+  height: 32px;
+}
+/* line 9, explorer_breadcrumbview.scss */
+#breadcrumb div {
+  margin-left: 8px;
+  height: 32px;
+  padding-top: 10px;
+  display: inline-flex;
+  width: auto;
+  min-width: 250px;
+  text-shadow: none;
+}
+/* line 17, explorer_breadcrumbview.scss */
+#breadcrumb div img {
+  height: 24px;
+  width: 24px;
+  margin-top: -5px;
+}
+/* line 22, explorer_breadcrumbview.scss */
+#breadcrumb div label {
+  font-size: 12px;
+  color: #808080;
+}
+/* line 26, explorer_breadcrumbview.scss */
+#breadcrumb div a {
+  font-size: 12px;
+  color: #808080;
+  cursor: pointer;
+  text-decoration: underline;
+  font-weight: normal;
+  text-shadow: none;
+  display: inline-table;
+}
+/* line 35, explorer_breadcrumbview.scss */
+#breadcrumb div a.ui-state-disabled {
+  opacity: 1;
+  cursor: default !important;
+  pointer-events: none;
+  font-weight: normal;
+  text-shadow: none;
+  text-decoration: none;
+}
+/* line 43, explorer_breadcrumbview.scss */
+#breadcrumb div span.dispFolder {
+  font-size: 12px;
+  color: #808080;
+  cursor: default;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+/* line 51, explorer_breadcrumbview.scss */
+#breadcrumb div span {
+  font-size: 12px;
+  color: #808080;
+}
+/* line 55, explorer_breadcrumbview.scss */
+#breadcrumb div span.sign {
+  font-size: 12px;
+  color: #808080;
+}
+/* line 59, explorer_breadcrumbview.scss */
+#breadcrumb div span.space {
+  font-size: 12px;
+  color: #808080;
+  width: 8px;
+}
+/* line 64, explorer_breadcrumbview.scss */
+#breadcrumb div a:hover {
+  color: #D9D9D9;
+}
+/* line 67, explorer_breadcrumbview.scss */
+#breadcrumb div a:active {
+  color: #333333;
+}
+
+/* <ATELIERMARKUP type="register-scss" /> */

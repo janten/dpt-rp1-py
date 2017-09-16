@@ -1,0 +1,63 @@
+{
+    "aplist": [{
+            "ssid": "ssid_nonsec",
+            "security": "nonsec",
+            "passwd": "string",
+            "dhcp": "string",
+            "static_address": "string",
+            "gateway": "string",
+            "network_mask": "string",
+            "dns1": "string",
+            "dns2": "string",
+            "proxy": "string",
+            "proxy_host": "string",
+            "proxy_port": "string",
+            "eap": "string",
+            "eap_phase2": "mschapv2",
+            "eap_id": "string",
+            "eap_anid": "string",
+            "eap_cacert": "string",
+            "eap_cert": "string"
+        }, {
+            "ssid": "ssid2_psk",
+            "security": "psk",
+            "passwd": "string",
+            "dhcp": "string",
+            "static_address": "string",
+            "gateway": "string",
+            "network_mask": "string",
+            "dns1": "string",
+            "dns2": "string",
+            "proxy": "string",
+            "proxy_host": "string",
+            "proxy_port": "string",
+            "eap": "string",
+            "eap_phase2": "string",
+            "eap_id": "string",
+            "eap_anid": "string",
+            "eap_cacert": "string",
+            "eap_cert": "string"
+        },
+
+        {
+            "ssid": "ssid3_eap",
+            "security": "eap",
+            "passwd": "string",
+            "dhcp": "string",
+            "static_address": "string",
+            "gateway": "string",
+            "network_mask": "string",
+            "dns1": "string",
+            "dns2": "string",
+            "proxy": "string",
+            "proxy_host": "string",
+            "proxy_port": "string",
+            "eap": "string",
+            "eap_phase2": "string",
+            "eap_id": "string",
+            "eap_anid": "string",
+            "eap_cacert": "string",
+            "eap_cert": "string"
+        }
+    ]
+}

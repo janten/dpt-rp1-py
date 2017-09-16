@@ -1,0 +1,81 @@
+/* line 2, software_update_eula.scss */
+#software-update-eula #notice-area {
+  margin: 0 0 32px 0;
+}
+/* line 4, software_update_eula.scss */
+#software-update-eula #notice-area p {
+  font-size: 12px;
+}
+/* line 7, software_update_eula.scss */
+#software-update-eula #notice-area .eula-title {
+  margin: 0 0 4px 0;
+}
+/* line 10, software_update_eula.scss */
+#software-update-eula #notice-area .eula-description {
+  margin: 0;
+}
+/* line 14, software_update_eula.scss */
+#software-update-eula #eula-area {
+  margin-bottom: 16px;
+  /*hide button*/
+  /* Handle */
+}
+/* line 16, software_update_eula.scss */
+#software-update-eula #eula-area ::-webkit-scrollbar {
+  width: 6px;
+  opacity: 0.8;
+}
+/* line 20, software_update_eula.scss */
+#software-update-eula #eula-area ::-webkit-scrollbar:horizontal {
+  height: 6px;
+  opacity: 0.8;
+}
+/* line 25, software_update_eula.scss */
+#software-update-eula #eula-area ::-webkit-scrollbar-button {
+  width: 4px;
+  height: 4px;
+  background: #FFFFFF;
+}
+/* line 31, software_update_eula.scss */
+#software-update-eula #eula-area ::-webkit-scrollbar-thumb {
+  border-radius: 12px;
+  background: rgba(51, 51, 51, 0.8);
+  opacity: 0.8;
+  border-width: 1px 1px 1px 6px;
+  min-height: 24px;
+  padding-left: 2px;
+  opacity: 0.8;
+}
+/* line 41, software_update_eula.scss */
+#software-update-eula #eula-area ::-webkit-scrollbar-thumb:hover {
+  background: rgba(92, 92, 92, 0.8);
+  opacity: 0.8;
+}
+/* line 46, software_update_eula.scss */
+#software-update-eula #eula-area ::-webkit-scrollbar-thumb:active {
+  background: #333333;
+  opacity: 1;
+}
+/* line 51, software_update_eula.scss */
+#software-update-eula #eula-area #eula {
+  font-size: 12px;
+  height: 312px;
+  overflow-y: auto;
+  border-color: #E5E5E5;
+  border-style: solid;
+  border-width: 1px;
+  padding: 8px;
+  white-space: pre-line;
+}
+/* line 62, software_update_eula.scss */
+#software-update-eula #agree-area {
+  margin-bottom: 32px;
+}
+/* line 63, software_update_eula.scss */
+#software-update-eula #agree-area label {
+  display: block;
+}
+/* line 66, software_update_eula.scss */
+#software-update-eula #agree-area #agree-yes-label {
+  margin-bottom: 8px;
+}

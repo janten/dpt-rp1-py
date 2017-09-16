@@ -1,0 +1,225 @@
+/* line 1, _base.scss */
+body {
+  height: 100%;
+  font-family: Arial,Helvetica,sans-serif;
+  overflow: auto;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+/* line 16, _base.scss */
+body article .ui-btn, body article .ui-slider {
+  z-index: 2;
+}
+/* line 20, _base.scss */
+body article section.normal-screen {
+  padding: 0;
+}
+/* line 23, _base.scss */
+body article section.fullscreen {
+  position: absolute;
+  padding: 0;
+  margin: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+/* line 32, _base.scss */
+body article section.fixed-screen {
+  position: absolute;
+  padding: 0;
+  top: 45px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+/* line 50, _dialog_base.scss */
+label {
+  font-size: 12px;
+  color: #333333;
+}
+
+/* line 55, _dialog_base.scss */
+input[type=textbox],
+input[type=text],
+input[type=password] {
+  border: solid 1px;
+  border-color: #CCCCCC;
+  background-color: #FFFFFF;
+  height: 22px;
+  text-indent: 8px;
+  font-size: 12px;
+  padding: 0;
+}
+
+/* line 67, _dialog_base.scss */
+input[type=text]:focus {
+  outline: 2px solid #49D2FF;
+}
+
+/* line 71, _dialog_base.scss */
+button,
+input[type=button] {
+  font-size: 12px;
+  background-color: #FAFAFA;
+  border-color: #CCCCCC;
+  color: #333333;
+  width: 160px;
+  margin-left: 8px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 2px;
+  outline: none;
+}
+
+/* line 84, _dialog_base.scss */
+button:focus,
+input[type=button]:focus {
+  outline: 2px solid #49D2FF;
+}
+
+/* line 88, _dialog_base.scss */
+button:hover,
+input[type=button]:hover {
+  background-color: #FBFBFB;
+  border-color: #DBDBDB;
+  color: #5C5C5C;
+}
+
+/* line 94, _dialog_base.scss */
+button:active,
+input[type=button]:active {
+  background-color: #D9D9D9;
+  border-color: #BBBBBB;
+  color: #1A1A1A;
+}
+
+/* line 100, _dialog_base.scss */
+button[disabled],
+input[type=button][disabled] {
+  opacity: .2;
+}
+
+/* line 105, _dialog_base.scss */
+select {
+  border: solid 1px;
+  border-color: #CCCCCC;
+  background-color: #FFFFFF;
+  text-indent: 4px;
+  outline: none;
+}
+
+/* line 113, _dialog_base.scss */
+select:focus {
+  outline: 2px solid #49D2FF;
+}
+
+/* line 117, _dialog_base.scss */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  cursor: default;
+}
+/* line 123, _dialog_base.scss */
+html article,
+body article {
+  outline: none;
+}
+
+/* line 3, dialog_loading.scss */
+article {
+  min-height: 100px;
+  border: 20px;
+}
+/* line 6, dialog_loading.scss */
+article .main {
+  position: absolute;
+  top: 0;
+  bottom: 48px;
+}
+/* line 10, dialog_loading.scss */
+article .main .center {
+  height: 32px;
+  width: 500px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+/* line 17, dialog_loading.scss */
+article .main .center .loader-box {
+  position: relative;
+  height: 32px;
+  width: 32px;
+  margin-left: 32px;
+  margin-right: 16px;
+  display: inline-block;
+}
+/* line 25, dialog_loading.scss */
+article .main .center .loader-box .loader-img {
+  animation: spin 2s linear infinite;
+  height: 32px;
+  width: 32px;
+}
+/* line 32, dialog_loading.scss */
+article .main .center .message {
+  position: absolute;
+  height: 32px;
+  width: 95%;
+  margin: auto 0;
+  display: inline-block;
+}
+/* line 38, dialog_loading.scss */
+article .main .center .message label {
+  position: absolute;
+  line-height: 32px;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+/* line 57, dialog_loading.scss */
+article .btn-area {
+  height: 48px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-color: #E5E5E5;
+  border-style: solid;
+  border-width: 1px 0px 0px 0px;
+}
+/* line 67, dialog_loading.scss */
+article .btn-area button {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: inline-block;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 16px;
+  margin-left: auto;
+  height: 24px;
+  width: 160px;
+}
+/* line 82, dialog_loading.scss */
+article .hide {
+  display: none;
+}
