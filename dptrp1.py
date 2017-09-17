@@ -2,6 +2,8 @@
 import requests
 import httpsig
 import urllib3
+from urllib.parse import quote_plus
+import os
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -38,7 +40,36 @@ class DigitalPaper(object):
 
     def get_endpoint(self, endpoint=""):
         url = f"{self.base_url}{endpoint}"
-        return requests.get(url, verify=False, cookies=self.cookies).json()
+        return requests.get(url, verify=False, cookies=self.cookies)
+
+    def put_endpoint(self, endpoint="", data={}, files=None):
+        url = f"{self.base_url}{endpoint}"
+        return requests.put(url, verify=False, cookies=self.cookies, json=data, files=files)
+
+    def post_endpoint(self, endpoint="", data={}):
+        url = f"{self.base_url}{endpoint}"
+        return requests.post(url, verify=False, cookies=self.cookies, json=data)
+    
+    def upload_document(self, local_path, remote_path):
+        filename = os.path.basename(remote_path)
+        remote_directory = os.path.dirname(remote_path)
+        encoded_directory = quote_plus(remote_directory)
+        directory_entry = dp.get_endpoint(f"/resolve/entry/{encoded_directory}").json()
+        directory_id = directory_entry["entry_id"]
+        info = {
+            "file_name": filename,
+            "parent_folder_id": directory_id,
+            "document_source": ""
+        }
+        r = dp.post_endpoint("/documents", data=info)
+        doc = r.json()
+        print(r.headers)
+        doc_id = doc["document_id"]
+        with open(local_path, 'rb') as local_file:
+            files = {
+                'file': ("altair.pdf", local_file, 'rb')
+            }
+            self.put_endpoint(f"/documents/{doc_id}/file", files=files)
         
     def take_screenshot(self):
         url = f"{self.base_url}/system/controls/screen_shot"
@@ -46,75 +77,87 @@ class DigitalPaper(object):
         with open("screenshot.png", 'wb') as f:
             f.write(r.content)
         
-dp = DigitalPaper(ip_address = "10.0.1.17", client_id="5d8cdd57-d496-459d-bd06-4774223e6707")
-dp.authenticate()
-endpoints = [
-    "/documents",
-    "/documents/{}",
-    "/documents/{}/file",
-    "/documents/{}/copy",
-    "/folders",
-    "/folders/{}",
-    "/folders/{}/entries",
-    "/viewer/configs/note_templates",
-    "/viewer/configs/note_templates/{}",
-    "/viewer/configs/note_templates/{}/file",
-    "/viewer/status/preset_marks",
-    "/viewer/controls/open",
-    "/system/configs",
-    "/system/configs/timezone",
-    "/system/configs/datetime",
-    "/system/configs/date_format",
-    "/system/configs/time_format",
-    "/system/configs/initialized_flag",
-    "/system/configs/timeout_to_standby",
-    "/system/configs/owner",
-    "/system/status/storage",
-    "/system/status/firmware_version",
-    "/system/status/mac_address",
-#    "/system/controls/screen_shot",
-    "/system/controls/update_firmware/precheck",
-    "/system/controls/update_firmware",
-    "/system/controls/update_firmware/file",
-    "/system/configs/wifi",
-    "/system/configs/wifi_accesspoints",
-    "/system/configs/wifi_accesspoints/{}/{}",
-    "/system/configs/certificates",
-    "/system/configs/certificates/ca",
-    "/system/configs/certificates/client",
-    "/system/status/wifi_state",
-    "/system/status/wps_state",
-    "/system/controls/wifi_accesspoints/scan",
-    "/system/controls/wifi_accesspoints/register",
-    "/system/controls/wps_start/button",
-    "/system/controls/wps_start/pin",
-    "/system/controls/wps_cancel",
-    "/register/serial_number",
-    "/register/information",
-    "/register/pin",
-    "/register/hash",
-    "/register/ca",
-    "/register",
-    "/register/cleanup",
-    "/auth/nonce/{}",
-    "/auth",
-    "/extensions/status",
-    "/extensions/status/{}",
-    "/extensions/configs",
-    "/extensions/configs/{}",
-    "/testmode/auth/nonce",
-    "/testmode/auth",
-    "/testmode/launch",
-    "/testmode/recovery_mode",
-    "/testmode/assets/{}",
-    "/resolve/entry/{}",
-    "/api_version",
-    "/ping"
-]
-dp.take_screenshot()
-for endpoint in endpoints:
-    print(endpoint)
-    print(dp.get_endpoint(endpoint))
-    print()
+if __name__ == "__main__":
+    dp = DigitalPaper(ip_address = "10.0.1.17", client_id="5d8cdd57-d496-459d-bd06-4774223e6707")
+    dp.authenticate()
+    dp.upload_document('/Users/janten/Downloads/spewi3517.pdf', "Document/Magazines/Economist/test.pdf")
+    
+    endpoints = [
+        '/documents',
+        '/documents/{}',
+        '/documents/{}/file',
+        '/documents/{}/copy',
 
-# print(dp.get_endpoint("/folders/root/entries"))
+        '/folders',
+        '/folders/{}',
+        '/folders/{}/entries',
+
+        '/viewer/configs/note_templates',
+        '/viewer/configs/note_templates/{}',
+        '/viewer/configs/note_templates/{}/file',
+
+        '/viewer/status/preset_marks',
+        '/viewer/controls/open',
+
+        '/system/configs',
+        '/system/configs/timezone',
+        '/system/configs/datetime',
+        '/system/configs/date_format',
+        '/system/configs/time_format',
+        '/system/configs/initialized_flag',
+        '/system/configs/timeout_to_standby',
+        '/system/configs/owner',
+
+        '/system/status/storage',
+        '/system/status/firmware_version',
+        '/system/status/mac_address',
+
+        '/system/controls/screen_shot',
+        '/system/controls/update_firmware/precheck',
+        '/system/controls/update_firmware',
+        '/system/controls/update_firmware/file',
+
+        '/system/configs/wifi',
+        '/system/configs/wifi_accesspoints',
+        '/system/configs/wifi_accesspoints/{}/{}',
+        '/system/configs/certificates',
+        '/system/configs/certificates/ca',
+        '/system/configs/certificates/client',
+
+        '/system/status/wifi_state',
+        '/system/status/wps_state',
+
+        '/system/controls/wifi_accesspoints/scan',
+        '/system/controls/wifi_accesspoints/register',
+        '/system/controls/wps_start/button',
+        '/system/controls/wps_start/pin',
+        '/system/controls/wps_cancel',
+
+        '/register/serial_number',
+        '/register/information',
+        '/register/pin',
+        '/register/hash',
+        '/register/ca',
+        '/register',
+        '/register/cleanup',
+
+        '/auth/nonce/{}',
+        '/auth',
+
+        '/extensions/status',
+        '/extensions/status/{}',
+        '/extensions/configs',
+        '/extensions/configs/{}',
+
+        '/testmode/auth/nonce',
+        '/testmode/auth',
+        '/testmode/launch',
+        '/testmode/recovery_mode',
+        '/testmode/assets/{}',
+
+        '/resolve/entry/{}',
+        '/api_version',
+        '/ping'
+    ]
+
+    # print(dp.get_endpoint("/folders/root/entries"))
