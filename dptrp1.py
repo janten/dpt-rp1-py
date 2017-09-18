@@ -9,15 +9,14 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 class DigitalPaper(object):
     """docstring for DigitalPaper"""
-    def __init__(self, ip_address, client_id):
+    def __init__(self, client_id):
         super(DigitalPaper, self).__init__()
         self.client_id = client_id
-        self.ip_address = ip_address
         self.cookies = {}
         
     @property
     def base_url(self):
-        return f"https://{self.ip_address}:8443"    
+        return f"https://digitalpaper.local:8443"    
     
     def get_nonce(self):
         url = f"{self.base_url}/auth/nonce/{self.client_id}"
@@ -63,7 +62,6 @@ class DigitalPaper(object):
         }
         r = dp.post_endpoint("/documents", data=info)
         doc = r.json()
-        print(r.headers)
         doc_id = doc["document_id"]
         with open(local_path, 'rb') as local_file:
             files = {
@@ -78,9 +76,8 @@ class DigitalPaper(object):
             f.write(r.content)
         
 if __name__ == "__main__":
-    dp = DigitalPaper(ip_address = "10.0.1.17", client_id="5d8cdd57-d496-459d-bd06-4774223e6707")
+    dp = DigitalPaper(client_id="5d8cdd57-d496-459d-bd06-4774223e6707")
     dp.authenticate()
-    dp.upload_document('/Users/janten/Downloads/spewi3517.pdf', "Document/Magazines/Economist/test.pdf")
     
     endpoints = [
         '/documents',
@@ -160,4 +157,3 @@ if __name__ == "__main__":
         '/ping'
     ]
 
-    # print(dp.get_endpoint("/folders/root/entries"))
