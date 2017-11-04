@@ -25,7 +25,7 @@ var clientPath = os.homedir() + '/Desktop/client_id.txt';
 fs.writeFileSync(certPath, data, 'utf-8');
 fs.writeFileSync(clientPath, deviceId, 'utf-8');
 console.log(data);
-console.log(deviceId);```
+console.log(deviceId);
 ```
 
 Then use the _asar_ utility again to archive the changes and implement them into the Digital Paper App.
