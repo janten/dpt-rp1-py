@@ -20,7 +20,7 @@ Surprisingly, the application is nicely organised into different modules that ev
 // console.log(JSON.stringify(authInfo, null, "  "));
 var fs = require('fs');
 var os = require('os');
-var certPath = os.homedir() + '/Desktop/cert.pem';
+var certPath = os.homedir() + '/Desktop/key.pem';
 var clientPath = os.homedir() + '/Desktop/client_id.txt';
 fs.writeFileSync(certPath, data, 'utf-8');
 fs.writeFileSync(clientPath, deviceId, 'utf-8');
@@ -35,4 +35,4 @@ cd "/Applications/Digital Paper App.app"
 sudo asar p ~/Desktop/dpt ./Contents/Resources/app.asar
 ```
 
-Now run the Digital Paper App and it will create two files, _client\_id.txt_ and _cert.pem_, on the desktop once the pairing is complete.
+Now run the Digital Paper App and it will create two files, _client\_id.txt_ and _key.pem_, on the desktop once the pairing is complete.
