@@ -7,23 +7,32 @@ import os
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-class DigitalPaper(object):
-    """docstring for DigitalPaper"""
-    def __init__(self, client_id):
-        super(DigitalPaper, self).__init__()
+class DigitalPaper():
+    def __init__(self, addr=None, client_id=None):
+        if client_id is None:
+            with open('privs/client_id.txt') as fh:
+                client_id = fh.readline().strip()
         self.client_id = client_id
+        if addr is None:
+            self.addr = "https://digitalpaper.local:8443"
+        else:
+            if ":" in addr:
+                port = ""
+            else:
+                port = ":8443"
+            self.addr = "https://" + addr + port
         self.cookies = {}
-        
+
     @property
     def base_url(self):
-        return f"https://digitalpaper.local:8443"    
-    
+        return self.addr
+
     def get_nonce(self):
         url = f"{self.base_url}/auth/nonce/{self.client_id}"
         r = requests.get(url, verify=False)
         return r.json()["nonce"]
 
-    def authenticate(self, path_to_private_key='certs/key.pem'):
+    def authenticate(self, path_to_private_key='privs/key.pem'):
         secret = open(path_to_private_key, 'rb').read()
         sig_maker = httpsig.Signer(secret=secret, algorithm='rsa-sha256')
         nonce = self.get_nonce()
@@ -48,7 +57,7 @@ class DigitalPaper(object):
     def post_endpoint(self, endpoint="", data={}):
         url = f"{self.base_url}{endpoint}"
         return requests.post(url, verify=False, cookies=self.cookies, json=data)
-    
+
     def upload_document(self, local_path, remote_path):
         filename = os.path.basename(remote_path)
         remote_directory = os.path.dirname(remote_path)
@@ -68,17 +77,17 @@ class DigitalPaper(object):
                 'file': ("altair.pdf", local_file, 'rb')
             }
             self.put_endpoint(f"/documents/{doc_id}/file", files=files)
-        
+
     def take_screenshot(self):
         url = f"{self.base_url}/system/controls/screen_shot"
         r = requests.get(url, verify=False, cookies=self.cookies)
         with open("screenshot.png", 'wb') as f:
             f.write(r.content)
-        
+
 if __name__ == "__main__":
-    dp = DigitalPaper(client_id="5d8cdd57-d496-459d-bd06-4774223e6707")
+    dp = DigitalPaper(addr="172.20.123.4")
     dp.authenticate()
-    
+
     endpoints = [
         '/documents',
         '/documents/{}',

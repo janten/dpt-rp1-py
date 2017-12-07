@@ -3137,24 +3137,16 @@
         },
         "/system/controls/wifi_accesspoints/register": {
             "put": {
-                "tags": [
-                    "設定-無線制御"
-                ],
-                "schemes": [
-                    "https"
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "description": "Wi-Fi アクセスポイント新規登録または登録済みのアクセスポイントの設定変更の上、そのアクセスポイントへの接続要求\n* 同一の SSID 且つ同一暗号化方式のアクセスポイントが既に登録されている場合、設定内容が上書きされる\n* dhcp が 'false' の場合、static_address, gateway, network_mask, dns1, dns2 は必須 <br/>\n     (static_address, network_mask, dns1 は空文字不可。gateway, dns2は空文字許容。)\n* proxy が 'true' の場合、proxy_host, proxy_port は必須 (空文字は許容)\n* security が 'eap' の場合、eap, eap_phase2, eap_id, eap_anid, eap_cacert, eap_cert は必須 (空文字は許容)\n* 登録済みのアクセスポイントの設定変更の際は、変更がない項目についても全て指定する\n * 例外的に passwd のみ、未設定もしくは空文字の場合は「変更なし」と解釈する",
+                "tags": [ "Setting - wireless control" ],
+                "schemes": [ "https" ],
+                "consumes": [ "application/json" ],
+                "produces": [ "application/json" ],
+"description": "Request to connect to the access point after new Wi-Fi access point registration or change of registered access point setting \n * Access point with the same SSID and same encryption method already registered \n * static_address, gateway, network_mask, dns1, dns2 are mandatory if \n * dhcp is 'false' \n (static_address, network_mask, dns1 is not empty, gateway, dns2 Proxy_port is required (empty character is acceptable) \n * If eap, eap_phase 2, eap_id, eap_idid, eap_cacert, eap_cert are required if security is 'eap'. \n * If proxy is 'true', proxy_host and proxy_port are required (Null character is acceptable.) \n * When changing the setting of registered access point, specify all items that have not been changed \n * exceptionally passwd only, unmodified or empty character 'no change' Interpret",
                 "parameters": [
                     {
                         "name": "ap",
                         "in": "body",
-                        "description": "アクセスポイント設定内容",
+"description": "Access point setting content",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/apConfigureObject"
@@ -3166,13 +3158,13 @@
                         "description": "成功"
                     },
                     "400": {
-                        "description": "* [40000] JSONのパースに失敗した\n* [40001] 必須パラメータが指定されていなかった\n* [40002] 数値指定のパラメータが数値として認識できなかった\n* [40003] Base64のデコードに失敗した\n* [40005] 規定された選択肢以外の文字列が指定された\n* [40006] 不正なパラメータ値が指定された\n* [40008] 登録可能なアクセスポイント数の上限に達している",
+"description": "* [40000] Failed to parse JSON \n * [40001] mandatory parameter was not specified \n * [40002] Numeric parameter was not recognized as numerical value \n * 40003] Failed to decode Base64 \n * [40005] A character string other than the prescribed option was specified \n * [40006] Incorrect parameter value was specified \n * [40008] Registerable access The maximum number of points has been reached ",
                         "schema": {
                             "$ref": "#/definitions/errorResult"
                         }
                     },
                     "403": {
-                        "description": "* [40304] Wi-Fi が OFF なので処理できない",
+"description": "* [40304] Can not process because Wi-Fi is OFF",
                         "schema": {
                             "$ref": "#/definitions/errorResult"
                         }
@@ -3183,27 +3175,27 @@
         "/system/controls/wps_start/button": {
             "put": {
                 "tags": [
-                    "設定-無線制御"
+"Setting - wireless control"
                 ],
                 "schemes": [
                     "https"
                 ],
                 "produces": [
                     "application/json"
-                ],
-                "description": "Wi-Fi Protected Setup&trade; (WPS) による Wi-Fi 登録開始 (ボタン型、非同期)",
+],
+"description": "Wi-Fi registration initiated by Wi-Fi Protected Setup & trade (WPS) (button type, asynchronous)",
                 "responses": {
                     "204": {
-                        "description": "成功 (登録シーケンスが開始された)"
+"description": "Success (registration sequence started)"
                     },
                     "403": {
-                        "description": "* [40304] Wi-Fi が OFF なので処理できない",
+"description": "* [40304] Can not process because Wi-Fi is OFF",
                         "schema": {
                             "$ref": "#/definitions/errorResult"
                         }
                     },
                     "503": {
-                        "description": "* [50301] 同時にできない処理を実行中で、要求に応じられない",
+"description": "* [50301] Processing that can not be done at the same time is being executed and can not respond to requests",
                         "schema": {
                             "$ref": "#/definitions/errorResult"
                         }
@@ -3222,28 +3214,28 @@
                 "produces": [
                     "application/json"
                 ],
-                "description": "Wi-Fi Protected Setup&trade; (WPS) による Wi-Fi 登録開始 (PIN 型、非同期)",
+"description": "Wi-Fi registration start (PIN type, asynchronous) by Wi-Fi Protected Setup & trade; (WPS)",
                 "responses": {
                     "200": {
-                        "description": "登録シーケンスが開始され、PIN を取得",
+"description": "Registration sequence started, Get PIN",
                         "schema": {
                             "$ref": "#/definitions/commonValueObject"
                         }
                     },
                     "403": {
-                        "description": "* [40304] Wi-Fi が OFF なので処理できない",
+"description": "* [40304] Can not process because Wi-Fi is OFF",
                         "schema": {
                             "$ref": "#/definitions/errorResult"
                         }
                     },
                     "408": {
-                        "description": "* [40800] 想定時間内に PIN が取得できなかった(60秒)",
+"description": "* [40800] PIN could not be acquired within the assumed time (60 seconds)",
                         "schema": {
                             "$ref": "#/definitions/errorResult"
                         }
                     },
                     "503": {
-                        "description": "* [50301] 同時にできない処理を実行中で、要求に応じられない",
+"description": "* [50301] Processing that can not be done at the same time is being executed and can not respond to requests",
                         "schema": {
                             "$ref": "#/definitions/errorResult"
                         }
@@ -3262,14 +3254,14 @@
                 "produces": [
                     "application/json"
                 ],
-                "description": "Wi-Fi Protected Setup&trade; (WPS) による Wi-Fi 登録の手動キャンセル",
+"description": "Manual cancellation of Wi-Fi registration by Wi-Fi Protected Setup & trade ((WPS)",
                 "responses": {
                     "204": {
-                        "description": "成功 (登録シーケンスを停止した)"
+"description": "Success (stop registration sequence)"
                     },
                     "403": {
-                        "description": "* [40304] Wi-Fi が OFF なので処理できない",
-                        "schema": {
+"description": "* [40304] Can not process because Wi-Fi is OFF",
+"schema": {
                             "$ref": "#/definitions/errorResult"
                         }
                     }
@@ -3279,7 +3271,7 @@
         "/register/serial_number": {
             "get": {
                 "tags": [
-                    "クライアント登録"
+"Client registration"
                 ],
                 "schemes": [
                     "http",
@@ -3288,10 +3280,10 @@
                 "produces": [
                     "application/json"
                 ],
-                "description": "本体シリアル番号の取得<br>\n<small>※HTTP通信が可能</small>",
+"description": "Get body serial number <br> \n <small> * Enable HTTP communication </ small>",
                 "responses": {
                     "200": {
-                        "description": "本体シリアル番号",
+"description": "body serial number",
                         "schema": {
                             "$ref": "#/definitions/commonValueObject"
                         }
@@ -3311,10 +3303,10 @@
                 "produces": [
                     "application/json"
                 ],
-                "description": "本体の各種情報を取得<br>\n<small>※HTTP通信が可能</small>",
+"description": "Getting various information on the main unit <br> \n <small> * Enable HTTP communication </ small>",
                 "responses": {
                     "200": {
-                        "description": "本体の各種情報",
+"description": "various information on the main body",
                         "schema": {
                             "$ref": "#/definitions/deviceInformationResult"
                         }
@@ -3501,16 +3493,16 @@
                 "produces": [
                     "application/json"
                 ],
-                "description": "クライアント登録シーケンスその1 (DCSS向け)<br>\n<small>※HTTP通信が可能、詳しくは別紙 'DCSS登録用WebAPI補足.pptx' 参照</small>",
+"description": "Client registration sequence part 1 (for DCSS) <br> \n <small> * HTTP communication is possible, see the attachment 'WebAPI supplement for DCSS registration .pptx' reference </ small>",
                 "responses": {
                     "200": {
-                        "description": "M5<br><small>※別紙 'DCSS登録用WebAPI補足.pptx' 参照</small>",
+"description": "M5 <br> <small> ※ Other paper DCSS login WebAPI make up. Pptx 'reference </ small>
                         "schema": {
                             "$ref": "#/definitions/commonRegisterObject"
                         }
                     },
                     "403": {
-                        "description": "* [40301] 登録シーケンスに基づくパラメータの検証結果に問題あり\n* [40305] リトライ制限・時間制限により、登録シーケンスを最初からやりなおす必要あり",
+"description": "* [40301] There is a problem with the verification result of the parameter based on the registration sequence \n * [40305] It is necessary to restart the registration sequence from the beginning due to the retry limit / time limit"
                         "schema": {
                             "$ref": "#/definitions/errorResult"
                         }
@@ -3674,8 +3666,8 @@
                 "produces": [
                     "application/json"
                 ],
-                "description": "クライアント登録シーケンスに関連する、本体画面の表示のクリアを指示する",
-                "responses": {
+"description": "Instruct clearing display of main screen related to client registration sequence",
+"responses": {
                     "204": {
                         "description": "結果に依らず応答"
                     }
@@ -3733,7 +3725,7 @@
                 "produces": [
                     "application/json"
                 ],
-                "description": "認証を行う<br>\nnonce_signed には、Nonce (ワンタイムトークン)をK_PRIV_C(クライアントの秘密鍵)を用いてSHA256署名アルゴリズムで電子署名したものを指定する",
+"description": "To authenticate <br> \nnonce_signed, specify Nonce (one-time token) digitally signed with SHA 256 signature algorithm using K_PRIV_C (client's private key)",
                 "parameters": [
                     {
                         "name": "auth_info",
@@ -3774,10 +3766,10 @@
                 "produces": [
                     "application/json"
                 ],
-                "description": "(拡張アプリ向け) 状態値の一覧を取得する",
+"description": "Obtain a list of state values (for extended applications)",
                 "responses": {
                     "200": {
-                        "description": "各種状態値の一覧<br>(JSONの属性名'item1, item2...'は動的に変化する)",
+"description": "List of various state values <br> (JSON attribute name 'item 1, item 2 ...' changes dynamically)",
                         "schema": {
                             "$ref": "#/definitions/extensionsStatusGetResult"
                         }
@@ -3833,7 +3825,7 @@
                 "produces": [
                     "application/json"
                 ],
-                "description": "(拡張アプリ向け) 設定値の一覧を取得する",
+"description": "Obtain a list of setting values (for extended applications)",
                 "responses": {
                     "200": {
                         "description": "各種設定値の一覧<br>(JSONの属性名 'item1, item2...' は動的に変化する)",
@@ -3942,10 +3934,10 @@
                 "produces": [
                     "application/json"
                 ],
-                "description": "テストモード専用認証のNonce (ワンタイムトークン) を取得する",
+"description": "Acquire Nonce (One Time Token) for Test Mode Dedicated Authentication",
                 "responses": {
                     "200": {
-                        "description": "Nonce (ワンタイムトークン) 情報",
+"description": "Nonce (one time token) information",
                         "schema": {
                             "$ref": "#/definitions/commonNonceObjectResult"
                         }
@@ -3973,7 +3965,7 @@
                 "produces": [
                     "application/json"
                 ],
-                "description": "テストモード専用認証を行う<br>\nnonce_signed には、Nonce (ワンタイムトークン)をK_PRIV_DT(テストモード専用クライアントの秘密鍵)を用いてSHA256署名アルゴリズムで電子署名したものを指定する",
+"description": "To do authentication exclusively for test mode <br> <br> # nonce_signed specifies Nonce (one-time token) digitally signed with SHA 256 signature algorithm using K_PRIV_DT (secret key of client dedicated to test mode) ",
                 "parameters": [
                     {
                         "name": "auth_info",
@@ -4020,7 +4012,7 @@
                 "produces": [
                     "application/json"
                 ],
-                "description": "テストモードUI表示",
+"description": "Test mode UI display",
                 "responses": {
                     "204": {
                         "description": "成功"
@@ -4045,7 +4037,7 @@
                 "produces": [
                     "application/json"
                 ],
-                "description": "本体をリカバリーモードで再起動する",
+"description": "Restart main unit in recovery mode",
                 "responses": {
                     "204": {
                         "description": "成功"
@@ -4072,7 +4064,7 @@
                     "text/plain",
                     "application/json"
                 ],
-                "description": "テストモード専用ストレージ領域内のファイル実体、もしくはフォルダーの情報を取得",
+"description": "Acquire file entity or folder information in the test mode dedicated storage area",
                 "parameters": [
                     {
                         "name": "path",
@@ -4122,12 +4114,12 @@
                 "produces": [
                     "application/json"
                 ],
-                "description": "テストモード専用ストレージ領域内にファイルをアップロード、もしくはフォルダーの作成<br>\n指定パスの途中までのフォルダーは、適宜自動生成される<br>\n同一パスに何かあった場合は、ファイルであれフォルダーであれ、問答無用で削除した後、上書きされる",
+"description": "Upload files or create folders within the test mode dedicated storage area <br> \ n Folders up to the middle of the specified path will be generated automatically when appropriate. \ \ n Something on the same path If it is a file or a folder, it is overwritten after deleting it without asking questions ",
                 "parameters": [
                     {
                         "name": "path",
                         "in": "path",
-                        "description": "ファイル/フォルダーの相対パスをURLエンコードしたもの<br>\nデコードした結果の末尾が'/'の場合は、フォルダー作成を要求されたと判断",
+"description": "URL-encoded relative path of file / folder <br> \ nThe result of decode is '/', judge that folder creation was requested"
                         "required": true,
                         "type": "string"
                     },
@@ -4212,7 +4204,7 @@
                 "produces": [
                     "application/json"
                 ],
-                "description": "キッティング専用認証のNonce (ワンタイムトークン) を取得する",
+"description": "Acquire Nonce (one-time token) for kitting-only authentication",
                 "responses": {
                     "200": {
                         "description": "Nonce (ワンタイムトークン) 情報",
@@ -4243,7 +4235,7 @@
                 "produces": [
                     "application/json"
                 ],
-                "description": "キッティング専用認証を行う<br>\nnonce_signed には、Nonce (ワンタイムトークン)をK_PRIV_DK(テストモード専用クライアントの秘密鍵)を用いてSHA256署名アルゴリズムで電子署名したものを指定する",
+"description": "To do authentication exclusively for kitting \ nnonce_signed, specify Nonce (one time token) digitally signed with SHA256 signature algorithm using K_PRIV_DK (secret key of client dedicated to test mode) ,
                 "parameters": [
                     {
                         "name": "auth_info",
@@ -4291,8 +4283,8 @@
                     "text/plain",
                     "application/json"
                 ],
-                "description": "キッティングで DCSS の登録処理を行うため、事前に DCSS の URL と登録コードを設定する",
-                "parameters": [
+"description": "Set DCSS URL and registration code beforehand in order to register DCSS with kitting",
+"parameters": [
                     {
                         "name": "code_info",
                         "in": "body",
@@ -4364,7 +4356,7 @@
                 "produces": [
                     "application/json"
                 ],
-                "description": "**★Obsoleted 使用非推奨★** <br/><br/>\nドキュメント/フォルダーのフルパスからエントリー情報を取得する<br>\n※ルートフォルダーを'Document/'と表現する事に注意",
+"description": "** ★ Obsoleted use deprecated ★ ** __ * \ n Get entry information from the full path of the document / folder <br> \ n * Change the root folder to 'Document /' Be careful with expressing ",
                 "parameters": [
                     {
                         "name": "path",
@@ -4401,7 +4393,7 @@
                 "produces": [
                     "application/json"
                 ],
-                "description": "ドキュメント/フォルダーのフルパスからエントリー情報を取得する<br>\n※ルートフォルダーを'Document/'と表現する事に注意",
+"description": "Get entry information from full path of document / folder <br> \ n * Note that root folder is represented as 'Document /'",
                 "parameters": [
                     {
                         "name": "path",
@@ -4444,7 +4436,7 @@
                 "produces": [
                     "application/json"
                 ],
-                "description": "指定された外部IDが設定されているエントリー情報のリストを取得する<br>\n※読み込み権限がないエントリーについては、リストに含まれない(エラーにもならない)<br>\n※該当するエントリーが一件もない場合は空のリストを応答する",
+"description": "Retrieve the list of entry information for which the specified external ID is set <br> \ n * Entries that do not have read permission are not included in the list (no error) <br> \ n * If there is no corresponding entry, respond with an empty list ",
                 "parameters": [
                     {
                         "name": "ext_id",
@@ -4478,8 +4470,8 @@
                 "produces": [
                     "application/json"
                 ],
-                "description": "DCSS のログイン処理実行の結果を通知する。",
-                "parameters": [
+"description": "Notify results of DCSS login processing execution",
+"parameters": [
                     {
                         "name": "value",
                         "in": "body",
@@ -5180,63 +5172,63 @@
             ],
             "properties": {
                 "ssid": {
-                    "description": "SSID を BASE64 encode したもの、文字コードは UTF-8",
+							"description": "SSID encoded with BASE64, character code is UTF-8"
                     "type": "string"
                 },
                 "security": {
-                    "description": "暗号化方式 ['nonsec'/'psk'/'eap']",
+                    "description": "Encryption ['nonsec'/'psk'/'eap']",
                     "type": "string"
                 },
                 "passwd": {
-                    "description": "アクセスポイントのアクセスパスワード",
+"description": "access point access password",
                     "type": "string"
                 },
                 "dhcp": {
-                    "description": "DHCPを利用する時'true'、未使用なら'false'",
+"description": "true 'when using DHCP,' false 'if not used,
                     "type": "string"
                 },
                 "static_address": {
-                    "description": "IPアドレスの指定、DHCP未使用時",
+"description": "IP address specification, DHCP not used",
                     "type": "string"
                 },
                 "gateway": {
-                    "description": "ゲートウェイアドレスの指定、DHCP未使用時",
+"description": "Gateway address specification, DHCP unused",
                     "type": "string"
                 },
                 "network_mask": {
-                    "description": "ネットワークプレフィックス長の指定(0-32)、DHCP未使用時",
+"description": "Specifying network prefix length (0 - 32), DHCP unused",
                     "type": "string"
                 },
                 "dns1": {
-                    "description": "プライマリDNSアドレス、DHCP未使用時",
+"description": "Primary DNS address, DHCP not used",
                     "type": "string"
                 },
                 "dns2": {
-                    "description": "セカンダリDNSアドレス(指定しない場合は空文字)、DHCP未使用時",
+"description": "Secondary DNS address (empty character if not specified), DHCP not used",
                     "type": "string"
                 },
                 "proxy": {
-                    "description": "proxy を利用する時'true'、未使用なら'false'",
+"description": "true 'when using proxy,' false 'if not used,
                     "type": "string"
                 },
                 "proxy_host": {
-                    "description": "proxy のアドレス、proxy使用時",
+"description": "address of proxy, when using proxy",
                     "type": "string"
                 },
                 "proxy_port": {
-                    "description": "proxy のポート、proxy使用時",
+"description": "Port of proxy, when using proxy",
                     "type": "string"
                 },
                 "eap": {
-                    "description": "EAP 方式の指定 ['peap'/'tls']",
+"description": "EAP method specification ['peap' / 'tls']",
                     "type": "string"
                 },
                 "eap_phase2": {
-                    "description": "EAP フェーズ2認証方式の指定 ['none'/'gtc'/'pap'/'mschap'/'mschapv2']",
+"description": "Specifying the EAP phase 2 authentication method ['none' / 'gtc' / 'pap' / 'mschap' / 'mschapv 2']"
                     "type": "string"
                 },
                 "eap_id": {
-                    "description": "EAP ログインID",
+"description": "EAP login ID",
                     "type": "string"
                 },
                 "eap_anid": {
@@ -5244,7 +5236,7 @@
                     "type": "string"
                 },
                 "eap_cacert": {
-                    "description": "EAP CA証明書名",
+"description": "EAP CA certificate name",
                     "type": "string"
                 },
                 "eap_cert": {
