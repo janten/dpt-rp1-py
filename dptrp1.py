@@ -28,7 +28,11 @@ class DigitalPaper():
         return self.addr
 
     def get_nonce(self):
-        url = f"{self.base_url}/auth/nonce/{self.client_id}"
+        #url = f"{self.base_url}/auth/nonce/{self.client_id}"
+        url = "{base_url}/auth/nonce/{client_id}" \
+                .format(base_url = self.base_url,
+                        client_id = self.client_id)
+
         r = requests.get(url, verify=False)
         return r.json()["nonce"]
 
@@ -37,7 +41,8 @@ class DigitalPaper():
         sig_maker = httpsig.Signer(secret=secret, algorithm='rsa-sha256')
         nonce = self.get_nonce()
         signed_nonce = sig_maker._sign(nonce)
-        url = f"{self.base_url}/auth"
+        #url = f"{self.base_url}/auth"
+        url = "{base_url}/auth".format(base_url = self.base_url)
         data = {
             "client_id": self.client_id,
             "nonce_signed": signed_nonce
@@ -47,22 +52,33 @@ class DigitalPaper():
         self.cookies["Credentials"] = credentials
 
     def get_endpoint(self, endpoint=""):
-        url = f"{self.base_url}{endpoint}"
+        #url = f"{self.base_url}{endpoint}"
+        url = "{base_url}{endpoint}" \
+                .format(base_url = self.base_url,
+                        endpoint = endpoint)
         return requests.get(url, verify=False, cookies=self.cookies)
 
     def put_endpoint(self, endpoint="", data={}, files=None):
-        url = f"{self.base_url}{endpoint}"
+        #url = f"{self.base_url}{endpoint}"
+        url = "{base_url}{endpoint}" \
+                .format(base_url = self.base_url,
+                        endpoint = endpoint)
         return requests.put(url, verify=False, cookies=self.cookies, json=data, files=files)
 
     def post_endpoint(self, endpoint="", data={}):
-        url = f"{self.base_url}{endpoint}"
+        #url = f"{self.base_url}{endpoint}"
+        url = "{base_url}{endpoint}" \
+                .format(base_url = self.base_url,
+                        endpoint = endpoint)
         return requests.post(url, verify=False, cookies=self.cookies, json=data)
 
     def upload_document(self, local_path, remote_path):
         filename = os.path.basename(remote_path)
         remote_directory = os.path.dirname(remote_path)
         encoded_directory = quote_plus(remote_directory)
-        directory_entry = dp.get_endpoint(f"/resolve/entry/{encoded_directory}").json()
+        #directory_entry = dp.get_endpoint(f"/resolve/entry/{encoded_directory}").json()
+        url = "/resolve/entry/{enc_dir}".format(enc_dir = encoded_directory)
+        directory_entry = dp.get_endpoint(url).json()
         directory_id = directory_entry["entry_id"]
         info = {
             "file_name": filename,
@@ -72,14 +88,18 @@ class DigitalPaper():
         r = dp.post_endpoint("/documents", data=info)
         doc = r.json()
         doc_id = doc["document_id"]
+        doc_url = "/documents/{doc_id}/file".format(doc_id = doc_id)
         with open(local_path, 'rb') as local_file:
             files = {
                 'file': ("altair.pdf", local_file, 'rb')
             }
-            self.put_endpoint(f"/documents/{doc_id}/file", files=files)
+            #self.put_endpoint(f"/documents/{doc_id}/file", files=files)
+            self.put_endpoint(doc_url, files=files)
 
     def take_screenshot(self):
-        url = f"{self.base_url}/system/controls/screen_shot"
+        #url = f"{self.base_url}/system/controls/screen_shot"
+        url = "{base_url}/system/controls/screen_shot" \
+                .format(base_url = self.base_url)
         r = requests.get(url, verify=False, cookies=self.cookies)
         with open("screenshot.png", 'wb') as f:
             f.write(r.content)
