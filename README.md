@@ -1,57 +1,50 @@
 # dpt-rp1-py
-Python script to manage Sony DPT-RP1 without Digital Paper App.  To run
-the command-line client:
+Python script to manage Sony DPT-RP1 without Digital Paper App. This repository includes a Python library and a command line utility to manage documents on the DTP-RP1. Tested on Windows, Linux, and macOS. 
 
-`python3 cli.py --client-d {client-id file} --key {key file} --addr {host or ip address} COMMAND arg1 [arg2 ...]`
-
-Commands and arguments:
+## Using the command line utility
 ```
-list-documents
-download {remote path} {local path}
-upload {local path} {remote path}
-new-folder {new folder path}
-wifi-list
-wifi-scan
-wifi-enable
-wifi-disable
+python3 cli.py \
+	--addr <DPT-RP1 hostname or IP address> \
+	--client-id <client_id file> \
+	--key <key file> \
+	command [arguments]
 ```
+The required files for the client ID and private key will be created when you first register the reader. The files can also be extracted from the original Digital Paper App.
 
-...more coming soon!
+### Supported commands
+You can get a list of the implemented commands by running `python3 cli.py` with no additional arguments. Supported commands include _register_, _list-documents_, _download <remote path> <local path>_, _upload <local path> <remote path>_, _new-folder <new folder path>_, _wifi-list_, _wifi-scan_, _wifi-enable_, and _wifi-disable_.
 
-## Registering the DPT-RP1
+
+### Registering the DPT-RP1
 
 The DPT-RP1 uses SSL encryption to communicate with the computer.  This
-requires "registering" the DPT-RP1 with the computer, which results in 
-two pieces of information -- the client ID and the key file -- that you'll
-need to run the script.  You can get this information in three ways.
+requires registering the DPT-RP1 with the computer, which results in 
+two pieces of information -- the client ID and the key file -- that you'll need to run the script.  You can get this information in three ways.
 
-### NEW: Registering works from the command line!
+#### Registering without the Digital Paper App
+This method requires your DPT-RP1 and your computer to be on the same network segment via WiFi, Bluetooth or a USB connection. The USB connection works on Windows on macOS but may not work on a Linux machine. If you the USB connection does not work for you, perform the initial setup on a different PC to connect the reader to your WiFi network.
 
-First, get your GNU/Linux box and your DPT-RP1 on the same network segment.
-You can either register it on Windows or MacOS with the Digital Paper App
-and then setup WiFi from there, or connect via Bluetooth networking.
-(For whatever reason, the DPT-RP1 does not show up as a USB network
-device on my Linux machine.  Maybe it works under newer distributions?)
+Second, find the DPT-RP1's IP address. If you're on WiFi, go to 
+_Wi-Fi Settings_ on the device and tap the connected network. If you're
+on Bluetooth, it's likely _172.25.47.1_. You can also try the hostname _digitalpaper.local_.
 
-Second, find the DPT-RP1's IP address.  If you're on WiFi, go to 
-"Wi-Fi Settings" on the device and tap the connected network.  If you're
-on Bluetooth, it's likely 172.25.47.1.
+Finally, use the _register_ command, substituting the files you want the client ID and key written to, and the IP address of the device:
 
-Finally, say ``python3 cli.py --client-id {client_id file} --key {key file} --addr {addr} register``, substituting the files you want the client id
-and key written to, and the IP address of the device.
+```
+python3 cli.py \
+	--client-id <client_id file> \
+	--key <key file> \
+	--addr <address> \
+	register
+```
 
-If you get an error, wait a few seconds and try again.  Sometimes it takes
-two or three tries to work.
+If you get an error, wait a few seconds and try again.  Sometimes it takes two or three tries to work.
 
-### Finding the private key and clientid on Windows
+#### Finding the private key and client ID on Windows
 
-If you have already registered on Windows, the Digital Paper app stores the
-files in ``Users/{username}/AppData/Roaming/Sony Corporation/Digital Paper App/``.
-You'll need the files deviceid.dat and privatekey.dat.
+If you have already registered on Windows, the Digital Paper app stores the files in _Users/{username}/AppData/Roaming/Sony Corporation/Digital Paper App/_. You'll need the files _deviceid.dat_ and _privatekey.dat_.
 
-### FIXME: Where are they stored on MacOS?
-
-### Extracting the Private Key and ClientID
+#### Extracting the private key and client ID on macOS
 You can also modify the Digital Paper App to write your files to the desktop.
 
 First, [download](https://esupport.sony.com/info/1667/US/EN/) the Digital Paper App. I am going to use the macOS version here but the process should be similar on Windows as the Digital Paper App is just an Electron wrapper around some JavaScript code. You will need to manipulate the application to extract the client identifier (_client\_id_) and the certificate that the application receives from the device upon pairing. 
