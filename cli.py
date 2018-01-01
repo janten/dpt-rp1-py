@@ -60,6 +60,9 @@ def do_add_wifi(d):
 def do_delete_wifi(d):
     print(d.delete_wifi(ssid = "vecna2", security = "psk"))
 
+def do_register(d):
+    d.register()
+
 if __name__ == "__main__":
 
     commands = {
@@ -75,7 +78,8 @@ if __name__ == "__main__":
         "wifi-del": do_delete_wifi,
         "wifi": do_wifi,
         "wifi-enable" : do_wifi_enable,
-        "wifi-disable" : do_wifi_disable
+        "wifi-disable" : do_wifi_disable,
+        "register" : do_register
     }
 
     def build_parser():
@@ -112,7 +116,8 @@ if __name__ == "__main__":
     dp = DigitalPaper(client_id = client_id,
                       key = secret,
                       addr = args.addr)
-    dp.authenticate()
+
+    #dp.authenticate()
 
     commands[args.command](dp, *args.command_args)
 

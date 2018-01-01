@@ -5,11 +5,18 @@ import urllib3
 from urllib.parse import quote_plus
 import os
 import base64
+from pyDH import DiffieHellman
+from pbkdf2 import PBKDF2
+from Crypto.Hash import SHA256 
+from Crypto.Hash.HMAC import HMAC
+#from diffiehellman.diffiehellman import DiffieHellman
+
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 class DigitalPaper():
     def __init__(self, client_id, key, addr = None):
+        self.reg_addr = addr
         self.client_id = client_id
         self.key = key
         if addr is None:
@@ -27,6 +34,62 @@ class DigitalPaper():
         return self.addr
 
     ### Authentication
+
+    def register(self):
+        reg_url = "http://{addr}:8080".format(addr = self.reg_addr)
+        print(reg_url)
+        register_pin_url = '{base_url}/register/pin'.format(base_url = reg_url)
+        print(register_pin_url)
+        register_hash_url = '{base_url}/register/hash'.format(base_url = reg_url)
+        register_ca_url = '{base_url}/register/ca'.format(base_url = reg_url)
+        register_cleanup_url = '{base_url}/register/cleanup'.format(base_url = reg_url)
+
+        r = requests.post(register_pin_url, verify = False)
+        m1 = r.json()
+
+        n1 = base64.b64decode(m1['a'])
+        mac = base64.b64decode(m1['b'])
+        yb = base64.b64decode(m1['c'])
+        yb = int.from_bytes(yb, 'big')
+        #n2 = os.urandom(16)  # random nonce
+        n2 = base64.b64decode('G3/TBqzaWD9cZen8rqJngQ==')
+
+        dh = DiffieHellman()
+        #print(dir(dh))
+        #dh._DiffieHellman__a = int.from_bytes(base64.b64decode('f0thp5CROJvF2excmobSTJruG1eFyYjefiMWYrSklItgUbqAo1CFk6RI1knMewQUtDgKzR8CJAft/jDE+6izQI0sS1FDjCPG3JHbXBUiRnNhSKz2+Eh43vDGKju74b6IcfNiuQT5Sq1rthluMknmx6JwnED5JvhkOL3yS7ol0dscsfUQPcZjHLLr7CVjXGXerKF95vtjfDZzV69/LGYCZ3zxN6UsIpmLYOAec9Ls1G+OfcCut4u4mqmNZpjoBSD9AfIlnvhqjaOpcfkbL6IPdRSRxvjay0Mm4vh5Ok2A7AmupFXEXd7dA/W+3P0S0hmNVM90tNPUogSB7FpAgHeqiQ=='), 'big')
+        ya = dh.gen_public_key()
+        ya = b'\x00' + ya.to_bytes(256, 'big')
+
+        zz = dh.gen_shared_key(yb)
+        yb = yb.to_bytes(256, 'big')
+
+        derivedKey = PBKDF2(passphrase = zz, 
+                            salt = n1 + mac + n2, 
+                            iterations = 10000,
+                            digestmodule = SHA256).read(48)
+        authKey = derivedKey[:32]
+        keyWrapKey = derivedKey[32:]
+
+        hmac = HMAC(authKey, digestmod = SHA256)
+        hmac.update(n1 + mac + yb + n1 + n2 + mac + ya)
+        m2hmac = hmac.digest()
+
+        m2 = dict(a = base64.b64encode(n1).decode('utf-8'),
+                  b = base64.b64encode(n2).decode('utf-8'),
+                  c = base64.b64encode(mac).decode('utf-8'),
+                  d = base64.b64encode(ya).decode('utf-8'),
+                  e = base64.b64encode(m2hmac).decode('utf-8'))
+
+        print(m2)
+
+        r = requests.post(register_hash_url, json = m2)
+        print(r)
+        print(r.json())
+
+
+        print("Cleaning up...")
+        r = requests.put(register_cleanup_url, verify = False)
+        print(r)
 
     def authenticate(self, path_to_private_key='privs/key.pem'):
         sig_maker = httpsig.Signer(secret=self.key, algorithm='rsa-sha256')
