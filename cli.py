@@ -2,6 +2,7 @@ import argparse
 import base64
 import sys
 import json
+import os
 
 from dptrp1 import DigitalPaper
 
@@ -85,13 +86,13 @@ if __name__ == "__main__":
     def build_parser():
         p = argparse.ArgumentParser(description = "Remote control for Sony DPT-RP1")
         p.add_argument('--client-id', 
-                help = "Client id of the device (or the file it's in)",
+                help = "File containing the device's client id",
                 required = True)
-        p.add_argument('--key-file', 
+        p.add_argument('--key', 
                 help = "File containing the device's private key",
                 required = True)
         p.add_argument('--addr', 
-                help = "IP address of the device")
+                help = "Hostname or IP address of the device")
         p.add_argument('command', 
                 help = 'Command to run', 
                 choices = sorted(commands.keys()))
@@ -104,21 +105,27 @@ if __name__ == "__main__":
 
     args = build_parser().parse_args()
 
-    try:
+    dp = DigitalPaper(addr = args.addr)
+
+    if args.command == "register":
+        _, key, device_id = dp.register()
+
+        with open(args.key, 'w') as f:
+            f.write(key)
+
+        with open(args.client_id, 'w') as f:
+            f.write(device_id)
+
+        sys.exit()
+
+    else:
         with open(args.client_id) as fh:
             client_id = fh.readline().strip()
-    except Exception:
-        client_id = args.client_id
 
-    with open(args.key_file, 'rb') as fh:
-        secret = fh.read()
+        with open(args.key, 'rb') as fh:
+            key = fh.read()
 
-    dp = DigitalPaper(client_id = client_id,
-                      key = secret,
-                      addr = args.addr)
-
-    #dp.authenticate()
+        dp.authenticate(client_id, key)
 
     commands[args.command](dp, *args.command_args)
-
 
