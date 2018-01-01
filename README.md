@@ -5,14 +5,16 @@ the command-line client:
 `python3 cli.py --client-d {client-id file} --key {key file} --addr {host or ip address} COMMAND arg1 [arg2 ...]`
 
 Commands and arguments:
-`list-documents`
-`download {remote path} {local path}`
-`upload {local path} {remote path}`
-`new-folder {new folder path}`
-`wifi-list`
-`wifi-scan`
-`wifi-enable`
-`wifi-disable`
+```
+list-documents
+download {remote path} {local path}
+upload {local path} {remote path}
+new-folder {new folder path}
+wifi-list
+wifi-scan
+wifi-enable
+wifi-disable
+```
 
 ...more coming soon!
 
