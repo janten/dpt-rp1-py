@@ -71,7 +71,7 @@ class DigitalPaper():
         yb = int.from_bytes(yb, 'big')
         n2 = os.urandom(16)  # random nonce
 
-        dh = pyDH.DiffieHellman()
+        dh = DiffieHellman()
         ya = dh.gen_public_key()
         ya = b'\x00' + ya.to_bytes(256, 'big')
 
