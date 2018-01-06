@@ -5,9 +5,9 @@ import urllib3
 from urllib.parse import quote_plus
 import os
 import base64
-from pyDH import DiffieHellman
+from dptrp1.pyDH import DiffieHellman
 from pbkdf2 import PBKDF2
-from Crypto.Hash import SHA256 
+from Crypto.Hash import SHA256
 from Crypto.Hash.HMAC import HMAC
 from Crypto.Cipher import AES
 from Crypto.PublicKey import RSA
@@ -32,7 +32,7 @@ class DigitalPaper():
             port = ""
         else:
             port = ":8443"
- 
+
         return "https://" + self.addr + port
 
     ### Authentication
@@ -71,7 +71,7 @@ class DigitalPaper():
         yb = int.from_bytes(yb, 'big')
         n2 = os.urandom(16)  # random nonce
 
-        dh = DiffieHellman()
+        dh = pyDH.DiffieHellman()
         ya = dh.gen_public_key()
         ya = b'\x00' + ya.to_bytes(256, 'big')
 
@@ -79,8 +79,8 @@ class DigitalPaper():
         zz = zz.to_bytes(256, 'big')
         yb = yb.to_bytes(256, 'big')
 
-        derivedKey = PBKDF2(passphrase = zz, 
-                            salt = n1 + mac + n2, 
+        derivedKey = PBKDF2(passphrase = zz,
+                            salt = n1 + mac + n2,
                             iterations = 10000,
                             digestmodule = SHA256).read(48)
 
@@ -103,7 +103,7 @@ class DigitalPaper():
         print(r)
 
         m3 = r.json()
-        
+
         if(base64.b64decode(m3['a']) != n2):
             print("Nonce N2 doesn't match")
             return
@@ -203,8 +203,8 @@ class DigitalPaper():
         r = requests.put(register_cleanup_url, verify = False)
         print(r)
 
-        return (cert.decode('utf-8'), 
-                new_key.exportKey("PEM").decode('utf-8'), 
+        return (cert.decode('utf-8'),
+                new_key.exportKey("PEM").decode('utf-8'),
                 selfDeviceId.decode('utf-8'))
 
     def authenticate(self, client_id, key):
@@ -276,7 +276,7 @@ class DigitalPaper():
 
         r = self._post_endpoint("/folders2", data=info)
 
-    ### Wifi 
+    ### Wifi
     def wifi_list(self):
         data = self._get_endpoint('/system/configs/wifi_accesspoints').json()
         for ap in data['aplist']:
@@ -291,7 +291,7 @@ class DigitalPaper():
 
     def configure_wifi(self, ssid, security, passwd, dhcp, static_address,
                        gateway, network_mask, dns1, dns2, proxy):
-                       
+
         #    cnf = {
         #        "ssid": base64.b64encode(b'YYY').decode('utf-8'),
         #        "security": "nonsec", # psk, nonsec, XXX
@@ -394,7 +394,7 @@ def wrap(data, authKey, keyWrapKey):
 def pad(bytestring, k=16):
     """
     Pad an input bytestring according to PKCS#7
-    
+
     """
     l = len(bytestring)
     val = k - (l % k)
@@ -408,7 +408,7 @@ def unwrap(data, authKey, keyWrapKey):
 
     kwa = unwrapped[-8:]
     unwrapped = unwrapped[:-8]
-    
+
     hmac = HMAC(authKey, digestmod = SHA256)
     hmac.update(unwrapped)
     local_kwa = hmac.digest()[:8]
