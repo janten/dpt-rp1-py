@@ -1,10 +1,13 @@
+#!/usr/bin/env python3
+# coding=utf-8
+
 import argparse
 import base64
 import sys
 import json
 import os
 
-from dptrp1 import DigitalPaper
+from dptrp1.dptrp1 import DigitalPaper
 
 def do_screenshot(d, filename):
     pic = d.take_screenshot()

@@ -1,0 +1,30 @@
+{
+    "name": "dpt-rp1-py",
+    "version": "0.1.0",
+    "description": "Python package to manage a Sony DPT-RP1",
+    "license": "",
+    "authors": [
+        ""
+    ],
+    "emails": [
+        ""
+    ],
+    "namespace_packages": [
+    ],
+    "packages": [
+        "dptrp1"
+    ],
+    "install_requires": [
+        "httpsig>=1.1.2",
+        "requests>=2.18.4",
+        "pbkdf2>=1.3",
+        "urllib3>=1.22"
+    ],
+    "scripts": [
+        "dptrp1"
+    ],
+    "classifiers": [
+        "Development Status :: 3 - Alpha",
+        "Programming Language :: Python :: 3"
+    ]
+}

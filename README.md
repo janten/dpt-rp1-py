@@ -1,9 +1,15 @@
 # dpt-rp1-py
 Python script to manage Sony DPT-RP1 without Digital Paper App. This repository includes a Python library and a command line utility to manage documents on the DTP-RP1. Tested on Windows, Linux, and macOS. 
 
+## Install
+
+To install the library run `python3 setup.py install` or `pip3 install .` from the root directory. To install as a developer use `python3 setup.py develop` (see [the setuptools docs](http://setuptools.readthedocs.io/en/latest/setuptools.html#development-mode)) and work on the source as usual.
+
+Installing the package also installs the command line utility called `dptrp1`.
+
 ## Using the command line utility
 ```
-python3 cli.py \
+dptrp1 \
 	--addr <DPT-RP1 hostname or IP address> \
 	--client-id <client_id file> \
 	--key <key file> \
@@ -12,7 +18,7 @@ python3 cli.py \
 The required files for the client ID and private key will be created when you first register the reader. The files can also be extracted from the original Digital Paper App.
 
 ### Supported commands
-You can get a list of the implemented commands by running `python3 cli.py` with no additional arguments. Supported commands include _register_, _list-documents_, _download <remote path> <local path>_, _upload <local path> <remote path>_, _new-folder <new folder path>_, _wifi-list_, _wifi-scan_, _wifi-enable_, and _wifi-disable_.
+You can get a list of the implemented commands by running `dptrp1` with no additional arguments. Supported commands include _register_, _list-documents_, _download <remote path> <local path>_, _upload <local path> <remote path>_, _new-folder <new folder path>_, _wifi-list_, _wifi-scan_, _wifi-enable_, and _wifi-disable_.
 
 
 ### Registering the DPT-RP1
@@ -31,7 +37,7 @@ on Bluetooth, it's likely _172.25.47.1_. You can also try the hostname _digitalp
 Finally, use the _register_ command, substituting the files you want the client ID and key written to, and the IP address of the device:
 
 ```
-python3 cli.py \
+dptrp1 \
 	--client-id <client_id file> \
 	--key <key file> \
 	--addr <address> \
