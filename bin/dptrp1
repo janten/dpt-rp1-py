@@ -29,6 +29,9 @@ def do_download(d, remote_path, local_path):
     with open(local_path, 'wb') as f:
         f.write(data)
 
+def do_delete_document(d, remote_path):
+    data = d.delete_document(remote_path)
+
 def do_new_folder(d, remote_path):
     d.new_folder(remote_path)
 
@@ -74,6 +77,7 @@ if __name__ == "__main__":
         "list-documents" : do_list_documents,
         "upload" : do_upload,
         "download" : do_download,
+        "delete" : do_delete_document,
         "new-folder" : do_new_folder,
 #        "list-folders" : do_list_folders,
         "wifi-list": do_wifi_list,
