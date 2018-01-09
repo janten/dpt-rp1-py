@@ -243,10 +243,7 @@ class DigitalPaper():
         url = "/resolve/entry/path/{enc_path}".format(enc_path = encoded_remote_path)
         remote_entry = self._get_endpoint(url).json()
         remote_id = remote_entry['entry_id']
-
-        url = "{base_url}/documents/{remote_id}/file".format(
-                base_url = self.base_url,
-                remote_id = remote_id)
+        url = "/documents/{remote_id}".format(remote_id = remote_id)
         self._delete_endpoint(url)
 
     def upload(self, fh, remote_path):
