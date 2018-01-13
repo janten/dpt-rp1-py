@@ -301,17 +301,22 @@ class DigitalPaper():
             print('ERROR: Remote directory {} not found. Upload failed.'.format(remote_directory))
 
     def new_folder(self, remote_path):
-        folder_name = os.path.basename(remote_path)
-        remote_directory = os.path.dirname(remote_path)
-        remote_dir_id = self._get_entry_id(remote_directory)
-        if remote_dir_id is not None:
-            info = {
-                "folder_name": folder_name,
-                "parent_folder_id": remote_dir_id
-            }
-            r = self._post_endpoint("/folders2", data=info)
+        # first check if the folder exists
+        entry_id = self._get_entry_id(remote_path)
+        if entry_id is None:
+            folder_name = os.path.basename(remote_path)
+            remote_directory = os.path.dirname(remote_path)
+            remote_dir_id = self._get_entry_id(remote_directory)
+            if remote_dir_id is not None:
+                info = {
+                    "folder_name": folder_name,
+                    "parent_folder_id": remote_dir_id
+                }
+                r = self._post_endpoint("/folders2", data=info)
+            else:
+                print('ERROR: Remote parent directory {} not found. Upload failed.'.format(remote_directory))
         else:
-            print('ERROR: Remote parent directory {} not found. Upload failed.'.format(remote_directory))
+            print('ERROR: Remote directory {} already exists.'.format(remote_directory))
 
     def get_directory_contents(self, remote_path):
         entry_id = self._get_entry_id(remote_path)
