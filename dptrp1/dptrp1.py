@@ -212,15 +212,19 @@ class DigitalPaper():
     def authenticate(self, client_id, key):
         sig_maker = httpsig.Signer(secret=key, algorithm='rsa-sha256')
         nonce = self._get_nonce(client_id)
-        signed_nonce = sig_maker._sign(nonce)
-        url = "{base_url}/auth".format(base_url = self.base_url)
-        data = {
-            "client_id": client_id,
-            "nonce_signed": signed_nonce
-        }
-        r = requests.put(url, json=data, verify=False)
-        _, credentials = r.headers["Set-Cookie"].split("; ")[0].split("=")
-        self.cookies["Credentials"] = credentials
+        if nonce is not None:
+            signed_nonce = sig_maker._sign(nonce)
+            url = "{base_url}/auth".format(base_url = self.base_url)
+            data = {
+                "client_id": client_id,
+                "nonce_signed": signed_nonce
+            }
+            r = requests.put(url, json=data, verify=False)
+            _, credentials = r.headers["Set-Cookie"].split("; ")[0].split("=")
+            self.cookies["Credentials"] = credentials
+            return True
+        else:
+            return False
 
     ### File management
 
@@ -488,10 +492,10 @@ class DigitalPaper():
                         client_id = client_id)
         try:
             r = requests.get(url, verify=False)
+            return r.json()["nonce"]
         except requests.exceptions.ConnectionError as e:
             print('ERROR: Could not connect to DPT-RP1 under address {}'.format(self.base_url))
-            sys.exit(1)
-        return r.json()["nonce"]
+            return None
 
 
 # crypto helpers
