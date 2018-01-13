@@ -19,6 +19,11 @@ def do_list_documents(d):
     for d in data:
         print(d['entry_path'])
 
+def do_list_all(d):
+    data = d.list_all()
+    for d in data:
+        print(d['entry_path'])
+
 def do_upload(d, local_path, remote_path):
     with open(local_path, 'rb') as fh:
         d.upload(fh, remote_path)
@@ -34,6 +39,9 @@ def do_delete_document(d, remote_path):
 
 def do_new_folder(d, remote_path):
     d.new_folder(remote_path)
+
+def do_delete_folder(d, remote_path):
+    data = d.delete_directory(remote_path)
 
 def do_wifi_list(d):
     data = d.wifi_list()
@@ -75,11 +83,12 @@ if __name__ == "__main__":
     commands = {
         "screenshot": do_screenshot,
         "list-documents" : do_list_documents,
+        "list-all" : do_list_all,
         "upload" : do_upload,
         "download" : do_download,
         "delete" : do_delete_document,
         "new-folder" : do_new_folder,
-#        "list-folders" : do_list_folders,
+        "delete-folder" : do_delete_folder,
         "wifi-list": do_wifi_list,
         "wifi-scan": do_wifi_scan,
         "wifi-add": do_add_wifi,

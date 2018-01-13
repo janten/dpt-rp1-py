@@ -16,14 +16,13 @@ import uuid
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+
 class DigitalPaper():
     def __init__(self, addr = None):
-
         if addr is None:
             self.addr = "digitalpaper.local"
         else:
             self.addr = addr
-
         self.cookies = {}
 
     @property
@@ -32,7 +31,6 @@ class DigitalPaper():
             port = ""
         else:
             port = ":8443"
-
         return "https://" + self.addr + port
 
     ### Authentication
@@ -57,7 +55,11 @@ class DigitalPaper():
         register_cleanup_url = '{base_url}/register/cleanup'.format(base_url = reg_url)
 
         print("Cleaning up...")
-        r = requests.put(register_cleanup_url, verify = False)
+        try:
+            r = requests.put(register_cleanup_url, verify = False)
+        except requests.exceptions.ConnectionError as e:
+            print('ERROR: Could not connect to DPT-RP1 under address {}'.format(self.base_url))
+            return None
         print(r)
 
         print("Requesting PIN...")
@@ -106,7 +108,7 @@ class DigitalPaper():
 
         if(base64.b64decode(m3['a']) != n2):
             print("Nonce N2 doesn't match")
-            return
+            return None
 
         eHash = base64.b64decode(m3['b'])
         m3hmac = base64.b64decode(m3['e'])
@@ -114,7 +116,7 @@ class DigitalPaper():
         hmac.update(n1 + n2 + mac + ya + m2hmac + n2 + eHash)
         if m3hmac != hmac.digest():
             print("M3 HMAC doesn't match")
-            return
+            return None
 
         pin = input("Please enter the PIN shown on the DPT-RP1: ")
 
@@ -146,7 +148,7 @@ class DigitalPaper():
 
         if(base64.b64decode(m5['a']) != n2):
             print("Nonce N2 doesn't match")
-            return
+            return None
 
         wrappedEsCert = base64.b64decode(m5['d'])
         m5hmac = base64.b64decode(m5['e'])
@@ -155,7 +157,7 @@ class DigitalPaper():
         hmac.update(n1 + rHash + wrappedRs + m4hmac + n2 + wrappedEsCert)
         if hmac.digest() != m5hmac:
             print("HMAC doesn't match!")
-            return
+            return None
 
         esCert = unwrap(wrappedEsCert, authKey, keyWrapKey)
         es = esCert[:16]
@@ -165,7 +167,7 @@ class DigitalPaper():
         hmac.update(es + psk + yb + ya)
         if hmac.digest() != eHash:
             print("eHash does not match!")
-            return
+            return None
 
         #print("Certificate: ")
         #print(cert)
@@ -223,109 +225,107 @@ class DigitalPaper():
     ### File management
 
     def list_documents(self):
-        data = self._get_endpoint('/documents2').json()
-        return data['entry_list']
+        data = self._get_endpoint('/documents2')
+        if data is not None:
+            return data.json()['entry_list']
+        else:
+            return None
+
+    def list_all(self):
+        data = self._get_endpoint('/documents2?entry_type=all')
+        if data is not None:
+            return data.json()['entry_list']
+        else:
+            return None
+
+    def _check_remote_path(self, remote_path):
+        """Check if remote path starts with Document/
+
+        """
+        if not remote_path.startswith('Document'):
+            print('ERROR: Remote path MUST start with "Document".')
+
+    def _get_entry_id(self, remote_path):
+        self._check_remote_path(remote_path)
+        encoded_remote_path = quote_plus(remote_path)
+        url = "/resolve/entry/path/{enc_path}".format(enc_path = encoded_remote_path)
+        remote_entry = self._get_endpoint(url)
+        if remote_entry is not None:
+            remote_id = remote_entry.json()['entry_id']
+            return remote_id
+        else:
+            return None
 
     def download(self, remote_path):
-        encoded_remote_path = quote_plus(remote_path)
-        url = "/resolve/entry/path/{enc_path}".format(enc_path = encoded_remote_path)
-        remote_entry = self._get_endpoint(url).json()
-        remote_id = remote_entry['entry_id']
-
-        url = "{base_url}/documents/{remote_id}/file".format(
-                base_url = self.base_url,
-                remote_id = remote_id)
-        response = requests.get(url, verify=False, cookies=self.cookies)
-        return response.content
+        remote_id = self._get_entry_id(remote_path)
+        if remote_id is not None:
+            url = "{base_url}/documents/{remote_id}/file".format(
+                    base_url = self.base_url,
+                    remote_id = remote_id)
+            response = requests.get(url, verify=False, cookies=self.cookies)
+            return response.content
+        else:
+            print('ERROR: Remote file {} not found. Download failed.'.format(remote_path))
 
     def delete_document(self, remote_path):
-        encoded_remote_path = quote_plus(remote_path)
-        url = "/resolve/entry/path/{enc_path}".format(enc_path = encoded_remote_path)
-        remote_entry = self._get_endpoint(url).json()
-        remote_id = remote_entry['entry_id']
-        url = "/documents/{remote_id}".format(remote_id = remote_id)
-        self._delete_endpoint(url)
+        remote_id = self._get_entry_id(remote_path)
+        if remote_id is not None:
+            url = "/documents/{remote_id}".format(remote_id = remote_id)
+            self._delete_endpoint(url)
+        else:
+            print('ERROR: Remote file {} not found. Delete failed.'.format(remote_path))
 
     def upload(self, fh, remote_path):
         filename = os.path.basename(remote_path)
         remote_directory = os.path.dirname(remote_path)
-        encoded_directory = quote_plus(remote_directory)
-        url = "/resolve/entry/path/{enc_dir}".format(enc_dir = encoded_directory)
-        directory_entry = self._get_endpoint(url).json()
-
-        directory_id = directory_entry["entry_id"]
-        info = {
-            "file_name": filename,
-            "parent_folder_id": directory_id,
-            "document_source": ""
-        }
-        r = self._post_endpoint("/documents2", data=info)
-        doc = r.json()
-        doc_id = doc["document_id"]
-        doc_url = "/documents/{doc_id}/file".format(doc_id = doc_id)
-
-        files = {
-            'file': (filename, fh, 'rb')
-        }
-        self._put_endpoint(doc_url, files=files)
+        remote_dir_id = self._get_entry_id(remote_directory)
+        if remote_dir_id is not None:
+            info = {
+                "file_name": filename,
+                "parent_folder_id": remote_dir_id,
+                "document_source": ""
+            }
+            r = self._post_endpoint("/documents2", data=info)
+            doc = r.json()
+            doc_id = doc["document_id"]
+            doc_url = "/documents/{doc_id}/file".format(doc_id = doc_id)
+            files = {
+                'file': (filename, fh, 'rb')
+            }
+            self._put_endpoint(doc_url, files=files)
+        else:
+            print('ERROR: Remote directory {} not found. Upload failed.'.format(remote_directory))
 
     def new_folder(self, remote_path):
         folder_name = os.path.basename(remote_path)
         remote_directory = os.path.dirname(remote_path)
-        encoded_directory = quote_plus(remote_directory)
-        url = "/resolve/entry/path/{enc_dir}".format(enc_dir = encoded_directory)
-        directory_entry = self._get_endpoint(url).json()
+        remote_dir_id = self._get_entry_id(remote_directory)
+        if remote_dir_id is not None:
+            info = {
+                "folder_name": folder_name,
+                "parent_folder_id": remote_dir_id
+            }
+            r = self._post_endpoint("/folders2", data=info)
+        else:
+            print('ERROR: Remote parent directory {} not found. Upload failed.'.format(remote_directory))
 
-        directory_id = directory_entry["entry_id"]
-        info = {
-            "folder_name": folder_name,
-            "parent_folder_id": directory_id
-        }
+    def get_directory_contents(self, remote_path):
+        entry_id = self._get_entry_id(remote_path)
+        if entry_id is not None:
+            data = self._get_endpoint('/folders/{}/entries2'.format(entry_id)).json()
+            return data
+        else:
+            print('ERROR: Remote directory {} not found. Cannot get contents.'.format(remote_path))
+            return None
 
-        r = self._post_endpoint("/folders2", data=info)
-
-    # TODO
-    def list_folders(self):
-        from pprint import pprint
-
-        # LISTING
-        # first get the entry id
-        dirname = quote_plus('Document')
-        data = self._get_endpoint('/resolve/entry/path/{}'.format(dirname)).json()
-        eid = data['entry_id']
-        # now the folder
-        data = self._get_endpoint('/folders2/{}'.format(eid)).json()
-        # pprint(data)
-        # ... and its contents
-        data = self._get_endpoint('/folders/{}/entries2'.format(eid)).json()
-        pprint(data)
-
-        # DELETE
-        dirname = quote_plus('Document/testfolder')
-        data = self._get_endpoint('/resolve/entry/path/{}'.format(dirname)).json()
-        print(data)
-        if not 'error_code' in data:
-            eid = data['entry_id']
-            print('deleting {}'.format(eid))
-            # NOTE: works only via the folders endpoint not via folders2
-            print(self._delete_endpoint('/folders/{}'.format(eid)))
-
-
-        # SYSTEM INFO AND CONFIG
-        # data = self._get_endpoint('/system/configs').json()
-        # pprint(data)
-        # data = self._get_endpoint('/system/configs/owner').json()
-        # pprint(data)
-        # data = self._get_endpoint('/system/status/storage').json()
-        # pprint(data)
-        # data = self._get_endpoint('/system/status/firmware_version').json()
-        # pprint(data)
-        # data = self._get_endpoint('/system/status/mac_address').json()
-        # pprint(data)
-        # data = self._get_endpoint('/system/status/battery').json()
-        # pprint(data)
-        # data = self._get_endpoint('/register/information').json()
-        # pprint(data)
+    def delete_directory(self, remote_path):
+        dir_cont = self.get_directory_contents(remote_path)
+        if dir_cont is not None:
+            if dir_cont['count'] == 0:
+                entry_id = self._get_entry_id(remote_path)
+                self._delete_endpoint('/folders/{}'.format(entry_id))
+            else:
+                print('ERROR: Remote directory {} not empty. Cannot delete it.'.format(remote_path))
 
     ### Wifi
     def wifi_list(self):
@@ -342,7 +342,6 @@ class DigitalPaper():
 
     def configure_wifi(self, ssid, security, passwd, dhcp, static_address,
                        gateway, network_mask, dns1, dns2, proxy):
-
         #    cnf = {
         #        "ssid": base64.b64encode(b'YYY').decode('utf-8'),
         #        "security": "nonsec", # psk, nonsec, XXX
@@ -355,7 +354,6 @@ class DigitalPaper():
         #        "dns2": "",
         #        "proxy": "false"
         #    }
-
         #print(kwargs['ssid'])
         conf = dict(ssid = base64.b64encode(ssid.encode()).decode('utf-8'),
                     security = security,
@@ -367,7 +365,6 @@ class DigitalPaper():
                     dns1 = dns1,
                     dns2 = dns2,
                     proxy = proxy)
-
         return self._put_endpoint('/system/controls/wifi_accesspoints/register', data=conf)
 
     def delete_wifi(self, ssid, security):
@@ -386,6 +383,65 @@ class DigitalPaper():
     def disable_wifi(self):
         return self._put_endpoint('/system/configs/wifi', data = {'value' : 'off'})
 
+    ### Configuration
+
+    def get_timeout(self):
+        data = self._get_endpoint('/system/configs/timeout_to_standby').json()
+        return(data['value'])
+
+    def set_timeout(self, value):
+        data = self._put_endpoint('/system/configs/timeout_to_standby', data={'value': value})
+
+    def get_date_format(self):
+        data = self._get_endpoint('/system/configs/date_format').json()
+        return(data['value'])
+
+    def set_date_format(self, value):
+        data = self._put_endpoint('/system/configs/date_format', data={'value': value})
+
+    def get_time_format(self):
+        data = self._get_endpoint('/system/configs/time_format').json()
+        return(data['value'])
+
+    def set_time_format(self, value):
+        data = self._put_endpoint('/system/configs/time_format', data={'value': value})
+
+    def get_timezone(self):
+        data = self._get_endpoint('/system/configs/timezone').json()
+        return(data['value'])
+
+    def set_timezone(self, value):
+        data = self._put_endpoint('/system/configs/timezone', data={'value': value})
+
+    def get_owner(self):
+        data = self._get_endpoint('/system/configs/owner').json()
+        return(data['value'])
+
+    def set_owner(self, value):
+        data = self._put_endpoint('/system/configs/owner', data={'value': value})
+
+    ### System info
+
+    def get_storage(self):
+        data = self._get_endpoint('/system/status/storage').json()
+        return(data)
+
+    def get_firmware_version(self):
+        data = self._get_endpoint('/system/status/firmware_version').json()
+        return(data['value'])
+
+    def get_mac_address(self):
+        data = self._get_endpoint('/system/status/mac_address').json()
+        return(data['value'])
+
+    def get_battery(self):
+        data = self._get_endpoint('/system/status/battery').json()
+        return(data)
+
+    def get_info(self):
+        data = self._get_endpoint('/register/information').json()
+        return(data)
+
     ### Etc
 
     def take_screenshot(self):
@@ -400,7 +456,13 @@ class DigitalPaper():
         url = "{base_url}{endpoint}" \
                 .format(base_url = self.base_url,
                         endpoint = endpoint)
-        return requests.get(url, verify=False, cookies=self.cookies)
+        res = requests.get(url, verify=False, cookies=self.cookies)
+        resjson = res.json()
+        if 'error_code' in resjson:
+            print('ERROR in getting endpoint: {}'.format(resjson['message']))
+            return None
+        else:
+            return res
 
     def _put_endpoint(self, endpoint="", data={}, files=None):
         url = "{base_url}{endpoint}" \
@@ -424,8 +486,11 @@ class DigitalPaper():
         url = "{base_url}/auth/nonce/{client_id}" \
                 .format(base_url = self.base_url,
                         client_id = client_id)
-
-        r = requests.get(url, verify=False)
+        try:
+            r = requests.get(url, verify=False)
+        except requests.exceptions.ConnectionError as e:
+            print('ERROR: Could not connect to DPT-RP1 under address {}'.format(self.base_url))
+            sys.exit(1)
         return r.json()["nonce"]
 
 
@@ -479,3 +544,5 @@ def unpad(bytestring, k=16):
         raise ValueError('Input is not padded or padding is corrupt')
     l = len(bytestring) - val
     return bytestring[:l]
+
+

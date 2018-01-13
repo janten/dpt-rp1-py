@@ -18,7 +18,7 @@ dptrp1 \
 The required files for the client ID and private key will be created when you first register the reader. The files can also be extracted from the original Digital Paper App.
 
 ### Supported commands
-You can get a list of the implemented commands by running `dptrp1` with no additional arguments. Supported commands include _register_, _list-documents_, _download <remote path> <local path>_, _upload <local path> <remote path>_, _new-folder <new folder path>_, _delete <remote_path>_, _wifi-list_, _wifi-scan_, _wifi-enable_, and _wifi-disable_.
+You can get a list of the implemented commands by running `dptrp1` with no additional arguments. Supported commands include _register_, _list-documents_, _list_all_, _download <remote path> <local path>_, _upload <local path> <remote path>_, _new-folder <new folder path>_, _delete <remote_path>_, _delete-folder <remote_path>_, _wifi-list_, _wifi-scan_, _wifi-enable_, and _wifi-disable_.
 
 
 ### Registering the DPT-RP1
