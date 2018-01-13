@@ -4401,7 +4401,7 @@
                 "produces": [
                     "application/json"
                 ],
-                "description": "Get entry information from full path of document / folder <br> \n * Note that root folder is represented as 'Document /'",
+                "description": "Get entry information from full path of document / folder <br> \n * Note that root folder is represented as 'Document/'",
                 "parameters": [
                     {
                         "name": "path",

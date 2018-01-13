@@ -284,6 +284,49 @@ class DigitalPaper():
 
         r = self._post_endpoint("/folders2", data=info)
 
+    # TODO
+    def list_folders(self):
+        from pprint import pprint
+
+        # LISTING
+        # first get the entry id
+        dirname = quote_plus('Document')
+        data = self._get_endpoint('/resolve/entry/path/{}'.format(dirname)).json()
+        eid = data['entry_id']
+        # now the folder
+        data = self._get_endpoint('/folders2/{}'.format(eid)).json()
+        # pprint(data)
+        # ... and its contents
+        data = self._get_endpoint('/folders/{}/entries2'.format(eid)).json()
+        pprint(data)
+
+        # DELETE
+        dirname = quote_plus('Document/testfolder')
+        data = self._get_endpoint('/resolve/entry/path/{}'.format(dirname)).json()
+        print(data)
+        if not 'error_code' in data:
+            eid = data['entry_id']
+            print('deleting {}'.format(eid))
+            # NOTE: works only via the folders endpoint not via folders2
+            print(self._delete_endpoint('/folders/{}'.format(eid)))
+
+
+        # SYSTEM INFO AND CONFIG
+        # data = self._get_endpoint('/system/configs').json()
+        # pprint(data)
+        # data = self._get_endpoint('/system/configs/owner').json()
+        # pprint(data)
+        # data = self._get_endpoint('/system/status/storage').json()
+        # pprint(data)
+        # data = self._get_endpoint('/system/status/firmware_version').json()
+        # pprint(data)
+        # data = self._get_endpoint('/system/status/mac_address').json()
+        # pprint(data)
+        # data = self._get_endpoint('/system/status/battery').json()
+        # pprint(data)
+        # data = self._get_endpoint('/register/information').json()
+        # pprint(data)
+
     ### Wifi
     def wifi_list(self):
         data = self._get_endpoint('/system/configs/wifi_accesspoints').json()
