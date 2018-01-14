@@ -342,6 +342,23 @@ class DigitalPaper():
         data = self._get_endpoint('/viewer/configs/note_templates').json()
         return(data)
 
+    def _get_template_id(self, name):
+        tmp_list = self.list_templates()
+        tmp_id = None
+        for template in tmp_list['template_list']:
+            if template['template_name'] == name:
+                tmp_id = template['note_template_id']
+        if tmp_id is None:
+            print('ERROR: No template with name {} found.'.format(name))
+        return tmp_id
+
+    def rename_template(self, old_name, new_name):
+        """docstring for rename_template"""
+        tid = self._get_template_id(old_name)
+        if tid is not None:
+            url = '/viewer/configs/note_templates/{}'.format(tid)
+            self._put_endpoint(url, data={'template_name': new_name})
+
     ### Wifi
 
     def wifi_list(self):
