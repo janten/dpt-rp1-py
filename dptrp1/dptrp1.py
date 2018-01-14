@@ -336,7 +336,14 @@ class DigitalPaper():
             else:
                 print('ERROR: Remote directory {} not empty. Cannot delete it.'.format(remote_path))
 
+    ### Templates
+
+    def list_templates(self):
+        data = self._get_endpoint('/viewer/configs/note_templates').json()
+        return(data)
+
     ### Wifi
+
     def wifi_list(self):
         data = self._get_endpoint('/system/configs/wifi_accesspoints').json()
         for ap in data['aplist']:
