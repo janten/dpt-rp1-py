@@ -353,11 +353,29 @@ class DigitalPaper():
         return tmp_id
 
     def rename_template(self, old_name, new_name):
-        """docstring for rename_template"""
         tid = self._get_template_id(old_name)
         if tid is not None:
             url = '/viewer/configs/note_templates/{}'.format(tid)
             self._put_endpoint(url, data={'template_name': new_name})
+
+    def delete_template(self, name):
+        tid = self._get_template_id(name)
+        if tid is not None:
+            url = '/viewer/configs/note_templates/{}'.format(tid)
+            self._delete_endpoint(url)
+
+    def add_template(self, name, file_handle):
+        url = '/viewer/configs/note_templates'
+        res = self._post_endpoint(url, data={'template_name': name}).json()
+        if not 'error_code' in res:
+            tid = res['note_template_id']
+            url = '/viewer/configs/note_templates/{}/file'.format(tid)
+            files = {
+                'file': (name+'.pdf', file_handle, 'rb')
+            }
+            self._put_endpoint(url, files=files)
+        else:
+            print('ERROR: Adding template failed: {}'.format(res['message']))
 
     ### Wifi
 
