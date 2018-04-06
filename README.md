@@ -1,5 +1,5 @@
 # dpt-rp1-py
-Python script to manage Sony DPT-RP1 without Digital Paper App. This repository includes a Python library and a command line utility to manage documents on the DTP-RP1. Tested on Windows, Linux, and macOS. 
+Python script to manage Sony DPT-RP1 without Digital Paper App. This repository includes a Python library and a command line utility to manage documents on the DPT-RP1. Tested on Windows, Linux, and macOS. 
 
 ## Install
 
