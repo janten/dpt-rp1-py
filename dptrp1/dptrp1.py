@@ -441,9 +441,16 @@ def unpad(bytestring, k=16):
 def wrap_request(req):
     status = req.status_code
 
-    if not ("{0}".format(status)).startswith('2'):
-        print("Error {0}: {1}".format(status, req.json()['message']), file = sys.stderr)
-        exit(1)
+    if not (str(status)).startswith('2'):
+        raise HTTPFailure(status, req.json()['message'])
 
     return req
+
+class HTTPFailure(Exception):
+    def __init__(self, status, message):
+        self.status = status
+        self.message = message
+
+    def __str__(self):
+        return "Error {0}: {1}".format(self.status, self.message)
 

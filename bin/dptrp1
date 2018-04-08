@@ -7,7 +7,7 @@ import sys
 import json
 import os
 
-from dptrp1.dptrp1 import DigitalPaper
+from dptrp1.dptrp1 import DigitalPaper, HTTPFailure
 
 def do_screenshot(d, filename):
     pic = d.take_screenshot()
@@ -134,5 +134,9 @@ if __name__ == "__main__":
 
         dp.authenticate(client_id, key)
 
-    commands[args.command](dp, *args.command_args)
+    try:
+        commands[args.command](dp, *args.command_args)
+    except HTTPFailure as e:
+        print(e, file = os.sys.stderr)
+        exit(1)
 
