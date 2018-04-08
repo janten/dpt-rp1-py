@@ -6,6 +6,7 @@ import base64
 import sys
 import json
 import os
+import re
 
 from dptrp1.dptrp1 import DigitalPaper
 
@@ -25,6 +26,10 @@ def do_upload(d, local_path, remote_path):
 
 def do_download(d, remote_path, local_path):
     data = d.download(remote_path)
+
+    if os.path.isdir(local_path):
+        re.sub('/?$', '/', local_path)
+        local_path += os.path.basename(remote_path)
 
     with open(local_path, 'wb') as f:
         f.write(data)
