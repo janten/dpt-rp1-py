@@ -12,6 +12,7 @@ from Crypto.Hash.HMAC import HMAC
 from Crypto.Cipher import AES
 from Crypto.PublicKey import RSA
 import uuid
+import functools
 #from diffiehellman.diffiehellman import DiffieHellman
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -225,6 +226,22 @@ class DigitalPaper():
     def list_documents(self):
         data = self._get_endpoint('/documents2').json()
         return data['entry_list']
+
+    def list_objects_in_folder(self, remote_path):
+        remote_id = self._resolve_object_by_path(remote_path).json()['entry_id']
+        response = self._get_endpoint("/folders/{remote_id}/entries2".format(remote_id = remote_id))
+        return response.json()['entry_list']
+
+    def traverse_folder(self, remote_path):
+        def traverse(obj):
+            if obj['entry_type'] == 'document':
+                return [obj]
+            else:
+                children = self \
+                  ._get_endpoint("/folders/{remote_id}/entries2".format(remote_id = obj['entry_id'])) \
+                  .json()['entry_list']
+                return [obj] + functools.reduce(lambda acc, c: traverse(c) + acc, children[::-1], [])
+        return traverse(self._resolve_object_by_path(remote_path).json())
 
     def download(self, remote_path):
         remote_id = self._resolve_object_by_path(remote_path).json()['entry_id']
