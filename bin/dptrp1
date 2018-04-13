@@ -6,22 +6,80 @@ import base64
 import sys
 import json
 import os
+import logging
 
 from dptrp1.dptrp1 import DigitalPaper
 
 def do_screenshot(d, filename):
-    pic = d.take_screenshot()
-    with open(filename, 'wb') as f:
-        f.write(pic)
+    try:
+        pic = d.take_screenshot()
+        with open(filename, 'wb') as f:
+            f.write(pic)
+    except Exception as e:
+        print(e)
 
 def do_list_documents(d):
-    data = d.list_documents()
-    for d in data:
-        print(d['entry_path'])
+    try:
+        data = d.list_documents()
+        for d in data:
+            if d['entry_type'] != 'folder':
+                print(d['entry_path'])
+    except Exception as e:
+        print(e)
+
+def do_list_folders(d):
+    try:
+        data = d.list_documents()
+        for d in data:
+            if d['entry_type'] == 'folder':
+                print(d['entry_path'])
+    except Exception as e:
+        print(e)
+        
+def do_document_info(d, remote_path):
+    try:
+        entry_info = d.resolve(remote_path)
+        entry_id = entry_info['entry_id']
+        info = d.get_document_info(entry_id)
+        print(json.dumps(info, indent = 2))
+    except Exception as e:
+        print(e)
+
+def do_list_templates(d):   
+    try:
+        data = d.list_templates()
+        for t in data:
+            print(t['template_name'])
+    except Exception as e:
+        print(e)
+        
+
+def do_upload_template(d, local_path, template_name):
+    try:
+        with open(local_path, 'rb') as fh:
+            print(d.upload_template(fh, template_name))
+    except Exception as e:
+        print(e)
+
+def do_delete_template(d, template_name):
+    try:
+        template_id = d.get_template_id(template_name)
+        d.delete_template(template_id)
+    except Exception as e:
+        print(e)
 
 def do_upload(d, local_path, remote_path):
-    with open(local_path, 'rb') as fh:
-        d.upload(fh, remote_path)
+    
+    parent_folder, filename = os.path.split(remote_path)
+    
+    try:
+        parent_folder_id = d.get_document_id(parent_folder)
+    
+        with open(local_path, 'rb') as fh:
+            d.upload(parent_folder_id, filename, fh)
+            
+    except Exception as e:
+        print(e)
 
 def do_download(d, remote_path, local_path):
     data = d.download(remote_path)
@@ -29,11 +87,29 @@ def do_download(d, remote_path, local_path):
     with open(local_path, 'wb') as f:
         f.write(data)
 
-def do_delete_document(d, remote_path):
-    data = d.delete_document(remote_path)
+def do_delete(d, remote_path):
+    try:
+        document_id = d.get_document_id(remote_path)
+        d.delete(document_id)
+    except Exception as e:
+        print(e)
 
 def do_new_folder(d, remote_path):
-    d.new_folder(remote_path)
+    
+    parent_folder, new_folder = os.path.split(remote_path)
+
+    try:
+        parent_folder_id = d.get_document_id(parent_folder)
+        d.new_folder(parent_folder_id, new_folder)
+    except Exception as e:
+        print(e)
+    
+def do_delete_folder(d, remote_path):
+    try:
+        folder_id = d.get_document_id(remote_path)
+        d.delete_folder(folder_id)
+    except Exception as e:
+        print(e)
 
 def do_wifi_list(d):
     data = d.wifi_list()
@@ -69,17 +145,31 @@ def do_delete_wifi(d):
 
 def do_register(d):
     d.register()
+    
+def do_info(d):
+    print("Device information:")
+    print(json.dumps(d.device_information(), indent = 2))
+    print("Device configuration:")
+    print(json.dumps(d.get_configuration(), indent = 2))
+    
 
-if __name__ == "__main__":
+def main():
+    
+    logging.getLogger().setLevel(logging.DEBUG)
 
     commands = {
         "screenshot": do_screenshot,
+        "document-info" : do_document_info,
         "list-documents" : do_list_documents,
+        "list-folders" : do_list_folders,
+        "list-templates" : do_list_templates,
+        "upload-template" : do_upload_template,
+        "delete-template" : do_delete_template,
         "upload" : do_upload,
         "download" : do_download,
-        "delete" : do_delete_document,
+        "delete" : do_delete,
         "new-folder" : do_new_folder,
-#        "list-folders" : do_list_folders,
+        "delete-folder" : do_delete_folder,
         "wifi-list": do_wifi_list,
         "wifi-scan": do_wifi_scan,
         "wifi-add": do_add_wifi,
@@ -87,7 +177,8 @@ if __name__ == "__main__":
         "wifi": do_wifi,
         "wifi-enable" : do_wifi_enable,
         "wifi-disable" : do_wifi_disable,
-        "register" : do_register
+        "register" : do_register,
+        "info" : do_info,
     }
 
     def build_parser():
@@ -133,6 +224,9 @@ if __name__ == "__main__":
             key = fh.read()
 
         dp.authenticate(client_id, key)
+        dp.update_datetime()
 
     commands[args.command](dp, *args.command_args)
 
+if __name__ == "__main__":
+    main()
