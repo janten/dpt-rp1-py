@@ -36,7 +36,7 @@ class DigitalPaper():
 
     ### Authentication
 
-    def register(self):
+    def register(self, callback = None):
         """
         Gets authentication info from a DPT-RP1.  You can call this BEFORE
         DigitalPaper.authenticate()
@@ -110,8 +110,11 @@ class DigitalPaper():
             if m3hmac != hmac.digest():
                 print("M3 HMAC doesn't match")
                 return
-    
-            pin = input("Please enter the PIN shown on the DPT-RP1: ")
+
+            if callback is not None:
+                pin = callback()
+            else:
+                pin = input("Please enter the PIN shown on the DPT-RP1: ")
     
             hmac = HMAC(authKey, digestmod = SHA256)
             hmac.update(pin.encode())
