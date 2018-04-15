@@ -12,6 +12,7 @@ from Crypto.Hash.HMAC import HMAC
 from Crypto.Cipher import AES
 from Crypto.PublicKey import RSA
 import uuid
+import logging
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)  # @UndefinedVariable
 
@@ -55,7 +56,7 @@ class DigitalPaper():
         register_url = '{base_url}/register'.format(base_url = reg_url)
         register_cleanup_url = '{base_url}/register/cleanup'.format(base_url = reg_url)
         try:
-            print("Requesting PIN...")
+            logging.debug("Requesting PIN...")
             r = requests.post(register_pin_url, verify = False)
             r.raise_for_status()
             m1 = r.json()
@@ -93,14 +94,14 @@ class DigitalPaper():
                       e = base64.b64encode(m2hmac).decode('utf-8'))
     
     
-            print("Encoding nonce...")
+            logging.debug("Encoding nonce...")
             r = requests.post(register_hash_url, json = m2)
             r.raise_for_status()
     
             m3 = r.json()
             
             if(base64.b64decode(m3['a']) != n2):
-                print("Nonce N2 doesn't match")
+                logging.error("Nonce N2 doesn't match")
                 return
     
             eHash = base64.b64decode(m3['b'])
@@ -108,7 +109,7 @@ class DigitalPaper():
             hmac = HMAC(authKey, digestmod = SHA256)
             hmac.update(n1 + n2 + mac + ya + m2hmac + n2 + eHash)
             if m3hmac != hmac.digest():
-                print("M3 HMAC doesn't match")
+                logging.error("M3 HMAC doesn't match")
                 return
 
             if callback is not None:
@@ -136,14 +137,14 @@ class DigitalPaper():
                       d = base64.b64encode(wrappedRs).decode('utf-8'),
                       e = base64.b64encode(m4hmac).decode('utf-8'))
     
-            print("Getting certificate from device CA...")
+            logging.debug("Getting certificate from device CA...")
             r = requests.post(register_ca_url, json = m4)
             r.raise_for_status()
     
             m5 = r.json()
     
             if(base64.b64decode(m5['a']) != n2):
-                print("Nonce N2 doesn't match")
+                logging.error("Nonce N2 doesn't match")
                 return
     
             wrappedEsCert = base64.b64decode(m5['d'])
@@ -152,7 +153,7 @@ class DigitalPaper():
             hmac = HMAC(authKey, digestmod = SHA256)
             hmac.update(n1 + rHash + wrappedRs + m4hmac + n2 + wrappedEsCert)
             if hmac.digest() != m5hmac:
-                print("HMAC doesn't match!")
+                logging.error("HMAC doesn't match!")
                 return
     
             esCert = unwrap(wrappedEsCert, authKey, keyWrapKey)
@@ -162,16 +163,16 @@ class DigitalPaper():
             hmac = HMAC(authKey, digestmod = SHA256)
             hmac.update(es + psk + yb + ya)
             if hmac.digest() != eHash:
-                print("eHash does not match!")
+                logging.error("eHash does not match!")
                 return
     
-            print("Generating RSA2048 keys")
+            logging.debug("Generating RSA2048 keys")
             new_key = RSA.generate(2048, e=65537)
     
             keyPubC = new_key.publickey().exportKey("PEM")
     
             selfDeviceId = str(uuid.uuid4())
-            print("Device ID: " + selfDeviceId)
+            logging.debug("Device ID: " + selfDeviceId)
             selfDeviceId = selfDeviceId.encode()
     
             wrappedDIDKPUBC = wrap(selfDeviceId + keyPubC, authKey, keyWrapKey)
@@ -184,7 +185,7 @@ class DigitalPaper():
                       d = base64.b64encode(wrappedDIDKPUBC).decode('utf-8'),
                       e = base64.b64encode(m6hmac).decode('utf-8'))
     
-            print("Registering device...")
+            logging.debug("Registering device...")
             r = requests.post(register_url, json = m6, verify = False)
             r.raise_for_status()
 
@@ -197,7 +198,7 @@ class DigitalPaper():
 
 
         finally:
-            print("Cleaning up...")
+            logging.debug("Cleaning up...")
             r = requests.put(register_cleanup_url, verify = False)
             r.raise_for_status()
 
@@ -252,7 +253,7 @@ class DigitalPaper():
     
     def get_document_info(self, document_id):
         """
-        Gets the document info for a single document.
+        Gets the document info for a single document (not a folder).
         
         Args:
             document_id (int): The document id
@@ -264,24 +265,38 @@ class DigitalPaper():
         url = '/documents2/{document_id}'.format(document_id = document_id)
         data = self._get_endpoint(url).json()
         return data
-         
-    
-    def get_document_id(self, remote_path):
+
+    def get_folder_info(self, folder_id):
         """
-        Gets the document id for a given path (file or folder).
-        
+        Gets the folder info for a single folder.
+
+        Args:
+            folder_id (int): The folder id
+
+        Returns:
+            dict: A dictionary with the folder info
+        """
+
+        url = '/folders2/{folder_id}'.format(folder_id = folder_id)
+        data = self._get_endpoint(url).json()
+        return data
+
+
+    def resolve(self, remote_path):
+        """
+        Gets info (doc id, entry type, etc) for a given path (file or folder).
+
         Args:
             remote_path (string): The document path
-            
+
         Returns:
-            string: the document id
+            dict: the document info for the path
         """
-        
+
         encoded_remote_path = quote_plus(remote_path)
         url = "/resolve/entry/path/{enc_path}".format(enc_path = encoded_remote_path)
-        remote_entry = self._get_endpoint(url).json()
-        return remote_entry['entry_id']
-        
+        return self._get_endpoint(url).json()
+
 
     def download(self, document_id):
         """
@@ -339,6 +354,59 @@ class DigitalPaper():
 
         url = "/documents/{document_id}".format(document_id = document_id)
         return self._delete_endpoint(url).json()
+
+    
+    def move_document(self, document_id, new_parent_folder_id):        
+        
+        info = {
+            #"file_name": file_name,
+            "parent_folder_id": new_parent_folder_id,
+        }
+        self._put_endpoint("/documents2/{document_id}"
+                           .format(document_id = document_id), 
+                           data=info)
+        
+    
+    def rename_document(self, document_id, new_name):
+        """
+        Renames a document (not a folder)
+        
+        Args:
+            document_id (string): The document ID
+            new_name (string): The new document name
+            
+        """
+
+        info = {
+            "file_name" : new_name
+            }
+        
+        self._put_endpoint("/documents2/{document_id}"
+                           .format(document_id = document_id), 
+                           data=info)
+                    
+    def move_folder(self, folder_id, new_parent_folder_id):
+        pass
+    
+    def rename_folder(self, folder_id, new_name):
+        """
+        Renames a folder (not a document)
+        
+        Args:
+            folder_id (string): The folder ID
+            new_name (string): The new folder name
+        """
+        # /folders2/{id}
+        # parent_folder_id
+        # folder_name
+        # ext_id
+        info = {
+            "folder_name" : new_name,
+            }
+        
+        self._put_endpoint("/folders2/{folder_id}"
+                           .format(folder_id = folder_id), 
+                           data=info)
 
     def new_folder(self, parent_folder_id, folder_name):
         """
@@ -633,7 +701,7 @@ def unwrap(data, authKey, keyWrapKey):
     local_kwa = hmac.digest()[:8]
 
     if(kwa != local_kwa):
-        print("Unwrapped kwa does not match")
+        logging.error("Unwrapped kwa does not match")
 
     return unwrapped
 
