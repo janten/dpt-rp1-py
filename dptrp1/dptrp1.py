@@ -58,11 +58,11 @@ class DigitalPaper():
         register_cleanup_url = '{base_url}/register/cleanup'.format(base_url = reg_url)
 
         print("Cleaning up...")
-        r = wrap_request(requests.put(register_cleanup_url, verify = False))
+        r = wrap_request(requests.put, register_cleanup_url, verify = False)
         print(r)
 
         print("Requesting PIN...")
-        r = wrap_request(requests.post(register_pin_url, verify = False))
+        r = wrap_request(requests.post, register_pin_url, verify = False)
         print(r)
         m1 = r.json()
 
@@ -100,7 +100,7 @@ class DigitalPaper():
 
 
         print("Encoding nonce...")
-        r = wrap_request(requests.post(register_hash_url, json = m2))
+        r = wrap_request(requests.post, register_hash_url, json = m2)
         print(r)
 
         m3 = r.json()
@@ -140,7 +140,7 @@ class DigitalPaper():
                   e = base64.b64encode(m4hmac).decode('utf-8'))
 
         print("Getting certificate from device CA...")
-        r = wrap_request(requests.post(register_ca_url, json = m4))
+        r = wrap_request(requests.post, register_ca_url, json = m4)
         print(r)
 
         m5 = r.json()
@@ -197,11 +197,11 @@ class DigitalPaper():
                   e = base64.b64encode(m6hmac).decode('utf-8'))
 
         print("Registering device...")
-        r = wrap_request(requests.post(register_url, json = m6, verify = False))
+        r = wrap_request(requests.post, register_url, json = m6, verify = False)
         print(r)
 
         print("Cleaning up...")
-        r = wrap_request(requests.put(register_cleanup_url, verify = False))
+        r = wrap_request(requests.put, register_cleanup_url, verify = False)
         print(r)
 
         return (cert.decode('utf-8'),
@@ -217,7 +217,7 @@ class DigitalPaper():
             "client_id": client_id,
             "nonce_signed": signed_nonce
         }
-        r = wrap_request(requests.put(url, json=data, verify=False))
+        r = wrap_request(requests.put, url, json=data, verify=False)
         _, credentials = r.headers["Set-Cookie"].split("; ")[0].split("=")
         self.cookies["Credentials"] = credentials
 
@@ -236,7 +236,7 @@ class DigitalPaper():
         url = "{base_url}/documents/{remote_id}/file".format(
                 base_url = self.base_url,
                 remote_id = remote_id)
-        response = wrap_request(requests.get(url, verify=False, cookies=self.cookies))
+        response = wrap_request(requests.get, url, verify=False, cookies=self.cookies)
         return response.content
 
     def delete_document(self, remote_path):
@@ -349,7 +349,7 @@ class DigitalPaper():
     def take_screenshot(self):
         url = "{base_url}/system/controls/screen_shot" \
                 .format(base_url = self.base_url)
-        r = wrap_request(requests.get(url, verify=False, cookies=self.cookies))
+        r = wrap_request(requests.get, url, verify=False, cookies=self.cookies)
         return r.content
 
     ### Utility
@@ -358,7 +358,7 @@ class DigitalPaper():
         url = "{base_url}{endpoint}" \
                 .format(base_url = self.base_url,
                         endpoint = endpoint)
-        return wrap_request(requests.get(url, verify=False, cookies=self.cookies))
+        return wrap_request(requests.get, url, verify=False, cookies=self.cookies)
 
     def _put_endpoint(self, endpoint="", data={}, files=None):
         url = "{base_url}{endpoint}" \
@@ -370,20 +370,20 @@ class DigitalPaper():
         url = "{base_url}{endpoint}" \
                 .format(base_url = self.base_url,
                         endpoint = endpoint)
-        return wrap_request(requests.post(url, verify=False, cookies=self.cookies, json=data))
+        return wrap_request(requests.post, url, verify=False, cookies=self.cookies, json=data)
 
     def _delete_endpoint(self, endpoint="", data={}):
         url = "{base_url}{endpoint}" \
                 .format(base_url = self.base_url,
                         endpoint = endpoint)
-        return wrap_request(requests.delete(url, verify=False, cookies=self.cookies, json=data))
+        return wrap_request(requests.delete, url, verify=False, cookies=self.cookies, json=data)
 
     def _get_nonce(self, client_id):
         url = "{base_url}/auth/nonce/{client_id}" \
                 .format(base_url = self.base_url,
                         client_id = client_id)
 
-        r = wrap_request(requests.get(url, verify=False))
+        r = wrap_request(requests.get, url, verify=False)
         return r.json()["nonce"]
 
 
@@ -438,7 +438,8 @@ def unpad(bytestring, k=16):
     l = len(bytestring) - val
     return bytestring[:l]
 
-def wrap_request(req):
+def wrap_request(reqfn, url, **args):
+    req = reqfn(url, **args)
     status = req.status_code
 
     if not (str(status)).startswith('2'):
