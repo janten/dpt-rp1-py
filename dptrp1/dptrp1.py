@@ -227,10 +227,7 @@ class DigitalPaper():
         return data['entry_list']
 
     def download(self, remote_path):
-        encoded_remote_path = quote_plus(remote_path)
-        url = "/resolve/entry/path/{enc_path}".format(enc_path = encoded_remote_path)
-        remote_entry = self._get_endpoint(url).json()
-        remote_id = remote_entry['entry_id']
+        remote_id = self._resolve_object_by_path(remote_path).json()['entry_id']
 
         url = "{base_url}/documents/{remote_id}/file".format(
                 base_url = self.base_url,
@@ -239,21 +236,15 @@ class DigitalPaper():
         return response.content
 
     def delete_document(self, remote_path):
-        encoded_remote_path = quote_plus(remote_path)
-        url = "/resolve/entry/path/{enc_path}".format(enc_path = encoded_remote_path)
-        remote_entry = self._get_endpoint(url).json()
-        remote_id = remote_entry['entry_id']
+        remote_id = self._resolve_object_by_path(remote_path).json()['entry_id']
         url = "/documents/{remote_id}".format(remote_id = remote_id)
         self._delete_endpoint(url)
 
     def upload(self, fh, remote_path):
         filename = os.path.basename(remote_path)
         remote_directory = os.path.dirname(remote_path)
-        encoded_directory = quote_plus(remote_directory)
-        url = "/resolve/entry/path/{enc_dir}".format(enc_dir = encoded_directory)
-        directory_entry = self._get_endpoint(url).json()
 
-        directory_id = directory_entry["entry_id"]
+        directory_id = self._resolve_object_by_path(remote_directory).json()['entry_id']
         info = {
             "file_name": filename,
             "parent_folder_id": directory_id,
@@ -272,11 +263,8 @@ class DigitalPaper():
     def new_folder(self, remote_path):
         folder_name = os.path.basename(remote_path)
         remote_directory = os.path.dirname(remote_path)
-        encoded_directory = quote_plus(remote_directory)
-        url = "/resolve/entry/path/{enc_dir}".format(enc_dir = encoded_directory)
-        directory_entry = self._get_endpoint(url).json()
 
-        directory_id = directory_entry["entry_id"]
+        directory_id = self._resolve_object_by_path(remote_directory).json()['entry_id']
         info = {
             "folder_name": folder_name,
             "parent_folder_id": directory_id
@@ -384,6 +372,11 @@ class DigitalPaper():
 
         r = requests.get(url, verify=False)
         return r.json()["nonce"]
+
+    def _resolve_object_by_path(self, path):
+        enc_path = quote_plus(path)
+        url = "/resolve/entry/path/{enc_path}".format(enc_path = enc_path)
+        return self._get_endpoint(url)
 
 
 # crypto helpers
