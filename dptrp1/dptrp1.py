@@ -352,7 +352,7 @@ class DigitalPaper():
         """
 
         url = "/documents/{document_id}".format(document_id = document_id)
-        return self._delete_endpoint(url).json()
+        self._delete_endpoint(url)
 
     
     def move_document(self, document_id, new_parent_folder_id):        
@@ -439,7 +439,7 @@ class DigitalPaper():
         """
         
         url = "/folders/{folder_id}".format(folder_id = folder_id)
-        return self._delete_endpoint(url)
+        self._delete_endpoint(url)
 
     def list_templates(self):
         """
