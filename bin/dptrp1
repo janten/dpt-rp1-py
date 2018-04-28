@@ -214,6 +214,7 @@ def main():
         "wifi-disable" : do_wifi_disable,
         "timeformat" : do_timeformat,
         "device-info" : do_info,
+        "register" : None
     }
 
     def build_parser():
