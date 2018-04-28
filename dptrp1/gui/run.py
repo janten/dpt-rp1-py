@@ -4,7 +4,7 @@ Created on Feb 24, 2018
 @author: brian
 '''
 
-import logging, os, pickle, threading, traceback, sys
+import logging, os, pickle, threading, traceback, sys, importlib
 
 from envisage.ui.tasks.api import TasksApplication
 from envisage.ui.tasks.tasks_application import TasksApplicationState
@@ -148,6 +148,43 @@ def main(argv):
     except:
         # if there's no console, this fails
         pass
+    
+    # see if we can load a QT api
+    QtAPIs = [
+        ('pyside', 'PySide'),
+        ('pyside2', 'PySide2'),
+        ('pyqt5', 'PyQt5'),
+        ('pyqt', 'PyQt4'),
+    ]
+ 
+    qt_api = None
+
+    # have we already imported a Qt API?
+    for api_name, module in QtAPIs:
+        if module in sys.modules:
+            qt_api = api_name
+            break
+    else:
+        # does our environment give us a preferred API?
+        qt_api = os.environ.get('QT_API')
+    
+    # if we have no preference, is a Qt API available? Or fail with ImportError.
+    if qt_api is None:
+        for api_name, module in QtAPIs:
+            try:
+                importlib.import_module(module)
+                qt_api = api_name
+                break
+            except ImportError:
+                continue
+        else:
+            raise ImportError('Please install PySide, PySide2, PyQt5 or PyQt4')
+    
+    # otherwise check QT_API value is valid
+    elif qt_api not in {api_name for api_name, module in QtAPIs}:
+        msg = ("Invalid Qt API %r, valid values are: " +
+               "'pyside, 'pyside2', 'pyqt' or 'pyqt5'") % qt_api
+        raise RuntimeError(msg)
  
     # install a global (gui) error handler for traits notifications
     from traits.api import push_exception_handler
@@ -172,6 +209,7 @@ def main(argv):
 
     sys.excepthook = log_excepthook    
 
+    # monkey-patch a bug in traitsui
     def _size_hint_wrapper(f, ui):
         """Wrap an existing sizeHint method with sizes from a UI object.
         """
@@ -189,13 +227,19 @@ def main(argv):
 
     def _tree_hash(self):
         return id(self)
-    
+      
     def _tree_eq(self, other):
         return id(self) == id(other)
+      
     
-    from PyQt4.QtGui import QTreeWidgetItem
-    QTreeWidgetItem.__hash__ = _tree_hash
-    QTreeWidgetItem.__eq__ = _tree_eq
+    if qt_api == "pyqt":
+        from PyQt4.QtGui import QTreeWidgetItem
+        QTreeWidgetItem.__hash__ = _tree_hash
+        QTreeWidgetItem.__eq__ = _tree_eq       
+    elif qt_api == "pyqt5":
+        from PyQt5.QtWidgets import QTreeWidgetItem
+        QTreeWidgetItem.__hash__ = _tree_hash
+        QTreeWidgetItem.__eq__ = _tree_eq        
     
     app.run()
 
