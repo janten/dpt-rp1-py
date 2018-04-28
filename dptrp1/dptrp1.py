@@ -309,7 +309,6 @@ class DigitalPaper():
             bytes: the document.
         """
 
-
         url = "/documents/{document_id}/file".format(document_id = document_id)
         response = self._get_endpoint(url)
         return response.content
@@ -419,7 +418,7 @@ class DigitalPaper():
         Returns:
             string: The id of the new folder
         """
-
+        
         info = {
             "folder_name": folder_name,
             "parent_folder_id": parent_folder_id
@@ -663,6 +662,11 @@ class DigitalPaper():
         r = requests.get(url, verify=False)
         r.raise_for_status()
         return r.json()["nonce"]
+
+    def _resolve_object_by_path(self, path):
+        enc_path = quote_plus(path)
+        url = "/resolve/entry/path/{enc_path}".format(enc_path = enc_path)
+        return self._get_endpoint(url)
 
 
 # crypto helpers
