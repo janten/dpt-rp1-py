@@ -169,7 +169,9 @@ class GUITask(Task, Controller):
         new_folder_id = self.dp.new_folder(selected.entry_id, nf.name)
         new_folder_info = self.dp.get_folder_info(new_folder_id)
         
-        new_folder = Folder(**new_folder_info)
+        new_folder = Folder(**new_folder_info,
+                            parent_folder = selected, 
+                            task = self)
         selected.files.append(new_folder)
 
     def _upload_files(self, editor):
@@ -211,7 +213,9 @@ class GUITask(Task, Controller):
                 remote_id = self.dp.upload(selected.entry_id, filename, fh)
             
             remote_file_info = self.dp.get_document_info(remote_id)
-            selected.files.append(File(**remote_file_info))
+            selected.files.append(File(**remote_file_info, 
+                                       parent_folder = selected,
+                                       task = self))
 
     def _download_files(self, editor):
         selected = editor.selected
