@@ -256,7 +256,7 @@ class DigitalPaper():
         doc_url = "/documents/{doc_id}/file".format(doc_id = doc_id)
 
         files = {
-            'file': (filename, fh, 'rb')
+            'file': (quote_plus(filename), fh, 'rb')
         }
         self._put_endpoint(doc_url, files=files)
 
