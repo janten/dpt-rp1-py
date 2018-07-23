@@ -34,6 +34,10 @@ def do_download(d, remote_path, local_path):
     with open(local_path, 'wb') as f:
         f.write(data)
 
+def do_update_firmware(d, local_path):
+    with open(local_path, 'rb') as fwfh:
+        d.update_firmware(fwfh)
+
 def do_delete_document(d, remote_path):
     data = d.delete_document(remote_path)
 
@@ -92,7 +96,8 @@ if __name__ == "__main__":
         "wifi": do_wifi,
         "wifi-enable" : do_wifi_enable,
         "wifi-disable" : do_wifi_disable,
-        "register" : do_register
+        "register" : do_register,
+        "update": do_update_firmware
     }
 
     def build_parser():
