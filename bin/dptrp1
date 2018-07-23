@@ -20,6 +20,14 @@ def do_list_documents(d):
     for d in data:
         print(d['entry_path'])
 
+def do_list_folders(d, *remote_paths):
+    if remote_paths == ():
+        remote_paths = ('Document',)
+    for p in remote_paths:
+        for o in d.traverse_folder(p):
+            if o['entry_type'] == 'folder':
+                print(o['entry_path'] + '/')
+
 def do_upload(d, local_path, remote_path):
     with open(local_path, 'rb') as fh:
         d.upload(fh, remote_path)
@@ -88,7 +96,7 @@ if __name__ == "__main__":
         "download" : do_download,
         "delete" : do_delete_document,
         "new-folder" : do_new_folder,
-#        "list-folders" : do_list_folders,
+        "list-folders" : do_list_folders,
         "wifi-list": do_wifi_list,
         "wifi-scan": do_wifi_scan,
         "wifi-add": do_add_wifi,
