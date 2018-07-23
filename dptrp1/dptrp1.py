@@ -339,6 +339,37 @@ class DigitalPaper():
         r = requests.get(url, verify=False, cookies=self.cookies)
         return r.content
 
+
+    ## Update firmware
+
+    def update_firmware(self, fwfh):
+        filename = 'FwUpdater.pkg'
+        fw_url = "/system/controls/update_firmware/file"\
+            .format(base_url=self.base_url)
+        files = {
+            'file': (quote_plus(filename), fwfh, 'rb')
+        }
+        # TODO: add file transferring feedback
+        self._put_endpoint(fw_url, files=files)
+
+        precheck_msg = self._get_endpoint(
+            '/system/controls/update_firmware/precheck').json()
+        battery_check = precheck_msg.get('battery', 'not ok')
+        uploaded_image_check = precheck_msg.get('image_file', 'not ok')
+
+        print('* battery check: {}'.format(battery_check))
+        print('* uploaded image check: {}'.format(uploaded_image_check))
+
+        for key in precheck_msg:
+            if not (key == 'battery' or key == 'image_file'):
+                print('! Find unrecognized key-value pair: ({0}, {1})'
+                      .format(key, precheck_msg[key]))
+
+        if battery_check == 'ok' and uploaded_image_check == 'ok':
+            # TODO: add check if status is 204
+            self._put_endpoint('/system/controls/update_firmware')
+
+
     ### Utility
 
     def _get_endpoint(self, endpoint=""):
