@@ -28,7 +28,9 @@ def do_list_folders(d, *remote_paths):
             if o['entry_type'] == 'folder':
                 print(o['entry_path'] + '/')
 
-def do_upload(d, local_path, remote_path):
+def do_upload(d, local_path, remote_path=''):
+    if not remote_path:
+        remote_path = 'Document/' + os.path.basename(local_path)
     with open(local_path, 'rb') as fh:
         d.upload(fh, remote_path)
 
