@@ -8,6 +8,7 @@ import json
 import os
 import re
 
+from pathlib import Path
 from dptrp1.dptrp1 import DigitalPaper
 
 def do_screenshot(d, filename):
@@ -91,6 +92,17 @@ def do_register(d):
 
 if __name__ == "__main__":
 
+    dpapp = "Sony Corporation/Digital Paper App"
+    if sys.platform.startswith('darwin'):
+        dpapp = "Library/Application Support" / dpapp
+    elif sys.platform.startswith('windows'):
+        dpapp = "AppData/Roaming" / dpapp
+    elif sys.platform.startswith('linux'):
+        dpapp = ".dpapp"
+    dpapp = Path.home() / dpapp
+    deviceid = str(dpapp / "deviceid.dat")
+    privatekey = str(dpapp / "privatekey.dat")
+
     commands = {
         "screenshot": do_screenshot,
         "list-documents" : do_list_documents,
@@ -114,10 +126,12 @@ if __name__ == "__main__":
         p = argparse.ArgumentParser(description = "Remote control for Sony DPT-RP1")
         p.add_argument('--client-id', 
                 help = "File containing the device's client id",
-                required = True)
+                default = deviceid,
+                required = not os.path.isfile(deviceid))
         p.add_argument('--key', 
                 help = "File containing the device's private key",
-                required = True)
+                default = privatekey,
+                required = not os.path.isfile(privatekey))
         p.add_argument('--addr', 
                 help = "Hostname or IP address of the device")
         p.add_argument('command', 
