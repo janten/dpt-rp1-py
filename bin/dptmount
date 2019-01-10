@@ -38,6 +38,7 @@ import errno
 import time
 import calendar
 import yaml
+import io
 from errno import ENOENT, EACCES
 from stat import S_IFDIR, S_IFLNK, S_IFREG
 
@@ -79,6 +80,7 @@ class DptTablet(LoggingMixIn, Operations):
 
         self.documents_data = {}
         self.documents_fds = {}
+        self.files = {}
         self.fd = 0
         
         
@@ -102,7 +104,7 @@ class DptTablet(LoggingMixIn, Operations):
         parentnodepath = '/'.join([str(node.name) for node in parent.path])
         
         for item in self.dpt.list_objects_in_folder(parentnodepath):
-            node = anytree.Node(item['entry_name'], parent=parent, item=item,
+            node = anytree.Node(item['entry_name'], parent=parent, item=item, remote_path=item["entry_path"],
                                 lstat=self._get_lstat(item), localpath=os.path.join(parent.localpath, item['entry_name']))
             if item['entry_type'] == 'folder':
                 self._recurse_load_document_list(node)
@@ -162,6 +164,8 @@ class DptTablet(LoggingMixIn, Operations):
         return 0
 
     def getattr(self, path, fh=None):
+        if path in self.files:
+            return self.files[path]
         node = self._map_local_remote(path)
         if node is None:
             raise FuseOSError(ENOENT)
@@ -194,9 +198,10 @@ class DptTablet(LoggingMixIn, Operations):
         pass
 
     def mkdir(self, path, mode):
-        remote_path = os.path.join('Document', path)
-        self.dpt.new_folder(remote_path)
-        self._load_document_list()
+        logger.debug("mkdir path:{0} mode:{1}".format(path, mode))
+        remote_path = os.path.join('Document', path.strip("/"))
+        logger.debug("mkdir remote_path:{0}".format(remote_path))
+        #self.dpt.new_folder(remote_path)
         return 0
 
     def rename(self, old, new):
@@ -235,11 +240,18 @@ class DptTablet(LoggingMixIn, Operations):
         logger.info('file handle %d closed' % fh)
         node = self._map_local_remote(path)
         del self.documents_data[fh]
-        del self.documents_fds[node]
+        try:
+            del self.documents_fds[node]
+        except KeyError:
+            del self.files[path]
         return 0
     
     def read(self, path, length, offset, fh):
         return self.documents_data[fh][offset:offset + length]
+        #stream = self.documents_data[fh]
+        #stream.seek(offset)
+        #return stream.read(length)
+        
 
     def create(self, path, mode, fi=None):
         self.files[path] = dict(
@@ -251,15 +263,37 @@ class DptTablet(LoggingMixIn, Operations):
             st_atime=time.time())
 
         self.fd += 1
-        self.documents_data[self.fd] = bytes()
+        self.documents_data[self.fd] = bytearray() #io.BytesIO()
+        #self.documents_data[self.fd] = io.BytesIO()
         return self.fd
 
     def write(self, path, buf, offset, fh):
         # TODO
-        return FuseOSError(EACCES)
+        #return FuseOSError(EACCES)
+        logging.debug("write to path {0}".format(path))
+        logging.debug("write to fh {0}".format(fh))
+        logging.debug("write offset {}".format(offset))
+        logging.debug("write len {}".format(len(buf)))
+        #stream = self.documents_data[fh].seek(offset)
+        #stream.write(buf)
+        #self.documents_data[fh][offset:] += buf
+        stream = self.documents_data[fh][:offset] + buf
+        self.documents_data[fh] = stream
+        logging.debug("written len {}".format(len(stream)))
+        return len(buf)
 
     def flush(self, path, fh):
-        pass
+        logging.debug("flushing data")
+        #fp = open('/tmp/test.pdf', 'wb')
+        stream = io.BytesIO(self.documents_data[fh])
+        dpath, fname = os.path.split(path)
+        node = self._map_local_remote(dpath)
+        remote_path = os.path.join(node.remote_path, fname)
+        logging.debug("flushing localpath:{0} remotepath:{1}".format(dpath, remote_path))
+        #stream = self.documents_data[fh].seek(0)
+        self.dpt.upload(stream, remote_path)
+        return
+        #pass
 
 
     
@@ -271,10 +305,16 @@ if __name__ == '__main__':
 
     parser.add_argument("--config", default=YAML_CONFIG_PATH, help="config file, default is %s" % YAML_CONFIG_PATH)
     parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
+    parser.add_argument("--logfile", default=False, help="Log to a file (default: log to standard output)")
     args = parser.parse_args()
 
     # Set up logging
-    logging.basicConfig()
+    if args.logfile is False:
+        logging.basicConfig()
+    else:
+        logging.basicConfig(filename=args.logfile)
+
+
     if args.verbose:
         logging.getLogger().setLevel(logging.DEBUG)
     else:
