@@ -65,13 +65,14 @@ class DptTablet(LoggingMixIn, Operations):
         self.__authenticate__()
 
         # Create root node
-        self.now = time.time()
-        self.root = anytree.Node('Document', item = None, localpath='/',
-                         lstat=dict(st_mode=(S_IFDIR | 0o755),
-                                    st_ctime=self.now,
-                                    st_mtime=self.now,
-                                    st_atime=self.now,
-                                    st_nlink=2), )
+        self.__init_empty_tree()
+        #self.now = time.time()
+        #self.root = anytree.Node('Document', item = None, localpath='/',
+                         #lstat=dict(st_mode=(S_IFDIR | 0o755),
+                                    #st_ctime=self.now,
+                                    #st_mtime=self.now,
+                                    #st_atime=self.now,
+                                    #st_nlink=2), )
 
         # Cache this for the session
         logger.info('Loading initial document list')
@@ -82,7 +83,17 @@ class DptTablet(LoggingMixIn, Operations):
         self.documents_fds = {}
         self.files = {}
         self.fd = 0
-        
+       
+    def __init_empty_tree(self):
+        # Create root node
+        self.now = time.time()
+        self.root = anytree.Node('Document', item = None, localpath='/',
+                         lstat=dict(st_mode=(S_IFDIR | 0o755),
+                                    st_ctime=self.now,
+                                    st_mtime=self.now,
+                                    st_atime=self.now,
+                                    st_nlink=2), )
+
         
     def __authenticate__(self):
         self.dpt = DigitalPaper(self.dpt_ip_address)
@@ -184,14 +195,12 @@ class DptTablet(LoggingMixIn, Operations):
         logger.debug(dirents)
         return dirents
 
-    
     def unlink(self, path):
-        item = self._map_local_remote(path)
-
-        remote_path = item['entry_path']
-        data = self.dpt.delete_document(remote_path)
-        
-        self._load_document_list()
+        node = self._map_local_remote(path)
+        remote_path = node.remote_path
+        data = self.dpt.delete_document(node.remote_path)
+        node.parent = None
+        del node
         return 0
 
 
@@ -289,6 +298,7 @@ class DptTablet(LoggingMixIn, Operations):
         return len(buf)
 
     def flush(self, path, fh):
+        #TODO needs to be added to node tree
         logging.debug("flushing data")
         #fp = open('/tmp/test.pdf', 'wb')
         stream = io.BytesIO(self.documents_data[fh])
