@@ -109,6 +109,10 @@ class DptTablet(LoggingMixIn, Operations):
     def _add_node_to_tree(self, parent, item):
         return anytree.Node(item['entry_name'], parent=parent, item=item, remote_path=item["entry_path"],
                                 lstat=self._get_lstat(item), localpath=os.path.join(parent.localpath, item['entry_name']))
+
+    def _add_remote_path_to_tree(self, parent, remote_path):
+        item = self.dpt._resolve_object_by_path(remote_path).json()
+        return self._add_node_to_tree(parent, item)
         
     def _load_document_list(self):
         # TODO maybe some smarter caching?
@@ -215,8 +219,7 @@ class DptTablet(LoggingMixIn, Operations):
         parent = self._map_local_remote(ppath)
         remote_path = os.path.join(parent.remote_path, dirname)
         self.dpt.new_folder(remote_path)
-        item = self.dpt._resolve_object_by_path(remote_path).json()
-        node = self._add_node_to_tree(parent, item)
+        node = self._add_remote_path_to_tree(parent, remote_path)
         return 0
 
     def rename(self, old, new):
@@ -300,16 +303,13 @@ class DptTablet(LoggingMixIn, Operations):
     def flush(self, path, fh):
         #TODO needs to be added to node tree
         logging.debug("flushing data")
-        #fp = open('/tmp/test.pdf', 'wb')
         stream = io.BytesIO(self.documents_data[fh])
         dpath, fname = os.path.split(path)
-        node = self._map_local_remote(dpath)
-        remote_path = os.path.join(node.remote_path, fname)
-        logging.debug("flushing localpath:{0} remotepath:{1}".format(dpath, remote_path))
-        #stream = self.documents_data[fh].seek(0)
+        parent = self._map_local_remote(dpath)
+        remote_path = os.path.join(parent.remote_path, fname)
         self.dpt.upload(stream, remote_path)
+        node = self._add_remote_path_to_tree(parent, remote_path)
         return
-        #pass
 
 
     
