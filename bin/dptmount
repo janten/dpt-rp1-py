@@ -213,8 +213,10 @@ class DptTablet(LoggingMixIn, Operations):
     # Directory creation
     # ============
     def rmdir(self, path):
-        # TODO! Need to find _delete in dpt
-        pass
+        node = self._map_local_remote(path)
+        self.dpt.delete_folder(node.remote_path)
+        self._remove_node(node)
+        return 0
 
     def mkdir(self, path, mode):
         ppath, dirname = os.path.split(path)
