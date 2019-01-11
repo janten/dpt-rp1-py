@@ -301,7 +301,6 @@ class DptTablet(LoggingMixIn, Operations):
         return len(buf)
 
     def flush(self, path, fh):
-        #TODO needs to be added to node tree
         logging.debug("flushing data")
         stream = io.BytesIO(self.documents_data[fh])
         dpath, fname = os.path.split(path)
@@ -309,6 +308,7 @@ class DptTablet(LoggingMixIn, Operations):
         remote_path = os.path.join(parent.remote_path, fname)
         self.dpt.upload(stream, remote_path)
         node = self._add_remote_path_to_tree(parent, remote_path)
+        self.files.pop(path)
         return
 
 
