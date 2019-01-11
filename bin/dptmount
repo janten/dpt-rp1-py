@@ -106,6 +106,10 @@ class DptTablet(LoggingMixIn, Operations):
 
         self.dpt.authenticate(client_id, key)
 
+    def _remove_node(self, node):
+        node.parent = None
+        del node
+
     def _add_node_to_tree(self, parent, item):
         return anytree.Node(item['entry_name'], parent=parent, item=item, remote_path=item["entry_path"],
                                 lstat=self._get_lstat(item), localpath=os.path.join(parent.localpath, item['entry_name']))
@@ -171,7 +175,6 @@ class DptTablet(LoggingMixIn, Operations):
         access_flags = os.O_RDONLY | os.O_WRONLY | os.O_RDWR
         return flags & access_flags == os.O_RDONLY
 
-    
     # Filesystem methods
     # ==================
     def chmod(self, path, mode):
@@ -203,8 +206,7 @@ class DptTablet(LoggingMixIn, Operations):
         node = self._map_local_remote(path)
         remote_path = node.remote_path
         data = self.dpt.delete_document(node.remote_path)
-        node.parent = None
-        del node
+        self._remove_node(node)
         return 0
 
 
