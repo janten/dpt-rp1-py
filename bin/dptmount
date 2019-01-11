@@ -266,10 +266,7 @@ class DptTablet(LoggingMixIn, Operations):
     
     def read(self, path, length, offset, fh):
         return self.documents_data[fh][offset:offset + length]
-        #stream = self.documents_data[fh]
-        #stream.seek(offset)
-        #return stream.read(length)
-        
+
 
     def create(self, path, mode, fi=None):
         self.files[path] = dict(
@@ -281,27 +278,16 @@ class DptTablet(LoggingMixIn, Operations):
             st_atime=time.time())
 
         self.fd += 1
-        self.documents_data[self.fd] = bytearray() #io.BytesIO()
-        #self.documents_data[self.fd] = io.BytesIO()
+        self.documents_data[self.fd] = bytearray()
         return self.fd
 
     def write(self, path, buf, offset, fh):
-        # TODO
-        #return FuseOSError(EACCES)
-        logging.debug("write to path {0}".format(path))
-        logging.debug("write to fh {0}".format(fh))
-        logging.debug("write offset {}".format(offset))
-        logging.debug("write len {}".format(len(buf)))
-        #stream = self.documents_data[fh].seek(offset)
-        #stream.write(buf)
-        #self.documents_data[fh][offset:] += buf
         stream = self.documents_data[fh][:offset] + buf
         self.documents_data[fh] = stream
         logging.debug("written len {}".format(len(stream)))
         return len(buf)
 
     def flush(self, path, fh):
-        logging.debug("flushing data")
         stream = io.BytesIO(self.documents_data[fh])
         dpath, fname = os.path.split(path)
         parent = self._map_local_remote(dpath)
