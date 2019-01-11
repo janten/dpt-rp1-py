@@ -211,7 +211,7 @@ class DigitalPaper():
     def authenticate(self, client_id, key):
         sig_maker = httpsig.Signer(secret=key, algorithm='rsa-sha256')
         nonce = self._get_nonce(client_id)
-        signed_nonce = sig_maker._sign(nonce)
+        signed_nonce = sig_maker.sign(nonce)
         url = "{base_url}/auth".format(base_url = self.base_url)
         data = {
             "client_id": client_id,
