@@ -257,6 +257,11 @@ class DigitalPaper():
         url = "/documents/{remote_id}".format(remote_id = remote_id)
         self._delete_endpoint(url)
 
+    def delete_folder(self, remote_path):
+        remote_id = self._resolve_object_by_path(remote_path).json()['entry_id']
+        url = "/folders/{remote_id}".format(remote_id = remote_id)
+        self._delete_endpoint(url)
+
     def upload(self, fh, remote_path):
         filename = os.path.basename(remote_path)
         remote_directory = os.path.dirname(remote_path)
