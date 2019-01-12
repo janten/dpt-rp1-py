@@ -289,6 +289,35 @@ class DigitalPaper():
 
         r = self._post_endpoint("/folders2", data=info)
 
+    def rename_document(self, remote_path, new_path):
+        """
+        Rename/move document
+
+        Parameters
+        ----------
+        remote_path: string
+            full remote path of the document
+        new_path: string
+            new remote_path of the document. If no filename is given (ends in /) move the
+            document to the given folder. If no path is given rename the file, but leave in
+            the same folder.
+        """
+        doc = self._resolve_object_by_path(remote_path).json()
+        doc_id = doc["entry_id"]
+        new_folder, new_name = os.path.split(new_path)
+        if new_folder is '':
+            parent_folder = doc["parent_folder_id"]
+        else:
+            parent_folder = self._resolve_object_by_path(new_folder).json()["entry_id"]
+        if new_name is '':
+            new_name = doc['entry_name']
+        info = {
+            "parent_folder_id": parent_folder,
+            "file_name": new_name
+        }
+        r = self._put_endpoint("/documents2/{doc_id}".format(doc_id=doc_id), data=info)
+        return r
+
     ### Wifi
     def wifi_list(self):
         data = self._get_endpoint('/system/configs/wifi_accesspoints').json()
