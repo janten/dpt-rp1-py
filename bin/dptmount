@@ -209,7 +209,6 @@ class DptTablet(LoggingMixIn, Operations):
         self._remove_node(node)
         return 0
 
-
     # Directory creation
     # ============
     def rmdir(self, path):
@@ -225,13 +224,6 @@ class DptTablet(LoggingMixIn, Operations):
         self.dpt.new_folder(remote_path)
         node = self._add_remote_path_to_tree(parent, remote_path)
         return 0
-
-    def rename(self, old, new):
-        print(old)
-        print(new)
-        node = self._map_local_remote(old)
-        self.dpt.rename_file(node, new)
-
 
     # File methods
     # ============
@@ -271,6 +263,14 @@ class DptTablet(LoggingMixIn, Operations):
     def read(self, path, length, offset, fh):
         return self.documents_data[fh][offset:offset + length]
 
+    def rename(self, oldpath, newpath):
+        old_node = self._map_local_remote(oldpath)
+        new_folder, fname = os.path.split(newpath)
+        new_folder_node = self._map_local_remote(new_folder)
+        newpath = os.path.join(new_folder_node.remote_path, fname)
+        self.dpt.rename_document(old_node.remote_path, newpath)
+        self._remove_node(old_node)
+        self._add_remote_path_to_tree(new_folder_node, newpath)
 
     def create(self, path, mode, fi=None):
         self.files[path] = dict(
