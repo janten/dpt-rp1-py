@@ -1,6 +1,8 @@
 # dpt-rp1-py
 Python script to manage Sony DPT-RP1 without Digital Paper App. This repository includes a Python library and a command line utility to manage documents on the DPT-RP1. Tested on Windows, Linux, and macOS. 
 
+This is an extended version which contains a script to allow mounting as a FUSE mount (see below for details).
+
 ## Install
 
 To install the library run `python3 setup.py install` or `pip3 install .` from the root directory. To install as a developer use `python3 setup.py develop` (see [the setuptools docs](http://setuptools.readthedocs.io/en/latest/setuptools.html#development-mode)) and work on the source as usual.
@@ -56,3 +58,35 @@ If you have already registered on Windows, the Digital Paper app stores the file
 #### Finding the private key and client ID on macOS
 
 If you have already registered on macOS, the Digital Paper app stores the files in _$HOME/Library/Application Support/Sony Corporation/Digital Paper App/_. You'll need the files _deviceid.dat_ and _privatekey.dat_.
+
+## FUSE mount
+
+This Repository contains a script to mount the Digital Paper as a userspace mount. The work was originally started by @jgrigera
+who did most of the work, but did not implement write delete and create methods. I have extended this work to also implement 
+write and upload methods. 
+
+### How to use 
+
+Create a yaml file with configuration details like the below:
+
+```
+dptrp1:
+  client-id: ~/.config/dpt/deviceid.dat
+  key: ~/.config/dpt/privatekey.dat
+  addr: 192.168.0.200
+```
+
+Mount the Digital Paper to a directory with `dptmount /my/mountpoint/`. 
+
+#### What works
+
+* reading files
+* moving files (both rename and move to different folder)
+* uploading new files
+* deleting files and folders 
+
+#### What does not work
+
+* currently there is no caching, therefore operations can be slow as they require uploading or downloading from the 
+device. However, this avoids having to resolve conflicts if a document has been changed both on the Digital Paper and
+the caching directory.
