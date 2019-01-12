@@ -55,6 +55,9 @@ def do_delete_document(d, remote_path):
 def do_delete_folder(d, remote_path):
     data = d.delete_folder(remote_path)
 
+def do_rename_document(d, remote_path, new_path):
+    data = d.rename_document(remote_path, new_path)
+
 def do_new_folder(d, remote_path):
     d.new_folder(remote_path)
 
@@ -114,6 +117,7 @@ if __name__ == "__main__":
         "delete" : do_delete_document,
         "rmdir" : do_delete_folder,
         "new-folder" : do_new_folder,
+        "rename" : do_rename_document,
         "list-folders" : do_list_folders,
         "wifi-list": do_wifi_list,
         "wifi-scan": do_wifi_scan,
