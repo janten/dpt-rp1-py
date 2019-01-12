@@ -118,8 +118,6 @@ class DptTablet(LoggingMixIn, Operations):
         parentnodepath = '/'.join([str(node.name) for node in parent.path])
         
         for item in self.dpt.list_objects_in_folder(parentnodepath):
-            #node = anytree.Node(item['entry_name'], parent=parent, item=item, remote_path=item["entry_path"],
-            #                    lstat=self._get_lstat(item), localpath=os.path.join(parent.localpath, item['entry_name']))
             node = self._add_node_to_tree(parent, item)
             if item['entry_type'] == 'folder':
                 self._recurse_load_document_list(node)
