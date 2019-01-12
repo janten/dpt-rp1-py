@@ -66,13 +66,6 @@ class DptTablet(LoggingMixIn, Operations):
 
         # Create root node
         self.__init_empty_tree()
-        #self.now = time.time()
-        #self.root = anytree.Node('Document', item = None, localpath='/',
-                         #lstat=dict(st_mode=(S_IFDIR | 0o755),
-                                    #st_ctime=self.now,
-                                    #st_mtime=self.now,
-                                    #st_atime=self.now,
-                                    #st_nlink=2), )
 
         # Cache this for the session
         logger.info('Loading initial document list')
@@ -94,7 +87,6 @@ class DptTablet(LoggingMixIn, Operations):
                                     st_atime=self.now,
                                     st_nlink=2), )
 
-        
     def __authenticate__(self):
         self.dpt = DigitalPaper(self.dpt_ip_address)
 
@@ -166,7 +158,6 @@ class DptTablet(LoggingMixIn, Operations):
         # 'title': 'untitled', 'total_page': '4'}
         return lstat
 
-                
     def _map_local_remote(self, full_local):
         return anytree.search.find(self.root, filter_=lambda node: node.localpath == full_local)
 
@@ -230,7 +221,6 @@ class DptTablet(LoggingMixIn, Operations):
     def open(self, path, flags):
         node = self._map_local_remote(path)
 
-        # TODO: allow uploading
         if not self._is_read_only_flags(flags):
             return FuseOSError(EACCES)
 
