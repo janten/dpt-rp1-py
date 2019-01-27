@@ -249,11 +249,11 @@ class DigitalPaper():
         if not remote_path.startswith('Document'):
             print('ERROR: Remote path MUST start with "Document".')
 
-    def _get_entry_id(self, remote_path):
+    def _get_entry_id(self, remote_path, printerr=True):
         self._check_remote_path(remote_path)
         encoded_remote_path = quote_plus(remote_path)
         url = "/resolve/entry/path/{enc_path}".format(enc_path = encoded_remote_path)
-        remote_entry = self._get_endpoint(url)
+        remote_entry = self._get_endpoint(url, printerr)
         if remote_entry is not None:
             remote_id = remote_entry.json()['entry_id']
             return remote_id
@@ -302,7 +302,7 @@ class DigitalPaper():
 
     def new_folder(self, remote_path):
         # first check if the folder exists
-        entry_id = self._get_entry_id(remote_path)
+        entry_id = self._get_entry_id(remote_path, printerr=False)
         if entry_id is None:
             folder_name = os.path.basename(remote_path)
             remote_directory = os.path.dirname(remote_path)
@@ -503,14 +503,15 @@ class DigitalPaper():
 
     ### Utility
 
-    def _get_endpoint(self, endpoint=""):
+    def _get_endpoint(self, endpoint="", printerr=True):
         url = "{base_url}{endpoint}" \
                 .format(base_url = self.base_url,
                         endpoint = endpoint)
         res = requests.get(url, verify=False, cookies=self.cookies)
         resjson = res.json()
         if 'error_code' in resjson:
-            print('ERROR in getting endpoint: {}'.format(resjson['message']))
+            if printerr:
+                print('ERROR in getting endpoint {}: {}'.format(url ,resjson['message']))
             return None
         else:
             return res
