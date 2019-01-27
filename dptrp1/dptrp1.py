@@ -352,6 +352,65 @@ class DigitalPaper():
     def disable_wifi(self):
         return self._put_endpoint('/system/configs/wifi', data = {'value' : 'off'})
 
+    ### Configuration
+
+    def get_timeout(self):
+        data = self._get_endpoint('/system/configs/timeout_to_standby').json()
+        return(data['value'])
+
+    def set_timeout(self, value):
+        data = self._put_endpoint('/system/configs/timeout_to_standby', data={'value': value})
+
+    def get_date_format(self):
+        data = self._get_endpoint('/system/configs/date_format').json()
+        return(data['value'])
+
+    def set_date_format(self, value):
+        data = self._put_endpoint('/system/configs/date_format', data={'value': value})
+
+    def get_time_format(self):
+        data = self._get_endpoint('/system/configs/time_format').json()
+        return(data['value'])
+
+    def set_time_format(self, value):
+        data = self._put_endpoint('/system/configs/time_format', data={'value': value})
+
+    def get_timezone(self):
+        data = self._get_endpoint('/system/configs/timezone').json()
+        return(data['value'])
+
+    def set_timezone(self, value):
+        data = self._put_endpoint('/system/configs/timezone', data={'value': value})
+
+    def get_owner(self):
+        data = self._get_endpoint('/system/configs/owner').json()
+        return(data['value'])
+
+    def set_owner(self, value):
+        data = self._put_endpoint('/system/configs/owner', data={'value': value})
+
+    ### System info
+
+    def get_storage(self):
+        data = self._get_endpoint('/system/status/storage').json()
+        return(data)
+
+    def get_firmware_version(self):
+        data = self._get_endpoint('/system/status/firmware_version').json()
+        return(data['value'])
+
+    def get_mac_address(self):
+        data = self._get_endpoint('/system/status/mac_address').json()
+        return(data['value'])
+
+    def get_battery(self):
+        data = self._get_endpoint('/system/status/battery').json()
+        return(data)
+
+    def get_info(self):
+        data = self._get_endpoint('/register/information').json()
+        return(data)
+
     ### Etc
 
     def take_screenshot(self):
