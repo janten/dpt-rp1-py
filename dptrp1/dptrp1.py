@@ -227,6 +227,10 @@ class DigitalPaper():
         data = self._get_endpoint('/documents2').json()
         return data['entry_list']
 
+    def list_all(self):
+        data = self._get_endpoint('/documents2?entry_type=all').json()
+        return data['entry_list']
+
     def list_objects_in_folder(self, remote_path):
         remote_id = self._resolve_object_by_path(remote_path).json()['entry_id']
         response = self._get_endpoint("/folders/{remote_id}/entries2".format(remote_id = remote_id))
