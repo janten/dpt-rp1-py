@@ -22,12 +22,10 @@ def do_list_documents(d):
         print(d['entry_path'])
 
 def do_list_folders(d, *remote_paths):
-    if remote_paths == ():
-        remote_paths = ('Document',)
-    for p in remote_paths:
-        for o in d.traverse_folder(p):
-            if o['entry_type'] == 'folder':
-                print(o['entry_path'] + '/')
+    data = d.list_all()
+    for d in data:
+        if d['entry_type'] == 'folder':
+            print(d['entry_path'] + '/')
 
 def do_upload(d, local_path, remote_path=''):
     if not remote_path:
