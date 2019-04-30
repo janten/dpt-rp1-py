@@ -451,42 +451,33 @@ class DigitalPaper():
 
 
     ### Utility
+    def _endpoint_url(self, endpoint=""):
+        return f"{self.base_url}{endpoint}"
 
     def _get_endpoint(self, endpoint=""):
-        url = "{base_url}{endpoint}" \
-                .format(base_url = self.base_url,
-                        endpoint = endpoint)
+        url = self._endpoint_url(endpoint)
         return requests.get(url, verify=False, cookies=self.cookies)
 
     def _put_endpoint(self, endpoint="", data={}, files=None):
-        url = "{base_url}{endpoint}" \
-                .format(base_url = self.base_url,
-                        endpoint = endpoint)
+        url = self._endpoint_url(endpoint)
         return requests.put(url, verify=False, cookies=self.cookies, json=data, files=files)
 
     def _post_endpoint(self, endpoint="", data={}):
-        url = "{base_url}{endpoint}" \
-                .format(base_url = self.base_url,
-                        endpoint = endpoint)
+        url = self._endpoint_url(endpoint)
         return requests.post(url, verify=False, cookies=self.cookies, json=data)
 
     def _delete_endpoint(self, endpoint="", data={}):
-        url = "{base_url}{endpoint}" \
-                .format(base_url = self.base_url,
-                        endpoint = endpoint)
+        url = self._endpoint_url(endpoint)
         return requests.delete(url, verify=False, cookies=self.cookies, json=data)
 
     def _get_nonce(self, client_id):
-        url = "{base_url}/auth/nonce/{client_id}" \
-                .format(base_url = self.base_url,
-                        client_id = client_id)
-
+        url = self._endpoint_url(f"/auth/nonce/{client_id}")
         r = requests.get(url, verify=False)
         return r.json()["nonce"]
 
     def _resolve_object_by_path(self, path):
         enc_path = quote_plus(path)
-        url = "/resolve/entry/path/{enc_path}".format(enc_path = enc_path)
+        url = f"/resolve/entry/path/{enc_path}"
         return self._get_endpoint(url)
 
 
