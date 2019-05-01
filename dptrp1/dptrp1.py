@@ -399,6 +399,11 @@ class DigitalPaper():
         data = self._get_endpoint('/system/status/firmware_version').json()
         return(data['value'])
 
+    def get_api_version(self):
+        url = f"http://{self.addr}:8080/api_version"
+        resp = requests.get(url)
+        return resp.json()["value"]
+
     def get_mac_address(self):
         data = self._get_endpoint('/system/status/mac_address').json()
         return(data['value'])
