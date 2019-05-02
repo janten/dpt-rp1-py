@@ -233,7 +233,11 @@ class DigitalPaper():
 
     def list_objects_in_folder(self, remote_path):
         remote_id = self._resolve_object_by_path(remote_path).json()['entry_id']
-        response = self._get_endpoint("/folders/{remote_id}/entries2".format(remote_id = remote_id))
+        response = self.list_folder_entries_by_id(remote_id)
+        return response.json()['entry_list']
+
+    def list_folder_entries_by_id(self, folder_id):
+        response = self._get_endpoint(f"folders/{folder_id}/entries2")
         return response.json()['entry_list']
 
     def traverse_folder(self, remote_path):
@@ -248,7 +252,8 @@ class DigitalPaper():
         return traverse(self._resolve_object_by_path(remote_path).json())
 
     def download(self, remote_path):
-        remote_id = self._resolve_object_by_path(remote_path).json()['entry_id']
+        resp = self._resolve_object_by_path(remote_path)
+        remote_id = resp.json()['entry_id']
 
         url = "{base_url}/documents/{remote_id}/file".format(
                 base_url = self.base_url,
