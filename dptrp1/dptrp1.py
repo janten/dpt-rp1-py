@@ -237,7 +237,7 @@ class DigitalPaper():
         return response.json()['entry_list']
 
     def list_folder_entries_by_id(self, folder_id):
-        response = self._get_endpoint(f"folders/{folder_id}/entries2")
+        response = self._get_endpoint(f"/folders/{folder_id}/entries")
         return response.json()['entry_list']
 
     def traverse_folder(self, remote_path):
