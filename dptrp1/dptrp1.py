@@ -429,6 +429,14 @@ class DigitalPaper():
         r = requests.get(url, verify=False, cookies=self.cookies)
         return r.content
 
+    def ping(self):
+        """
+        Returns True if we are authenticated.
+        """
+        url = f"{self.base_url}/ping"
+        r = requests.get(url, verify=False, cookies=self.cookies)
+        return r.status_code == 204
+
 
     ## Update firmware
 
