@@ -43,6 +43,11 @@ def do_download(d, remote_path, local_path):
     with open(local_path, 'wb') as f:
         f.write(data)
 
+def do_document_info(d, remote_path):
+    data = d.document_info(remote_path)
+    for key in data:
+        print(key + ": " + data[key])
+
 def do_update_firmware(d, local_path):
     with open(local_path, 'rb') as fwfh:
         d.update_firmware(fwfh)
@@ -106,6 +111,7 @@ if __name__ == "__main__":
         "list-documents" : do_list_documents,
         "upload" : do_upload,
         "download" : do_download,
+        "document-info" : do_document_info,
         "delete" : do_delete_document,
         "new-folder" : do_new_folder,
         "list-folders" : do_list_folders,
@@ -122,18 +128,18 @@ if __name__ == "__main__":
 
     def build_parser():
         p = argparse.ArgumentParser(description = "Remote control for Sony DPT-RP1")
-        p.add_argument('--client-id', 
+        p.add_argument('--client-id',
                 help = "File containing the device's client id",
                 default = deviceid,
                 required = not os.path.isfile(deviceid))
-        p.add_argument('--key', 
+        p.add_argument('--key',
                 help = "File containing the device's private key",
                 default = privatekey,
                 required = not os.path.isfile(privatekey))
-        p.add_argument('--addr', 
+        p.add_argument('--addr',
                 help = "Hostname or IP address of the device")
-        p.add_argument('command', 
-                help = 'Command to run', 
+        p.add_argument('command',
+                help = 'Command to run',
                 choices = sorted(commands.keys()))
         p.add_argument('command_args',
                 help = 'Arguments for the command',
