@@ -49,6 +49,11 @@ def do_download(d, remote_path, local_path):
     with open(local_path, 'wb') as f:
         f.write(data)
 
+def do_document_info(d, remote_path):
+    data = d.document_info(remote_path)
+    for key in data:
+        print(key + ": " + data[key])
+
 def do_update_firmware(d, local_path):
     with open(local_path, 'rb') as fwfh:
         d.update_firmware(fwfh)
@@ -64,7 +69,7 @@ def do_sync(d, local_path, remote_path):
     Synchronize all PDF documents between a local path (on your PC) and a
     remote path (on the DPT). Older documents will be overwritten by newer ones
     without any additional warning.
-    
+
     Example: dptrp1 --addr 10.0.0.13 sync ~/Dropbox/Papers Document/Papers
     """
     d.sync(local_path, remote_path)
@@ -143,7 +148,7 @@ commands = {
     "command-help": do_help
 }
 
-def find_auth_files():    
+def find_auth_files():
     config_path = os.path.join(Path.home(), ".dpapp")
     if sys.platform.startswith('darwin'):
             config_path = os.path.join(Path.home(), "Library/Application Support/Sony Corporation/Digital Paper App")
