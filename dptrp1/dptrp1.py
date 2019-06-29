@@ -25,7 +25,8 @@ class DigitalPaper():
         else:
             self.addr = addr
 
-        self.cookies = {}
+        self.session = requests.Session()
+        self.session.verify = False # disable ssl certificate verification
 
     @property
     def base_url(self):
@@ -58,11 +59,11 @@ class DigitalPaper():
         register_cleanup_url = '{base_url}/register/cleanup'.format(base_url = reg_url)
 
         print("Cleaning up...")
-        r = requests.put(register_cleanup_url, verify = False)
+        r = self.session.put(register_cleanup_url)
         print(r)
 
         print("Requesting PIN...")
-        r = requests.post(register_pin_url, verify = False)
+        r = self.session.post(register_pin_url)
         print(r)
         m1 = r.json()
 
@@ -100,7 +101,7 @@ class DigitalPaper():
 
 
         print("Encoding nonce...")
-        r = requests.post(register_hash_url, json = m2)
+        r = self.session.post(register_hash_url, json = m2)
         print(r)
 
         m3 = r.json()
@@ -140,7 +141,7 @@ class DigitalPaper():
                   e = base64.b64encode(m4hmac).decode('utf-8'))
 
         print("Getting certificate from device CA...")
-        r = requests.post(register_ca_url, json = m4)
+        r = self.session.post(register_ca_url, json = m4)
         print(r)
 
         m5 = r.json()
@@ -197,11 +198,11 @@ class DigitalPaper():
                   e = base64.b64encode(m6hmac).decode('utf-8'))
 
         print("Registering device...")
-        r = requests.post(register_url, json = m6, verify = False)
+        r = self.session.post(register_url, json = m6)
         print(r)
 
         print("Cleaning up...")
-        r = requests.put(register_cleanup_url, verify = False)
+        r = self.session.put(register_cleanup_url)
         print(r)
 
         return (cert.decode('utf-8'),
@@ -217,9 +218,12 @@ class DigitalPaper():
             "client_id": client_id,
             "nonce_signed": signed_nonce
         }
-        r = requests.put(url, json=data, verify=False)
+        r = self.session.put(url, json=data)
+        # cookiejar cannot parse the cookie format used by the tablet,
+        # so we have to set it manually.
         _, credentials = r.headers["Set-Cookie"].split("; ")[0].split("=")
-        self.cookies["Credentials"] = credentials
+        self.session.cookies["Credentials"] = credentials
+        return r
 
     ### File management
 
@@ -258,7 +262,7 @@ class DigitalPaper():
         url = "{base_url}/documents/{remote_id}/file".format(
                 base_url = self.base_url,
                 remote_id = remote_id)
-        response = requests.get(url, verify=False, cookies=self.cookies)
+        response = self.session.get(url)
         return response.content
 
     def delete_document(self, remote_path):
@@ -427,7 +431,7 @@ class DigitalPaper():
 
     def get_api_version(self):
         url = f"http://{self.addr}:8080/api_version"
-        resp = requests.get(url)
+        resp = self.session.get(url)
         return resp.json()["value"]
 
     def get_mac_address(self):
@@ -447,7 +451,7 @@ class DigitalPaper():
     def take_screenshot(self):
         url = "{base_url}/system/controls/screen_shot" \
                 .format(base_url = self.base_url)
-        r = requests.get(url, verify=False, cookies=self.cookies)
+        r = self.session.get(url)
         return r.content
 
     def ping(self):
@@ -455,7 +459,7 @@ class DigitalPaper():
         Returns True if we are authenticated.
         """
         url = f"{self.base_url}/ping"
-        r = requests.get(url, verify=False, cookies=self.cookies)
+        r = self.session.get(url)
         return r.status_code == 204
 
 
@@ -490,28 +494,28 @@ class DigitalPaper():
 
 
     ### Utility
-    def _endpoint_url(self, endpoint=""):
-        return f"{self.base_url}{endpoint}"
+    def _endpoint_request(self, method, endpoint, data=None, files=None):
+        req = requests.Request(method, self.base_url)
+        prep = self.session.prepare_request(req)
+        # modifying the prepared request, so that the "endpoint" part of
+        # the URL will not be modified by urllib.
+        prep.url += endpoint.lstrip("/")
+        return self.session.send(prep)
 
     def _get_endpoint(self, endpoint=""):
-        url = self._endpoint_url(endpoint)
-        return requests.get(url, verify=False, cookies=self.cookies)
+        return self._endpoint_request("GET", endpoint)
 
     def _put_endpoint(self, endpoint="", data={}, files=None):
-        url = self._endpoint_url(endpoint)
-        return requests.put(url, verify=False, cookies=self.cookies, json=data, files=files)
+        return self._endpoint_request("PUT", endpoint, data, files)
 
     def _post_endpoint(self, endpoint="", data={}):
-        url = self._endpoint_url(endpoint)
-        return requests.post(url, verify=False, cookies=self.cookies, json=data)
+        return self._endpoint_request("POST", endpoint, data)
 
     def _delete_endpoint(self, endpoint="", data={}):
-        url = self._endpoint_url(endpoint)
-        return requests.delete(url, verify=False, cookies=self.cookies, json=data)
+        return self._endpoint_request("DELETE", endpoint, data)
 
     def _get_nonce(self, client_id):
-        url = self._endpoint_url(f"/auth/nonce/{client_id}")
-        r = requests.get(url, verify=False)
+        r = self._get_endpoint(f"/auth/nonce/{client_id}")
         return r.json()["nonce"]
 
     def _resolve_object_by_path(self, path):
