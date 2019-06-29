@@ -43,10 +43,20 @@ def do_download(d, remote_path, local_path):
     with open(local_path, 'wb') as f:
         f.write(data)
 
-def do_document_info(d, remote_path):
-    data = d.document_info(remote_path)
-    for key in data:
-        print(key + ": " + data[key])
+def do_list_document_info(d, remote_path = False):
+    if not remote_path:
+        infos = d.list_all()
+        for info in infos:
+            print(info['entry_path'])
+            for key in info:
+                print("    - " + key + ": " + info[key])
+    else:
+        info = d.list_document_info(remote_path)
+        print(info['entry_path'])
+        for key in info:
+            print("    - " + key + ": " + info[key])
+
+
 
 def do_update_firmware(d, local_path):
     with open(local_path, 'rb') as fwfh:
@@ -111,7 +121,7 @@ if __name__ == "__main__":
         "list-documents" : do_list_documents,
         "upload" : do_upload,
         "download" : do_download,
-        "document-info" : do_document_info,
+        "document-info" : do_list_document_info,
         "delete" : do_delete_document,
         "new-folder" : do_new_folder,
         "list-folders" : do_list_folders,

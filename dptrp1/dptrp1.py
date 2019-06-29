@@ -247,7 +247,7 @@ class DigitalPaper():
                 return [obj] + functools.reduce(lambda acc, c: traverse(c) + acc, children[::-1], [])
         return traverse(self._resolve_object_by_path(remote_path).json())
 
-    def document_info(self, remote_path):
+    def list_document_info(self, remote_path):
         remote_info = self._resolve_object_by_path(remote_path).json()
         return remote_info
 
