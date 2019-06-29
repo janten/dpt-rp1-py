@@ -237,8 +237,8 @@ class DigitalPaper():
 
     def list_objects_in_folder(self, remote_path):
         remote_id = self._resolve_object_by_path(remote_path).json()['entry_id']
-        response = self.list_folder_entries_by_id(remote_id)
-        return response.json()['entry_list']
+        entries = self.list_folder_entries_by_id(remote_id)
+        return entries
 
     def list_folder_entries_by_id(self, folder_id):
         response = self._get_endpoint(f"/folders/{folder_id}/entries")
@@ -313,7 +313,7 @@ class DigitalPaper():
         without renaming the file.
         """
         data = {"parent_folder_id": folder_id}
-        return self._post_endpoint("/documents/{file_id}/copy", data=data)
+        return self._post_endpoint(f"/documents/{file_id}/copy", data=data)
 
     def move_file_to_folder_by_id(self, file_id, folder_id):
         """
@@ -321,7 +321,7 @@ class DigitalPaper():
         without renaming the file.
         """
         data = {"parent_folder_id": folder_id}
-        self._put_endpoint("/documents/{file_id}", data=data)
+        self._put_endpoint(f"/documents/{file_id}", data=data)
 
     ### Wifi
     def wifi_list(self):
@@ -495,7 +495,7 @@ class DigitalPaper():
 
     ### Utility
     def _endpoint_request(self, method, endpoint, data=None, files=None):
-        req = requests.Request(method, self.base_url)
+        req = requests.Request(method, self.base_url, json=data, files=files)
         prep = self.session.prepare_request(req)
         # modifying the prepared request, so that the "endpoint" part of
         # the URL will not be modified by urllib.
