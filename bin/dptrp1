@@ -53,6 +53,9 @@ def do_delete_document(d, remote_path):
 def do_new_folder(d, remote_path):
     d.new_folder(remote_path)
 
+def do_delete_folder(d, remote_path):
+    d.delete_folder(remote_path)
+
 def do_wifi_list(d):
     data = d.wifi_list()
     print(json.dumps(data, indent=2))
@@ -108,6 +111,7 @@ if __name__ == "__main__":
         "download" : do_download,
         "delete" : do_delete_document,
         "new-folder" : do_new_folder,
+        "delete-folder" : do_delete_folder,
         "list-folders" : do_list_folders,
         "wifi-list": do_wifi_list,
         "wifi-scan": do_wifi_scan,
