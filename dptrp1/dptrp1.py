@@ -236,7 +236,7 @@ class DigitalPaper():
         return data['entry_list']
 
     def list_objects_in_folder(self, remote_path):
-        remote_id = self._resolve_object_by_path(remote_path).json()['entry_id']
+        remote_id = self._get_object_id(remote_path)
         entries = self.list_folder_entries_by_id(remote_id)
         return entries
 
@@ -266,8 +266,12 @@ class DigitalPaper():
         return response.content
 
     def delete_document(self, remote_path):
-        remote_id = self._resolve_object_by_path(remote_path).json()['entry_id']
+        remote_id = self._get_object_id(remote_path)
         self.delete_document_by_id(remote_id)
+
+    def delete_folder(self, remote_path):
+        remote_id = self._get_object_id(remote_path)
+        self.delete_folder_by_id(remote_id)
 
     def delete_document_by_id(self, doc_id):
         self._delete_endpoint(f"/documents/{doc_id}")
@@ -279,7 +283,7 @@ class DigitalPaper():
         filename = os.path.basename(remote_path)
         remote_directory = os.path.dirname(remote_path)
 
-        directory_id = self._resolve_object_by_path(remote_directory).json()['entry_id']
+        directory_id = self._get_object_id(remote_path)
         info = {
             "file_name": filename,
             "parent_folder_id": directory_id,
@@ -299,7 +303,7 @@ class DigitalPaper():
         folder_name = os.path.basename(remote_path)
         remote_directory = os.path.dirname(remote_path)
 
-        directory_id = self._resolve_object_by_path(remote_directory).json()['entry_id']
+        directory_id = self._get_object_id(remote_path)
         info = {
             "folder_name": folder_name,
             "parent_folder_id": directory_id
@@ -307,21 +311,27 @@ class DigitalPaper():
 
         r = self._post_endpoint("/folders2", data=info)
 
-    def copy_file_to_folder_by_id(self, file_id, folder_id):
+    def copy_file_to_folder_by_id(self, file_id, folder_id,
+            new_filename=None):
         """
-        Copies a file with given file_id to a folder with given folder_id,
-        without renaming the file.
+        Copies a file with given file_id to a folder with given folder_id.
+        If new_filename is given, rename the file.
         """
         data = {"parent_folder_id": folder_id}
+        if new_filename is not None:
+            data["file_name"] = new_filename
         return self._post_endpoint(f"/documents/{file_id}/copy", data=data)
 
-    def move_file_to_folder_by_id(self, file_id, folder_id):
+    def move_file_to_folder_by_id(self, file_id, folder_id,
+            new_filename=None):
         """
-        Moves a file with given file_id to a folder with given folder_id,
-        without renaming the file.
+        Moves a file with given file_id to a folder with given folder_id.
+        If new_filename is given, rename the file.
         """
         data = {"parent_folder_id": folder_id}
-        self._put_endpoint(f"/documents/{file_id}", data=data)
+        if new_filename is not None:
+            data["file_name"] = new_filename
+        return self._put_endpoint(f"/documents/{file_id}", data=data)
 
     ### Wifi
     def wifi_list(self):
@@ -522,6 +532,9 @@ class DigitalPaper():
         enc_path = quote_plus(path)
         url = f"/resolve/entry/path/{enc_path}"
         return self._get_endpoint(url)
+
+    def _get_object_id(self, path):
+        return self._resolve_object_by_path(path).json()["entry_id"]
 
 
 # crypto helpers
