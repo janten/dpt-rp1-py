@@ -17,6 +17,12 @@ import functools
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+class DigitalPaperException(Exception):
+    pass
+
+class ResolveObjectFailed(DigitalPaperException):
+    pass
+
 class DigitalPaper():
     def __init__(self, addr = None):
 
@@ -253,11 +259,10 @@ class DigitalPaper():
                   ._get_endpoint("/folders/{remote_id}/entries2".format(remote_id = obj['entry_id'])) \
                   .json()['entry_list']
                 return [obj] + functools.reduce(lambda acc, c: traverse(c) + acc, children[::-1], [])
-        return traverse(self._resolve_object_by_path(remote_path).json())
+        return traverse(self._resolve_object_by_path(remote_path))
 
     def download(self, remote_path):
-        resp = self._resolve_object_by_path(remote_path)
-        remote_id = resp.json()['entry_id']
+        remote_id = self._get_object_id(remote_path)
 
         url = "{base_url}/documents/{remote_id}/file".format(
                 base_url = self.base_url,
@@ -311,15 +316,20 @@ class DigitalPaper():
 
         r = self._post_endpoint("/folders2", data=info)
 
+    def _copy_move_data(self, file_id, folder_id,
+            new_filename=None):
+        data = {"parent_folder_id": folder_id}
+        if new_filename is not None:
+            data["file_name"] = new_filename
+        return data
+
     def copy_file_to_folder_by_id(self, file_id, folder_id,
             new_filename=None):
         """
         Copies a file with given file_id to a folder with given folder_id.
         If new_filename is given, rename the file.
         """
-        data = {"parent_folder_id": folder_id}
-        if new_filename is not None:
-            data["file_name"] = new_filename
+        data = self._copy_move_data(file_id, folder_id, new_filename)
         return self._post_endpoint(f"/documents/{file_id}/copy", data=data)
 
     def move_file_to_folder_by_id(self, file_id, folder_id,
@@ -328,10 +338,40 @@ class DigitalPaper():
         Moves a file with given file_id to a folder with given folder_id.
         If new_filename is given, rename the file.
         """
-        data = {"parent_folder_id": folder_id}
-        if new_filename is not None:
-            data["file_name"] = new_filename
+        data = self._copy_move_data(file_id, folder_id, new_filename)
         return self._put_endpoint(f"/documents/{file_id}", data=data)
+
+    def _copy_move_find_ids(self, old_path, new_path):
+        old_id = self._get_object_id(old_path)
+        new_filename = None
+        
+        try: # find out whether new_path is a filename or folder
+            new_folder_id = self._get_object_id(new_path)
+        except ResolveObjectFailed:
+            new_filename = os.path.basename(new_path)
+            new_folder = os.path.dirname(new_path)
+            new_folder_id = self._get_object_id(new_folder)
+
+        return old_id, new_folder_id, new_filename
+
+    def copy_file(self, old_path, new_path):
+        """
+        Copies a file with given path to a new path.
+        """
+        old_id, new_folder_id, new_filename = self._copy_move_find_ids(
+                old_path, new_path)
+        self.copy_file_to_folder_by_id(old_id, new_folder_id,
+                new_filename)
+
+    def move_file(self, old_path, new_path):
+        """
+        Moves a file with given path to a new path.
+        """
+        old_id, new_folder_id, new_filename = self._copy_move_find_ids(
+                old_path, new_path)
+        return self.move_file_to_folder_by_id(old_id, new_folder_id,
+                new_filename)
+
 
     ### Wifi
     def wifi_list(self):
@@ -470,7 +510,7 @@ class DigitalPaper():
         """
         url = f"{self.base_url}/ping"
         r = self.session.get(url)
-        return r.status_code == 204
+        return r.ok
 
 
     ## Update firmware
@@ -531,10 +571,13 @@ class DigitalPaper():
     def _resolve_object_by_path(self, path):
         enc_path = quote_plus(path)
         url = f"/resolve/entry/path/{enc_path}"
-        return self._get_endpoint(url)
+        resp = self._get_endpoint(url)
+        if not resp.ok:
+            raise ResolveObjectFailed(path, resp.json()["message"])
+        return resp.json()
 
     def _get_object_id(self, path):
-        return self._resolve_object_by_path(path).json()["entry_id"]
+        return self._resolve_object_by_path(path)["entry_id"]
 
 
 # crypto helpers
