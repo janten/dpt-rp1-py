@@ -26,6 +26,12 @@ def do_list_folders(d, *remote_paths):
         if d['entry_type'] == 'folder':
             print(d['entry_path'] + '/')
 
+def do_move_document(d, old_path, new_path):
+    d.move_file(old_path, new_path)
+
+def do_copy_document(d, old_path, new_path):
+    d.copy_file(old_path, new_path)
+
 def do_upload(d, local_path, remote_path=''):
     if not remote_path:
         remote_path = 'Document/' + os.path.basename(local_path)
@@ -100,6 +106,8 @@ commands = {
     "download" : do_download,
     "delete" : do_delete_document,
     "new-folder" : do_new_folder,
+    "move-document": do_move_document,
+    "copy-document": do_copy_document,
     "list-folders" : do_list_folders,
     "wifi-list": do_wifi_list,
     "wifi-scan": do_wifi_scan,
