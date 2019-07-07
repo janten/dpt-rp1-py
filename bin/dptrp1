@@ -55,6 +55,9 @@ def do_update_firmware(d, local_path):
 def do_delete_document(d, remote_path):
     d.delete_document(remote_path)
 
+def do_delete_folder(d, remote_path):
+    d.delete_folder(remote_path)
+
 def do_new_folder(d, remote_path):
     d.new_folder(remote_path)
 
@@ -105,6 +108,7 @@ commands = {
     "upload" : do_upload,
     "download" : do_download,
     "delete" : do_delete_document,
+    "delete-folder" : do_delete_folder,
     "new-folder" : do_new_folder,
     "move-document": do_move_document,
     "copy-document": do_copy_document,
