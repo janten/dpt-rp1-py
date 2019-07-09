@@ -70,7 +70,6 @@ class DigitalPaper():
 
         print("Requesting PIN...")
         r = self.session.post(register_pin_url)
-        print(r)
         m1 = r.json()
 
         n1 = base64.b64decode(m1['a'])
@@ -105,11 +104,8 @@ class DigitalPaper():
                   d = base64.b64encode(ya).decode('utf-8'),
                   e = base64.b64encode(m2hmac).decode('utf-8'))
 
-
         print("Encoding nonce...")
         r = self.session.post(register_hash_url, json = m2)
-        print(r)
-
         m3 = r.json()
 
         if(base64.b64decode(m3['a']) != n2):

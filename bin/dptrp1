@@ -121,20 +121,23 @@ commands = {
     "wifi-enable" : do_wifi_enable,
     "wifi-disable" : do_wifi_disable,
     "register" : do_register,
-    "update": do_update_firmware
+    "update-firmware": do_update_firmware
 }
 
-def find_auth_files():
-    dpapp = "Sony Corporation/Digital Paper App"
-    if sys.platform.startswith('darwin'):
-        dpapp = "Library/Application Support/" + dpapp
-    elif sys.platform.startswith('windows'):
-        dpapp = "AppData/Roaming/" + dpapp
-    elif sys.platform.startswith('linux'):
-        dpapp = ".dpapp"
-    dpapp = os.path.join(Path.home(), dpapp)
-    deviceid = os.path.join(dpapp, "deviceid.dat")
-    privatekey = os.path.join(dpapp, "privatekey.dat")
+def find_auth_files():    
+    search_paths = [
+        os.path.join(Path.home(), "Library/Application Support/Sony Corporation/Digital Paper App"), # Mac
+        os.path.join(Path.home(), "AppData/Roaming/Sony Corporation/Digital Paper App"), # Windows
+        os.path.join(Path.home(), ".dpapp") # Fallback
+    ]
+    config_path = ""
+    for path in search_paths:
+        config_path = path
+        if os.path.exists(path):
+            break
+    os.makedirs(config_path, exist_ok=True)
+    deviceid = os.path.join(config_path, "deviceid.dat")
+    privatekey = os.path.join(config_path, "privatekey.dat")
     return deviceid, privatekey
 
 def build_parser():
@@ -143,26 +146,23 @@ def build_parser():
     p = argparse.ArgumentParser(description = "Remote control for Sony DPT-RP1")
     p.add_argument('--client-id',
             help = "File containing the device's client id",
-            default = deviceid,
-            required = not os.path.isfile(deviceid))
+            default = deviceid)
     p.add_argument('--key',
             help = "File containing the device's private key",
-            default = privatekey,
-            required = not os.path.isfile(privatekey))
+            default = privatekey)
     p.add_argument('--addr',
-            help = "Hostname or IP address of the device")
+            help = "Hostname or IP address of the device",
+            default = "digitalpaper.local")
     p.add_argument('command',
             help = 'Command to run',
             choices = sorted(commands.keys()))
     p.add_argument('command_args',
             help = 'Arguments for the command',
             nargs = '*')
-
     return p
 
 def main():
     args = build_parser().parse_args()
-
     dp = DigitalPaper(addr = args.addr)
 
     if args.command == "register":
