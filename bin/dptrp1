@@ -125,16 +125,11 @@ commands = {
 }
 
 def find_auth_files():    
-    search_paths = [
-        os.path.join(Path.home(), "Library/Application Support/Sony Corporation/Digital Paper App"), # Mac
-        os.path.join(Path.home(), "AppData/Roaming/Sony Corporation/Digital Paper App"), # Windows
-        os.path.join(Path.home(), ".dpapp") # Fallback
-    ]
-    config_path = ""
-    for path in search_paths:
-        config_path = path
-        if os.path.exists(path):
-            break
+    config_path = os.path.join(Path.home(), ".dpapp")
+    if sys.platform.startswith('darwin'):
+            config_path = os.path.join(Path.home(), "Library/Application Support/Sony Corporation/Digital Paper App")
+    elif sys.platform.startswith('windows'):
+            config_path = os.path.join(Path.home(), "AppData/Roaming/Sony Corporation/Digital Paper App")
     os.makedirs(config_path, exist_ok=True)
     deviceid = os.path.join(config_path, "deviceid.dat")
     privatekey = os.path.join(config_path, "privatekey.dat")
