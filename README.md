@@ -26,13 +26,11 @@ Note that the root path for DPT-RP1 is `Document/`. Example command to download 
 The DPT-RP1 uses SSL encryption to communicate with the computer.  This requires registering the DPT-RP1 with the computer, which results in two pieces of information -- the client ID and the key file -- that you'll need to run the script. You can get this information in three ways.
 
 #### Registering without the Digital Paper App
-This method requires your DPT-RP1 and your computer to be on the same network segment via WiFi, Bluetooth or a USB connection. The USB connection works on Windows on macOS but may not work on a Linux machine. If you the USB connection does not work for you, perform the initial setup on a different PC to connect the reader to your WiFi network.
+This method requires your DPT-RP1 and your computer to be on the same network segment via WiFi, Bluetooth or a USB connection. The USB connection works on Windows and macOS but may not work on a Linux machine. If the USB connection does not work for you, perform the initial setup on a different PC to connect the reader to your WiFi network.
 
-Second, find the DPT-RP1's IP address. If you're on WiFi, go to 
-_Wi-Fi Settings_ on the device and tap the connected network. If you're
-on Bluetooth, it's likely _172.25.47.1_. You can also try the hostname _digitalpaper.local_.
+Second, find the DPT-RP1's IP address. If you're on WiFi, go to _Wi-Fi Settings_ on the device and tap the connected network. If you're on Bluetooth, it's likely _172.25.47.1_. You can also try the hostname _digitalpaper.local_.
 
-Finally, use the _register_ command, substituting the files you want the client ID and key written to, and the IP address of the device:
+Finally, use the _register_ command, substituting the IP address of the device:
 
 ```
 dptrp1 --client-id <client_id file> register
