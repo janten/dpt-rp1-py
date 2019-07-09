@@ -127,14 +127,14 @@ commands = {
 def find_auth_files():
     dpapp = "Sony Corporation/Digital Paper App"
     if sys.platform.startswith('darwin'):
-        dpapp = "Library/Application Support" / dpapp
+        dpapp = "Library/Application Support/" + dpapp
     elif sys.platform.startswith('windows'):
-        dpapp = "AppData/Roaming" / dpapp
+        dpapp = "AppData/Roaming/" + dpapp
     elif sys.platform.startswith('linux'):
         dpapp = ".dpapp"
-    dpapp = Path.home() / dpapp
-    deviceid = str(dpapp / "deviceid.dat")
-    privatekey = str(dpapp / "privatekey.dat")
+    dpapp = os.path.join(Path.home(), dpapp)
+    deviceid = os.path.join(dpapp, "deviceid.dat")
+    privatekey = os.path.join(dpapp, "privatekey.dat")
     return deviceid, privatekey
 
 def build_parser():
