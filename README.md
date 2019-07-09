@@ -9,9 +9,7 @@ Installing the package also installs the command line utility called `dptrp1`.
 
 ## Using the command line utility
 ```
-dptrp1 \
-	--addr <DPT-RP1 hostname or IP address> \
-	command [arguments]
+dptrp1 --addr <DPT-RP1 hostname or IP address> command [arguments]
 ```
 
 To see if you can successfully connect to the reader, try the command `dptrp1 --addr <address> list-documents`. If you have Sony's Digital Paper App installed, this should work without any further configuration. If this fails, register your reader with the app using `dptrp1 --addr <address> register`.
@@ -37,9 +35,7 @@ on Bluetooth, it's likely _172.25.47.1_. You can also try the hostname _digitalp
 Finally, use the _register_ command, substituting the files you want the client ID and key written to, and the IP address of the device:
 
 ```
-dptrp1 \
-	--client-id <client_id file> \
-	register
+dptrp1 --client-id <client_id file> register
 ```
 
 If you get an error, wait a few seconds and try again.  Sometimes it takes two or three tries to work.
