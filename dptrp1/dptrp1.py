@@ -17,6 +17,12 @@ import functools
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+class DigitalPaperException(Exception):
+    pass
+
+class ResolveObjectFailed(DigitalPaperException):
+    pass
+
 class DigitalPaper():
     def __init__(self, addr = None):
 
@@ -25,7 +31,8 @@ class DigitalPaper():
         else:
             self.addr = addr
 
-        self.cookies = {}
+        self.session = requests.Session()
+        self.session.verify = False # disable ssl certificate verification
 
     @property
     def base_url(self):
@@ -58,11 +65,11 @@ class DigitalPaper():
         register_cleanup_url = '{base_url}/register/cleanup'.format(base_url = reg_url)
 
         print("Cleaning up...")
-        r = requests.put(register_cleanup_url, verify = False)
+        r = self.session.put(register_cleanup_url)
         print(r)
 
         print("Requesting PIN...")
-        r = requests.post(register_pin_url, verify = False)
+        r = self.session.post(register_pin_url)
         print(r)
         m1 = r.json()
 
@@ -100,7 +107,7 @@ class DigitalPaper():
 
 
         print("Encoding nonce...")
-        r = requests.post(register_hash_url, json = m2)
+        r = self.session.post(register_hash_url, json = m2)
         print(r)
 
         m3 = r.json()
@@ -140,7 +147,7 @@ class DigitalPaper():
                   e = base64.b64encode(m4hmac).decode('utf-8'))
 
         print("Getting certificate from device CA...")
-        r = requests.post(register_ca_url, json = m4)
+        r = self.session.post(register_ca_url, json = m4)
         print(r)
 
         m5 = r.json()
@@ -197,11 +204,11 @@ class DigitalPaper():
                   e = base64.b64encode(m6hmac).decode('utf-8'))
 
         print("Registering device...")
-        r = requests.post(register_url, json = m6, verify = False)
+        r = self.session.post(register_url, json = m6)
         print(r)
 
         print("Cleaning up...")
-        r = requests.put(register_cleanup_url, verify = False)
+        r = self.session.put(register_cleanup_url)
         print(r)
 
         return (cert.decode('utf-8'),
@@ -217,9 +224,12 @@ class DigitalPaper():
             "client_id": client_id,
             "nonce_signed": signed_nonce
         }
-        r = requests.put(url, json=data, verify=False)
+        r = self.session.put(url, json=data)
+        # cookiejar cannot parse the cookie format used by the tablet,
+        # so we have to set it manually.
         _, credentials = r.headers["Set-Cookie"].split("; ")[0].split("=")
-        self.cookies["Credentials"] = credentials
+        self.session.cookies["Credentials"] = credentials
+        return r
 
     ### File management
 
@@ -232,8 +242,12 @@ class DigitalPaper():
         return data['entry_list']
 
     def list_objects_in_folder(self, remote_path):
-        remote_id = self._resolve_object_by_path(remote_path).json()['entry_id']
-        response = self._get_endpoint("/folders/{remote_id}/entries2".format(remote_id = remote_id))
+        remote_id = self._get_object_id(remote_path)
+        entries = self.list_folder_entries_by_id(remote_id)
+        return entries
+
+    def list_folder_entries_by_id(self, folder_id):
+        response = self._get_endpoint(f"/folders/{folder_id}/entries")
         return response.json()['entry_list']
 
     def traverse_folder(self, remote_path):
@@ -245,27 +259,36 @@ class DigitalPaper():
                   ._get_endpoint("/folders/{remote_id}/entries2".format(remote_id = obj['entry_id'])) \
                   .json()['entry_list']
                 return [obj] + functools.reduce(lambda acc, c: traverse(c) + acc, children[::-1], [])
-        return traverse(self._resolve_object_by_path(remote_path).json())
+        return traverse(self._resolve_object_by_path(remote_path))
 
     def download(self, remote_path):
-        remote_id = self._resolve_object_by_path(remote_path).json()['entry_id']
+        remote_id = self._get_object_id(remote_path)
 
         url = "{base_url}/documents/{remote_id}/file".format(
                 base_url = self.base_url,
                 remote_id = remote_id)
-        response = requests.get(url, verify=False, cookies=self.cookies)
+        response = self.session.get(url)
         return response.content
 
     def delete_document(self, remote_path):
-        remote_id = self._resolve_object_by_path(remote_path).json()['entry_id']
-        url = "/documents/{remote_id}".format(remote_id = remote_id)
-        self._delete_endpoint(url)
+        remote_id = self._get_object_id(remote_path)
+        self.delete_document_by_id(remote_id)
+
+    def delete_folder(self, remote_path):
+        remote_id = self._get_object_id(remote_path)
+        self.delete_folder_by_id(remote_id)
+
+    def delete_document_by_id(self, doc_id):
+        self._delete_endpoint(f"/documents/{doc_id}")
+
+    def delete_folder_by_id(self, folder_id):
+        self._delete_endpoint(f"/folders/{folder_id}")
 
     def upload(self, fh, remote_path):
         filename = os.path.basename(remote_path)
         remote_directory = os.path.dirname(remote_path)
 
-        directory_id = self._resolve_object_by_path(remote_directory).json()['entry_id']
+        directory_id = self._get_object_id(remote_path)
         info = {
             "file_name": filename,
             "parent_folder_id": directory_id,
@@ -285,13 +308,70 @@ class DigitalPaper():
         folder_name = os.path.basename(remote_path)
         remote_directory = os.path.dirname(remote_path)
 
-        directory_id = self._resolve_object_by_path(remote_directory).json()['entry_id']
+        directory_id = self._get_object_id(remote_path)
         info = {
             "folder_name": folder_name,
             "parent_folder_id": directory_id
         }
 
         r = self._post_endpoint("/folders2", data=info)
+
+    def _copy_move_data(self, file_id, folder_id,
+            new_filename=None):
+        data = {"parent_folder_id": folder_id}
+        if new_filename is not None:
+            data["file_name"] = new_filename
+        return data
+
+    def copy_file_to_folder_by_id(self, file_id, folder_id,
+            new_filename=None):
+        """
+        Copies a file with given file_id to a folder with given folder_id.
+        If new_filename is given, rename the file.
+        """
+        data = self._copy_move_data(file_id, folder_id, new_filename)
+        return self._post_endpoint(f"/documents/{file_id}/copy", data=data)
+
+    def move_file_to_folder_by_id(self, file_id, folder_id,
+            new_filename=None):
+        """
+        Moves a file with given file_id to a folder with given folder_id.
+        If new_filename is given, rename the file.
+        """
+        data = self._copy_move_data(file_id, folder_id, new_filename)
+        return self._put_endpoint(f"/documents/{file_id}", data=data)
+
+    def _copy_move_find_ids(self, old_path, new_path):
+        old_id = self._get_object_id(old_path)
+        new_filename = None
+        
+        try: # find out whether new_path is a filename or folder
+            new_folder_id = self._get_object_id(new_path)
+        except ResolveObjectFailed:
+            new_filename = os.path.basename(new_path)
+            new_folder = os.path.dirname(new_path)
+            new_folder_id = self._get_object_id(new_folder)
+
+        return old_id, new_folder_id, new_filename
+
+    def copy_file(self, old_path, new_path):
+        """
+        Copies a file with given path to a new path.
+        """
+        old_id, new_folder_id, new_filename = self._copy_move_find_ids(
+                old_path, new_path)
+        self.copy_file_to_folder_by_id(old_id, new_folder_id,
+                new_filename)
+
+    def move_file(self, old_path, new_path):
+        """
+        Moves a file with given path to a new path.
+        """
+        old_id, new_folder_id, new_filename = self._copy_move_find_ids(
+                old_path, new_path)
+        return self.move_file_to_folder_by_id(old_id, new_folder_id,
+                new_filename)
+
 
     ### Wifi
     def wifi_list(self):
@@ -399,6 +479,11 @@ class DigitalPaper():
         data = self._get_endpoint('/system/status/firmware_version').json()
         return(data['value'])
 
+    def get_api_version(self):
+        url = f"http://{self.addr}:8080/api_version"
+        resp = self.session.get(url)
+        return resp.json()["value"]
+
     def get_mac_address(self):
         data = self._get_endpoint('/system/status/mac_address').json()
         return(data['value'])
@@ -416,8 +501,16 @@ class DigitalPaper():
     def take_screenshot(self):
         url = "{base_url}/system/controls/screen_shot" \
                 .format(base_url = self.base_url)
-        r = requests.get(url, verify=False, cookies=self.cookies)
+        r = self.session.get(url)
         return r.content
+
+    def ping(self):
+        """
+        Returns True if we are authenticated.
+        """
+        url = f"{self.base_url}/ping"
+        r = self.session.get(url)
+        return r.ok
 
 
     ## Update firmware
@@ -451,43 +544,40 @@ class DigitalPaper():
 
 
     ### Utility
+    def _endpoint_request(self, method, endpoint, data=None, files=None):
+        req = requests.Request(method, self.base_url, json=data, files=files)
+        prep = self.session.prepare_request(req)
+        # modifying the prepared request, so that the "endpoint" part of
+        # the URL will not be modified by urllib.
+        prep.url += endpoint.lstrip("/")
+        return self.session.send(prep)
 
     def _get_endpoint(self, endpoint=""):
-        url = "{base_url}{endpoint}" \
-                .format(base_url = self.base_url,
-                        endpoint = endpoint)
-        return requests.get(url, verify=False, cookies=self.cookies)
+        return self._endpoint_request("GET", endpoint)
 
     def _put_endpoint(self, endpoint="", data={}, files=None):
-        url = "{base_url}{endpoint}" \
-                .format(base_url = self.base_url,
-                        endpoint = endpoint)
-        return requests.put(url, verify=False, cookies=self.cookies, json=data, files=files)
+        return self._endpoint_request("PUT", endpoint, data, files)
 
     def _post_endpoint(self, endpoint="", data={}):
-        url = "{base_url}{endpoint}" \
-                .format(base_url = self.base_url,
-                        endpoint = endpoint)
-        return requests.post(url, verify=False, cookies=self.cookies, json=data)
+        return self._endpoint_request("POST", endpoint, data)
 
     def _delete_endpoint(self, endpoint="", data={}):
-        url = "{base_url}{endpoint}" \
-                .format(base_url = self.base_url,
-                        endpoint = endpoint)
-        return requests.delete(url, verify=False, cookies=self.cookies, json=data)
+        return self._endpoint_request("DELETE", endpoint, data)
 
     def _get_nonce(self, client_id):
-        url = "{base_url}/auth/nonce/{client_id}" \
-                .format(base_url = self.base_url,
-                        client_id = client_id)
-
-        r = requests.get(url, verify=False)
+        r = self._get_endpoint(f"/auth/nonce/{client_id}")
         return r.json()["nonce"]
 
     def _resolve_object_by_path(self, path):
         enc_path = quote_plus(path)
-        url = "/resolve/entry/path/{enc_path}".format(enc_path = enc_path)
-        return self._get_endpoint(url)
+        url = f"/resolve/entry/path/{enc_path}"
+        resp = self._get_endpoint(url)
+        if not resp.ok:
+            raise ResolveObjectFailed(path, resp.json()["message"])
+        return resp.json()
+
+    def _get_object_id(self, path):
+        return self._resolve_object_by_path(path)["entry_id"]
 
 
 # crypto helpers
