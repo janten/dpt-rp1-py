@@ -1,19 +1,21 @@
 #!/usr/local/bin/python3
-import requests
+import os
+import uuid
+import time
+import base64
 import httpsig
 import urllib3
+import requests
+import functools
+from glob import glob
 from urllib.parse import quote_plus
-import os
-import base64
 from dptrp1.pyDH import DiffieHellman
+from datetime import datetime
 from pbkdf2 import PBKDF2
 from Crypto.Hash import SHA256
 from Crypto.Hash.HMAC import HMAC
 from Crypto.Cipher import AES
 from Crypto.PublicKey import RSA
-import uuid
-import functools
-#from diffiehellman.diffiehellman import DiffieHellman
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -228,7 +230,6 @@ class DigitalPaper():
         return r
 
     ### File management
-
     def list_documents(self):
         data = self._get_endpoint('/documents2').json()
         return data['entry_list']
@@ -283,8 +284,7 @@ class DigitalPaper():
     def upload(self, fh, remote_path):
         filename = os.path.basename(remote_path)
         remote_directory = os.path.dirname(remote_path)
-
-        directory_id = self._get_object_id(remote_path)
+        directory_id = self._get_object_id(remote_directory)
         info = {
             "file_name": filename,
             "parent_folder_id": directory_id,
@@ -311,6 +311,44 @@ class DigitalPaper():
 
         r = self._post_endpoint("/folders2", data=info)
 
+    def download_file(self, remote_path, local_path):
+        os.makedirs(os.path.dirname(local_path), exist_ok=True)
+        data = self.download(remote_path)
+        with open(local_path, 'wb') as f:
+            f.write(data)
+
+    def upload_file(self, local_path, remote_path):
+        with open(local_path, 'rb') as f:
+            self.upload(f, remote_path)
+
+    def sync(self, local_folder, remote_folder):
+        remote_info = self.traverse_folder(remote_folder)
+        remote_files = []
+        for file_info in remote_info:
+            if file_info["entry_type"] == "document":
+                remote_files.append(file_info["entry_path"])
+                remote_path = os.path.relpath(file_info["entry_path"], remote_folder)
+                remote_date = datetime.strptime(file_info["modified_date"], '%Y-%m-%dT%H:%M:%SZ')
+                local_path = os.path.join(local_folder, remote_path)
+                date_difference = 1 # Positive if remote is newer
+                if os.path.exists(local_path):
+                    local_date = datetime.fromtimestamp(os.path.getmtime(local_path))
+                    date_difference = (remote_date - local_date).total_seconds()
+                if date_difference > 0:
+                    print(file_info["entry_path"] + " → " + local_path)
+                    self.download_file(file_info["entry_path"], local_path)
+                    mod_time = time.mktime(remote_date.timetuple())
+                    os.utime(local_path, (mod_time, mod_time))
+                elif date_difference < 0:
+                    print(file_info["entry_path"] + " ← " + local_path)
+                    self.upload_file(local_path, file_info["entry_path"])
+        local_files = glob(os.path.join(local_folder, "**.pdf"), recursive=True)
+        for local_path in local_files:
+            remote_path = os.path.join(remote_folder, os.path.relpath(local_path, local_folder))
+            if remote_path not in remote_files:
+                print(remote_path + " ← " + local_path)
+                self.upload_file(local_path, remote_path)
+        
     def _copy_move_data(self, file_id, folder_id,
             new_filename=None):
         data = {"parent_folder_id": folder_id}

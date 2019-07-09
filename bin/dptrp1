@@ -58,6 +58,9 @@ def do_delete_document(d, remote_path):
 def do_delete_folder(d, remote_path):
     d.delete_folder(remote_path)
 
+def do_sync(d, local_path, remote_path):
+    d.sync(local_path, remote_path)
+
 def do_new_folder(d, remote_path):
     d.new_folder(remote_path)
 
@@ -121,7 +124,8 @@ commands = {
     "wifi-enable" : do_wifi_enable,
     "wifi-disable" : do_wifi_disable,
     "register" : do_register,
-    "update-firmware": do_update_firmware
+    "update-firmware": do_update_firmware,
+    "sync": do_sync
 }
 
 def find_auth_files():    
