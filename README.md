@@ -17,11 +17,11 @@ dptrp1 \
 To see if you can successfully connect to the reader, try the command `dptrp1 --addr <address> list-documents`. If you have Sony's Digital Paper App installed, this should work without any further configuration. If this fails, register your reader with the app using `dptrp1 --addr <address> register`.
 
 ### Supported commands
-You can get a list of the implemented commands by running `dptrp1` with no additional arguments. Supported commands include _register_, _list-documents_, _download <remote path> [<local path>]_, _upload <local path> <remote path>_, _new-folder <new folder path>_, _delete <remote_path>_, _wifi-list_, _wifi-scan_, _wifi-enable_, and _wifi-disable_.
+You can get a list of the implemented commands by running `dptrp1` with no additional arguments. Supported commands include _command-help_, _copy-document_, _delete_, _delete-folder_, _download_, _list-documents_, _list-folders_, _move-document_, _new-folder_, _register_, _screenshot_, _sync_, _update-firmware_, _upload_, _wifi_, _wifi-add_, _wifi-del_, _wifi-disable_, _wifi-enable_, _wifi-list_, and _wifi-scan_.
 
-Note that the root path for DPT-RP1 is `Document/`.
-- Example command to download a document `file.pdf` from the root folder ("System Storage") of DPT-RP1: `dptrp1 --addr 10.0.0.4 download Document/file.pdf ./file.pdf`
-- Example command to upload a document `file.pdf` to a folder named `Articles` on DPT-RP1: `dptrp1 --addr 10.0.0.4 upload ./file.pdf Document/Articles/file.pdf`
+For some command, you can get additional help by calling `dptrp1 command-help <command>`, e.g. `dptrp1 command-help sync`.
+
+Note that the root path for DPT-RP1 is `Document/`. Example command to download a document `file.pdf` from the root folder ("System Storage") of DPT-RP1: `dptrp1 --addr 10.0.0.4 download Document/file.pdf ./file.pdf`. Example command to upload a document `file.pdf` to a folder named `Articles` on DPT-RP1: `dptrp1 --addr 10.0.0.4 upload ./file.pdf Document/Articles/file.pdf`
 
 ### Registering the DPT-RP1
 
