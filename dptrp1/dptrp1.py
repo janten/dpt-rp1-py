@@ -303,8 +303,7 @@ class DigitalPaper():
     def new_folder(self, remote_path):
         folder_name = os.path.basename(remote_path)
         remote_directory = os.path.dirname(remote_path)
-
-        directory_id = self._get_object_id(remote_path)
+        directory_id = self._get_object_id(remote_directory)
         info = {
             "folder_name": folder_name,
             "parent_folder_id": directory_id

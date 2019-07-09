@@ -147,7 +147,7 @@ def build_parser():
             default = privatekey)
     p.add_argument('--addr',
             help = "Hostname or IP address of the device",
-            default = "digitalpaper.local")
+            required = True)
     p.add_argument('command',
             help = 'Command to run',
             choices = sorted(commands.keys()))
