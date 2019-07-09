@@ -2,8 +2,9 @@
 # coding=utf-8
 
 import argparse
-import sys
+import inspect
 import json
+import sys
 import os
 import re
 
@@ -59,6 +60,13 @@ def do_delete_folder(d, remote_path):
     d.delete_folder(remote_path)
 
 def do_sync(d, local_path, remote_path):
+    """
+    Synchronize all PDF documents between a local path (on your PC) and a
+    remote path (on the DPT). Older documents will be overwritten by newer ones
+    without any additional warning.
+    
+    Example: dptrp1 --addr 10.0.0.13 sync ~/Dropbox/Papers Document/Papers
+    """
     d.sync(local_path, remote_path)
 
 def do_new_folder(d, remote_path):
@@ -105,6 +113,12 @@ def do_register(d, key_file, id_file):
     with open(id_file, 'w') as f:
         f.write(device_id)
 
+def do_help(d, command):
+    """
+    Print additional information about a command, if available.
+    """
+    print(inspect.getdoc(commands[command]))
+
 commands = {
     "screenshot": do_screenshot,
     "list-documents" : do_list_documents,
@@ -125,7 +139,8 @@ commands = {
     "wifi-disable" : do_wifi_disable,
     "register" : do_register,
     "update-firmware": do_update_firmware,
-    "sync": do_sync
+    "sync": do_sync,
+    "command-help": do_help
 }
 
 def find_auth_files():    
@@ -163,19 +178,14 @@ def build_parser():
 def main():
     args = build_parser().parse_args()
     dp = DigitalPaper(addr = args.addr)
-
     if args.command == "register":
         do_register(dp, args.key, args.client_id)
         return
-
     with open(args.client_id) as fh:
         client_id = fh.readline().strip()
-
     with open(args.key, 'rb') as fh:
         key = fh.read()
-
     dp.authenticate(client_id, key)
-
     commands[args.command](dp, *args.command_args)
 
 if __name__ == "__main__":
