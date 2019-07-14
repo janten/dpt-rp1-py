@@ -348,12 +348,12 @@ class DigitalPaper():
                 if os.path.exists(local_path):
                     local_date = datetime.fromtimestamp(os.path.getmtime(local_path))
                     date_difference = (remote_date - local_date).total_seconds()
-                if date_difference > 1:
+                if date_difference > 0:
                     print("⇣ " + file_info["entry_path"])
                     self.download_file(file_info["entry_path"], local_path)
                     mod_time = time.mktime(remote_date.timetuple())
                     os.utime(local_path, (mod_time, mod_time))
-                elif date_difference < -1:
+                elif date_difference < 0:
                     print("⇡ " + local_path)
                     self.upload_file(local_path, file_info["entry_path"])
         local_files = glob(os.path.join(local_folder, "**/*.pdf"), recursive=True)

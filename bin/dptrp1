@@ -198,6 +198,11 @@ def main():
     if args.command == "register":
         do_register(dp, args.key, args.client_id)
         return
+    if not os.path.exists(args.key) or not os.path.exists(args.client_id):
+        print("Could not read device identifier and private key.")
+        print("Please use command 'register' first:")
+        print("    dptrp1 --addr " + args.addr + " register")
+        exit(1)
     with open(args.client_id) as fh:
         client_id = fh.readline().strip()
     with open(args.key, 'rb') as fh:
