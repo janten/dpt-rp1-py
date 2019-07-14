@@ -49,6 +49,21 @@ def do_download(d, remote_path, local_path):
     with open(local_path, 'wb') as f:
         f.write(data)
 
+def do_list_document_info(d, remote_path = False):
+    if not remote_path:
+        infos = d.list_all()
+        for info in infos:
+            print(info['entry_path'])
+            for key in info:
+                print("    - " + key + ": " + info[key])
+    else:
+        info = d.list_document_info(remote_path)
+        print(info['entry_path'])
+        for key in info:
+            print("    - " + key + ": " + info[key])
+
+
+
 def do_update_firmware(d, local_path):
     with open(local_path, 'rb') as fwfh:
         d.update_firmware(fwfh)
@@ -65,7 +80,7 @@ def do_sync(d, local_path, remote_path):
     remote path (on the DPT). Older documents will be overwritten by newer ones
     without any additional warning. Also synchronizes the time and date on the
     reader to the computer's time and date.
-    
+
     Example: dptrp1 --addr 10.0.0.13 sync ~/Dropbox/Papers Document/Papers
     """
     d.sync(local_path, remote_path)
@@ -123,6 +138,7 @@ def do_help(d, command):
 commands = {
     "screenshot": do_screenshot,
     "list-documents" : do_list_documents,
+    "document-info" : do_list_document_info,
     "upload" : do_upload,
     "download" : do_download,
     "delete" : do_delete_document,
@@ -144,7 +160,7 @@ commands = {
     "command-help": do_help
 }
 
-def find_auth_files():    
+def find_auth_files():
     config_path = os.path.join(Path.home(), ".dpapp")
     if sys.platform.startswith('darwin'):
             config_path = os.path.join(Path.home(), "Library/Application Support/Sony Corporation/Digital Paper App")
