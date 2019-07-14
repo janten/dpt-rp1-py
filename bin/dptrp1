@@ -63,7 +63,8 @@ def do_sync(d, local_path, remote_path):
     """
     Synchronize all PDF documents between a local path (on your PC) and a
     remote path (on the DPT). Older documents will be overwritten by newer ones
-    without any additional warning.
+    without any additional warning. Also synchronizes the time and date on the
+    reader to the computer's time and date.
     
     Example: dptrp1 --addr 10.0.0.13 sync ~/Dropbox/Papers Document/Papers
     """

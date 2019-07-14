@@ -7,6 +7,7 @@ import httpsig
 import urllib3
 import requests
 import functools
+import unicodedata
 from glob import glob
 from urllib.parse import quote_plus
 from dptrp1.pyDH import DiffieHellman
@@ -268,7 +269,11 @@ class DigitalPaper():
         return response.content
 
     def delete_document(self, remote_path):
-        remote_id = self._get_object_id(remote_path)
+        try:
+            remote_id = self._get_object_id(remote_path)
+        except ResolveObjectFailed as e:
+            # Path not found
+            return
         self.delete_document_by_id(remote_id)
 
     def delete_folder(self, remote_path):
@@ -282,8 +287,11 @@ class DigitalPaper():
         self._delete_endpoint(f"/folders/{folder_id}")
 
     def upload(self, fh, remote_path):
+        # Uploading a document should replace the existing document
+        self.delete_document(remote_path)
         filename = os.path.basename(remote_path)
         remote_directory = os.path.dirname(remote_path)
+        self.new_folder(remote_directory)
         directory_id = self._get_object_id(remote_directory)
         info = {
             "file_name": filename,
@@ -322,31 +330,34 @@ class DigitalPaper():
             self.upload(f, remote_path)
 
     def sync(self, local_folder, remote_folder):
+        self.set_datetime()
+        self.new_folder(remote_folder)
         remote_info = self.traverse_folder(remote_folder)
         remote_files = []
         for file_info in remote_info:
             if file_info["entry_type"] == "document":
-                remote_files.append(file_info["entry_path"])
                 remote_path = os.path.relpath(file_info["entry_path"], remote_folder)
+                remote_files.append(unicodedata.normalize("NFC", remote_path))
                 remote_date = datetime.strptime(file_info["modified_date"], '%Y-%m-%dT%H:%M:%SZ')
                 local_path = os.path.join(local_folder, remote_path)
                 date_difference = 1 # Positive if remote is newer
                 if os.path.exists(local_path):
                     local_date = datetime.fromtimestamp(os.path.getmtime(local_path))
                     date_difference = (remote_date - local_date).total_seconds()
-                if date_difference > 0:
-                    print(file_info["entry_path"] + " → " + local_path)
+                if date_difference > 1:
+                    print("⇣ " + file_info["entry_path"])
                     self.download_file(file_info["entry_path"], local_path)
                     mod_time = time.mktime(remote_date.timetuple())
                     os.utime(local_path, (mod_time, mod_time))
-                elif date_difference < 0:
-                    print(file_info["entry_path"] + " ← " + local_path)
+                elif date_difference < -1:
+                    print("⇡ " + local_path)
                     self.upload_file(local_path, file_info["entry_path"])
-        local_files = glob(os.path.join(local_folder, "**.pdf"), recursive=True)
+        local_files = glob(os.path.join(local_folder, "**/*.pdf"), recursive=True)
         for local_path in local_files:
-            remote_path = os.path.join(remote_folder, os.path.relpath(local_path, local_folder))
-            if remote_path not in remote_files:
-                print(remote_path + " ← " + local_path)
+            relative_path = os.path.relpath(local_path, local_folder)
+            remote_path = os.path.join(remote_folder, relative_path)
+            if unicodedata.normalize("NFC", relative_path) not in remote_files:
+                print("⇡ " + local_path)
                 self.upload_file(local_path, remote_path)
         
     def _copy_move_data(self, file_id, folder_id,
@@ -528,6 +539,10 @@ class DigitalPaper():
     def get_info(self):
         data = self._get_endpoint('/register/information').json()
         return(data)
+
+    def set_datetime(self):
+        now = datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
+        self._put_endpoint('/system/configs/datetime', data={"value": now})
 
     ### Etc
 
