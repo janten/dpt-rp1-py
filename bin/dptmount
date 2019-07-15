@@ -239,6 +239,7 @@ class DptTablet(LoggingMixIn, Operations):
         return self.fd
 
     def release(self, path, fh):
+        #TODO: something is going wrong with releasing the file handles for new created docs
         logger.info('file handle %d closed' % fh)
         node = self._map_local_remote(path)
         del self.documents_data[fh]
@@ -261,6 +262,8 @@ class DptTablet(LoggingMixIn, Operations):
         self._add_remote_path_to_tree(new_folder_node, newpath)
 
     def create(self, path, mode, fi=None):
+        #TODO: check if files is necessary
+        logging.debug("create path {}".format(path))
         self.files[path] = dict(
             st_mode=(S_IFREG | mode),
             st_nlink=1,
@@ -286,7 +289,7 @@ class DptTablet(LoggingMixIn, Operations):
         remote_path = os.path.join(parent.remote_path, fname)
         self.dpt.upload(stream, remote_path)
         node = self._add_remote_path_to_tree(parent, remote_path)
-        self.files.pop(path)
+        #self.files.pop(path)
         return
 
 
