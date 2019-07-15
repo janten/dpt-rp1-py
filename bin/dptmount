@@ -322,7 +322,12 @@ if __name__ == '__main__':
     parser.add_argument("--config", default=YAML_CONFIG_PATH, help="config file, default is %s" % YAML_CONFIG_PATH)
     parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
     parser.add_argument("--logfile", default=False, help="Log to a file (default: log to standard output)")
+    parser.add_argument("--big_writes", default=True, help="Enable writes of big")
     args = parser.parse_args()
+    kwarg = ["big_writes"]
+    kwargs = {}
+    for k in kwarg:
+        kwargs[k] = getattr(args, k)
 
     # Set up logging
     if args.logfile is False:
@@ -355,6 +360,6 @@ if __name__ == '__main__':
     )
     
     tablet = DptTablet(**params)
-    fuse = FUSE(tablet, args.mountpoint, foreground=True, allow_other=True, nothreads=True)
+    fuse = FUSE(tablet, args.mountpoint, foreground=True, allow_other=True, nothreads=True, **kwargs)
 
 
