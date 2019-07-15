@@ -66,13 +66,6 @@ class DptTablet(LoggingMixIn, Operations):
 
         # Create root node
         self.__init_empty_tree()
-        #self.now = time.time()
-        #self.root = anytree.Node('Document', item = None, localpath='/',
-                         #lstat=dict(st_mode=(S_IFDIR | 0o755),
-                                    #st_ctime=self.now,
-                                    #st_mtime=self.now,
-                                    #st_atime=self.now,
-                                    #st_nlink=2), )
 
         # Cache this for the session
         logger.info('Loading initial document list')
@@ -94,7 +87,6 @@ class DptTablet(LoggingMixIn, Operations):
                                     st_atime=self.now,
                                     st_nlink=2), )
 
-        
     def __authenticate__(self):
         self.dpt = DigitalPaper(self.dpt_ip_address)
 
@@ -106,9 +98,17 @@ class DptTablet(LoggingMixIn, Operations):
 
         self.dpt.authenticate(client_id, key)
 
+    def _remove_node(self, node):
+        node.parent = None
+        del node
+
     def _add_node_to_tree(self, parent, item):
         return anytree.Node(item['entry_name'], parent=parent, item=item, remote_path=item["entry_path"],
                                 lstat=self._get_lstat(item), localpath=os.path.join(parent.localpath, item['entry_name']))
+
+    def _add_remote_path_to_tree(self, parent, remote_path):
+        item = self.dpt._resolve_object_by_path(remote_path).json()
+        return self._add_node_to_tree(parent, item)
         
     def _load_document_list(self):
         # TODO maybe some smarter caching?
@@ -158,7 +158,6 @@ class DptTablet(LoggingMixIn, Operations):
         # 'title': 'untitled', 'total_page': '4'}
         return lstat
 
-                
     def _map_local_remote(self, full_local):
         return anytree.search.find(self.root, filter_=lambda node: node.localpath == full_local)
 
@@ -167,7 +166,6 @@ class DptTablet(LoggingMixIn, Operations):
         access_flags = os.O_RDONLY | os.O_WRONLY | os.O_RDWR
         return flags & access_flags == os.O_RDONLY
 
-    
     # Filesystem methods
     # ==================
     def chmod(self, path, mode):
@@ -199,39 +197,30 @@ class DptTablet(LoggingMixIn, Operations):
         node = self._map_local_remote(path)
         remote_path = node.remote_path
         data = self.dpt.delete_document(node.remote_path)
-        node.parent = None
-        del node
+        self._remove_node(node)
         return 0
-
 
     # Directory creation
     # ============
     def rmdir(self, path):
-        # TODO! Need to find _delete in dpt
-        pass
+        node = self._map_local_remote(path)
+        self.dpt.delete_folder(node.remote_path)
+        self._remove_node(node)
+        return 0
 
     def mkdir(self, path, mode):
         ppath, dirname = os.path.split(path)
         parent = self._map_local_remote(ppath)
         remote_path = os.path.join(parent.remote_path, dirname)
         self.dpt.new_folder(remote_path)
-        item = self.dpt._resolve_object_by_path(remote_path).json()
-        node = self._add_node_to_tree(parent, item)
+        node = self._add_remote_path_to_tree(parent, remote_path)
         return 0
-
-    def rename(self, old, new):
-        print(old)
-        print(new)
-        node = self._map_local_remote(old)
-        self.dpt.rename_file(node, new)
-
 
     # File methods
     # ============
     def open(self, path, flags):
         node = self._map_local_remote(path)
 
-        # TODO: allow uploading
         if not self._is_read_only_flags(flags):
             return FuseOSError(EACCES)
 
@@ -263,10 +252,15 @@ class DptTablet(LoggingMixIn, Operations):
     
     def read(self, path, length, offset, fh):
         return self.documents_data[fh][offset:offset + length]
-        #stream = self.documents_data[fh]
-        #stream.seek(offset)
-        #return stream.read(length)
-        
+
+    def rename(self, oldpath, newpath):
+        old_node = self._map_local_remote(oldpath)
+        new_folder, fname = os.path.split(newpath)
+        new_folder_node = self._map_local_remote(new_folder)
+        newpath = os.path.join(new_folder_node.remote_path, fname)
+        self.dpt.rename_document(old_node.remote_path, newpath)
+        self._remove_node(old_node)
+        self._add_remote_path_to_tree(new_folder_node, newpath)
 
     def create(self, path, mode, fi=None):
         self.files[path] = dict(
@@ -278,38 +272,24 @@ class DptTablet(LoggingMixIn, Operations):
             st_atime=time.time())
 
         self.fd += 1
-        self.documents_data[self.fd] = bytearray() #io.BytesIO()
-        #self.documents_data[self.fd] = io.BytesIO()
+        self.documents_data[self.fd] = bytearray()
         return self.fd
 
     def write(self, path, buf, offset, fh):
-        # TODO
-        #return FuseOSError(EACCES)
-        logging.debug("write to path {0}".format(path))
-        logging.debug("write to fh {0}".format(fh))
-        logging.debug("write offset {}".format(offset))
-        logging.debug("write len {}".format(len(buf)))
-        #stream = self.documents_data[fh].seek(offset)
-        #stream.write(buf)
-        #self.documents_data[fh][offset:] += buf
         stream = self.documents_data[fh][:offset] + buf
         self.documents_data[fh] = stream
         logging.debug("written len {}".format(len(stream)))
         return len(buf)
 
     def flush(self, path, fh):
-        #TODO needs to be added to node tree
-        logging.debug("flushing data")
-        #fp = open('/tmp/test.pdf', 'wb')
         stream = io.BytesIO(self.documents_data[fh])
         dpath, fname = os.path.split(path)
-        node = self._map_local_remote(dpath)
-        remote_path = os.path.join(node.remote_path, fname)
-        logging.debug("flushing localpath:{0} remotepath:{1}".format(dpath, remote_path))
-        #stream = self.documents_data[fh].seek(0)
+        parent = self._map_local_remote(dpath)
+        remote_path = os.path.join(parent.remote_path, fname)
         self.dpt.upload(stream, remote_path)
+        node = self._add_remote_path_to_tree(parent, remote_path)
+        self.files.pop(path)
         return
-        #pass
 
 
     
