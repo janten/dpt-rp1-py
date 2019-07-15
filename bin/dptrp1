@@ -2,9 +2,9 @@
 # coding=utf-8
 
 import argparse
-import base64
-import sys
+import inspect
 import json
+import sys
 import os
 import re
 
@@ -22,12 +22,16 @@ def do_list_documents(d):
         print(d['entry_path'])
 
 def do_list_folders(d, *remote_paths):
-    if remote_paths == ():
-        remote_paths = ('Document',)
-    for p in remote_paths:
-        for o in d.traverse_folder(p):
-            if o['entry_type'] == 'folder':
-                print(o['entry_path'] + '/')
+    data = d.list_all()
+    for d in data:
+        if d['entry_type'] == 'folder':
+            print(d['entry_path'] + '/')
+
+def do_move_document(d, old_path, new_path):
+    d.move_file(old_path, new_path)
+
+def do_copy_document(d, old_path, new_path):
+    d.copy_file(old_path, new_path)
 
 def do_upload(d, local_path, remote_path=''):
     if not remote_path:
@@ -45,18 +49,41 @@ def do_download(d, remote_path, local_path):
     with open(local_path, 'wb') as f:
         f.write(data)
 
+def do_list_document_info(d, remote_path = False):
+    if not remote_path:
+        infos = d.list_all()
+        for info in infos:
+            print(info['entry_path'])
+            for key in info:
+                print("    - " + key + ": " + info[key])
+    else:
+        info = d.list_document_info(remote_path)
+        print(info['entry_path'])
+        for key in info:
+            print("    - " + key + ": " + info[key])
+
+
+
 def do_update_firmware(d, local_path):
     with open(local_path, 'rb') as fwfh:
         d.update_firmware(fwfh)
 
 def do_delete_document(d, remote_path):
-    data = d.delete_document(remote_path)
+    d.delete_document(remote_path)
 
 def do_delete_folder(d, remote_path):
-    data = d.delete_folder(remote_path)
+    d.delete_folder(remote_path)
 
-def do_rename_document(d, remote_path, new_path):
-    data = d.rename_document(remote_path, new_path)
+def do_sync(d, local_path, remote_path):
+    """
+    Synchronize all PDF documents between a local path (on your PC) and a
+    remote path (on the DPT). Older documents will be overwritten by newer ones
+    without any additional warning. Also synchronizes the time and date on the
+    reader to the computer's time and date.
+
+    Example: dptrp1 --addr 10.0.0.13 sync ~/Dropbox/Papers Document/Papers
+    """
+    d.sync(local_path, remote_path)
 
 def do_new_folder(d, remote_path):
     d.new_folder(remote_path)
@@ -93,88 +120,98 @@ def do_add_wifi(d):
 def do_delete_wifi(d):
     print(d.delete_wifi(ssid = "vecna2", security = "psk"))
 
-def do_register(d):
-    d.register()
+def do_register(d, key_file, id_file):
+    _, key, device_id = d.register()
+
+    with open(key_file, 'w') as f:
+        f.write(key)
+
+    with open(id_file, 'w') as f:
+        f.write(device_id)
+
+def do_help(d, command):
+    """
+    Print additional information about a command, if available.
+    """
+    print(inspect.getdoc(commands[command]))
+
+commands = {
+    "screenshot": do_screenshot,
+    "list-documents" : do_list_documents,
+    "document-info" : do_list_document_info,
+    "upload" : do_upload,
+    "download" : do_download,
+    "delete" : do_delete_document,
+    "delete-folder" : do_delete_folder,
+    "new-folder" : do_new_folder,
+    "move-document": do_move_document,
+    "copy-document": do_copy_document,
+    "list-folders" : do_list_folders,
+    "wifi-list": do_wifi_list,
+    "wifi-scan": do_wifi_scan,
+    "wifi-add": do_add_wifi,
+    "wifi-del": do_delete_wifi,
+    "wifi": do_wifi,
+    "wifi-enable" : do_wifi_enable,
+    "wifi-disable" : do_wifi_disable,
+    "register" : do_register,
+    "update-firmware": do_update_firmware,
+    "sync": do_sync,
+    "command-help": do_help
+}
+
+def find_auth_files():
+    config_path = os.path.join(Path.home(), ".dpapp")
+    if sys.platform.startswith('darwin'):
+            config_path = os.path.join(Path.home(), "Library/Application Support/Sony Corporation/Digital Paper App")
+    elif sys.platform.startswith('windows'):
+            config_path = os.path.join(Path.home(), "AppData/Roaming/Sony Corporation/Digital Paper App")
+    os.makedirs(config_path, exist_ok=True)
+    deviceid = os.path.join(config_path, "deviceid.dat")
+    privatekey = os.path.join(config_path, "privatekey.dat")
+    return deviceid, privatekey
+
+def build_parser():
+    deviceid, privatekey = find_auth_files()
+
+    p = argparse.ArgumentParser(description = "Remote control for Sony DPT-RP1")
+    p.add_argument('--client-id',
+            help = "File containing the device's client id",
+            default = deviceid)
+    p.add_argument('--key',
+            help = "File containing the device's private key",
+            default = privatekey)
+    p.add_argument('--addr',
+            help = "Hostname or IP address of the device",
+            required = True)
+    p.add_argument('command',
+            help = 'Command to run',
+            choices = sorted(commands.keys()))
+    p.add_argument('command_args',
+            help = 'Arguments for the command',
+            nargs = '*')
+    return p
+
+def main():
+    args = build_parser().parse_args()
+    dp = DigitalPaper(addr = args.addr)
+    if args.command == "register":
+        do_register(dp, args.key, args.client_id)
+        return
+    if not os.path.exists(args.key) or not os.path.exists(args.client_id):
+        print("Could not read device identifier and private key.")
+        print("Please use command 'register' first:")
+        print("    dptrp1 --addr " + args.addr + " register")
+        exit(1)
+    with open(args.client_id) as fh:
+        client_id = fh.readline().strip()
+    with open(args.key, 'rb') as fh:
+        key = fh.read()
+    dp.authenticate(client_id, key)
+    commands[args.command](dp, *args.command_args)
 
 if __name__ == "__main__":
-
-    dpapp = "Sony Corporation/Digital Paper App"
-    if sys.platform.startswith('darwin'):
-        dpapp = "Library/Application Support" / dpapp
-    elif sys.platform.startswith('windows'):
-        dpapp = "AppData/Roaming" / dpapp
-    elif sys.platform.startswith('linux'):
-        dpapp = ".dpapp"
-    dpapp = Path.home() / dpapp
-    deviceid = str(dpapp / "deviceid.dat")
-    privatekey = str(dpapp / "privatekey.dat")
-
-    commands = {
-        "screenshot": do_screenshot,
-        "list-documents" : do_list_documents,
-        "upload" : do_upload,
-        "download" : do_download,
-        "delete" : do_delete_document,
-        "rmdir" : do_delete_folder,
-        "new-folder" : do_new_folder,
-        "rename" : do_rename_document,
-        "list-folders" : do_list_folders,
-        "wifi-list": do_wifi_list,
-        "wifi-scan": do_wifi_scan,
-        "wifi-add": do_add_wifi,
-        "wifi-del": do_delete_wifi,
-        "wifi": do_wifi,
-        "wifi-enable" : do_wifi_enable,
-        "wifi-disable" : do_wifi_disable,
-        "register" : do_register,
-        "update": do_update_firmware
-    }
-
-    def build_parser():
-        p = argparse.ArgumentParser(description = "Remote control for Sony DPT-RP1")
-        p.add_argument('--client-id', 
-                help = "File containing the device's client id",
-                default = deviceid,
-                required = not os.path.isfile(deviceid))
-        p.add_argument('--key', 
-                help = "File containing the device's private key",
-                default = privatekey,
-                required = not os.path.isfile(privatekey))
-        p.add_argument('--addr', 
-                help = "Hostname or IP address of the device")
-        p.add_argument('command', 
-                help = 'Command to run', 
-                choices = sorted(commands.keys()))
-        p.add_argument('command_args',
-                help = 'Arguments for the command',
-                nargs = '*')
-
-        return p
+    main()
 
 
-    args = build_parser().parse_args()
-
-    dp = DigitalPaper(addr = args.addr)
-
-    if args.command == "register":
-        _, key, device_id = dp.register()
-
-        with open(args.key, 'w') as f:
-            f.write(key)
-
-        with open(args.client_id, 'w') as f:
-            f.write(device_id)
-
-        sys.exit()
-
-    else:
-        with open(args.client_id) as fh:
-            client_id = fh.readline().strip()
-
-        with open(args.key, 'rb') as fh:
-            key = fh.read()
-
-        dp.authenticate(client_id, key)
-
-    commands[args.command](dp, *args.command_args)
 

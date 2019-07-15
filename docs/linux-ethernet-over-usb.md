@@ -43,6 +43,8 @@ If you're using DHCP to obtain addresses, you should disable it for the DPT-RP1,
 
 For example, if you're using Network Manager, change the IPv4 settings on the DPT-RP1 Ethernet device to 'Link-Local Only' instead of 'Automatic'. This will assign your end of the Ethernet link an IPv4 link-local address in the 169.254.0.0/16 range. 
 
+When using Network Manager, also make sure that in the 'Ethernet' tab, 'device' is set to the interface name, not the MAC address. This will help Network Manager to restore the settings when connecting next time.
+
 ## Determining the address for DPT-RP1
 
 The DPT-RP1 uses an IPv6 link-local address when in Ethernet-over-USB. You can determine this address by using an mDNS resolver such as `avahi`.
