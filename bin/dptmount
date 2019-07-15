@@ -27,6 +27,8 @@ Author
 ------
 
 Juan Grigera <juan@grigera.com.ar>
+
+upload functionality by Jochen Schroeder <cycomanic@gmail.com>
 """
     
 # debian-dependency: python3-fusepy
