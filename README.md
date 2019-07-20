@@ -38,14 +38,6 @@ dptrp1 --client-id <client_id file> register
 
 If you get an error, wait a few seconds and try again.  Sometimes it takes two or three tries to work.
 
-#### Finding the private key and client ID on Windows
-
-If you have already registered on Windows, the Digital Paper app stores the files in _Users/{username}/AppData/Roaming/Sony Corporation/Digital Paper App/_. You'll need the files _deviceid.dat_ and _privatekey.dat_.
-
-#### Finding the private key and client ID on macOS
-
-If you have already registered on macOS, the Digital Paper app stores the files in _$HOME/Library/Application Support/Sony Corporation/Digital Paper App/_. You'll need the files _deviceid.dat_ and _privatekey.dat_.
-
 ## FUSE mount
 
 This Repository contains a script to mount the Digital Paper as a userspace mount. The work was originally started by @jgrigera
@@ -64,6 +56,14 @@ dptrp1:
 ```
 
 Mount the Digital Paper to a directory with `dptmount /my/mountpoint/`. 
+
+#### Finding the private key and client ID on Windows
+
+If you have already registered on Windows, the Digital Paper app stores the files in _Users/{username}/AppData/Roaming/Sony Corporation/Digital Paper App/_. You'll need the files _deviceid.dat_ and _privatekey.dat_.
+
+#### Finding the private key and client ID on macOS
+
+If you have already registered on macOS, the Digital Paper app stores the files in _$HOME/Library/Application Support/Sony Corporation/Digital Paper App/_. You'll need the files _deviceid.dat_ and _privatekey.dat_.
 
 #### What works
 
