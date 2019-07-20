@@ -37,3 +37,43 @@ dptrp1 --client-id <client_id file> register
 ```
 
 If you get an error, wait a few seconds and try again.  Sometimes it takes two or three tries to work.
+
+#### Finding the private key and client ID on Windows
+
+If you have already registered on Windows, the Digital Paper app stores the files in _Users/{username}/AppData/Roaming/Sony Corporation/Digital Paper App/_. You'll need the files _deviceid.dat_ and _privatekey.dat_.
+
+#### Finding the private key and client ID on macOS
+
+If you have already registered on macOS, the Digital Paper app stores the files in _$HOME/Library/Application Support/Sony Corporation/Digital Paper App/_. You'll need the files _deviceid.dat_ and _privatekey.dat_.
+
+## FUSE mount
+
+This Repository contains a script to mount the Digital Paper as a userspace mount. The work was originally started by @jgrigera
+who did most of the work, but did not implement write delete and create methods. I have extended this work to also implement 
+write and upload methods. 
+
+### How to use 
+
+Create a yaml file with configuration details like the below:
+
+```
+dptrp1:
+  client-id: ~/.config/dpt/deviceid.dat
+  key: ~/.config/dpt/privatekey.dat
+  addr: 192.168.0.200
+```
+
+Mount the Digital Paper to a directory with `dptmount /my/mountpoint/`. 
+
+#### What works
+
+* reading files
+* moving files (both rename and move to different folder)
+* uploading new files
+* deleting files and folders 
+
+#### What does not work
+
+* currently there is no caching, therefore operations can be slow as they require uploading or downloading from the 
+device. However, this avoids having to resolve conflicts if a document has been changed both on the Digital Paper and
+the caching directory.
