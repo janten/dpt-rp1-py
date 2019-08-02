@@ -260,7 +260,7 @@ class DigitalPaper():
         return traverse(self._resolve_object_by_path(remote_path))
 
     def list_document_info(self, remote_path):
-        remote_info = self._resolve_object_by_path(remote_path).json()
+        remote_info = self._resolve_object_by_path(remote_path)
         return remote_info
 
     def download(self, remote_path):
@@ -363,7 +363,7 @@ class DigitalPaper():
             if unicodedata.normalize("NFC", relative_path) not in remote_files:
                 print("⇡ " + local_path)
                 self.upload_file(local_path, remote_path)
-        
+
     def _copy_move_data(self, file_id, folder_id,
             new_filename=None):
         data = {"parent_folder_id": folder_id}
@@ -392,7 +392,7 @@ class DigitalPaper():
     def _copy_move_find_ids(self, old_path, new_path):
         old_id = self._get_object_id(old_path)
         new_filename = None
-        
+
         try: # find out whether new_path is a filename or folder
             new_folder_id = self._get_object_id(new_path)
         except ResolveObjectFailed:
