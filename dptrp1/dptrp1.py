@@ -8,6 +8,7 @@ import urllib3
 import requests
 import functools
 import unicodedata
+import json
 from glob import glob
 from urllib.parse import quote_plus
 from dptrp1.pyDH import DiffieHellman
@@ -363,6 +364,13 @@ class DigitalPaper():
             if unicodedata.normalize("NFC", relative_path) not in remote_files:
                 print("⇡ " + local_path)
                 self.upload_file(local_path, remote_path)
+        doclist = self.list_document_info(remote_folder)
+        self.sync_checkpoint(local_folder, doclist)
+
+    def sync_checkpoint(self, local_folder, doclist):
+        checkpoint_file = local_folder + "/.sync.json"
+        with open(checkpoint_file, "w") as f:
+            json.dump(doclist, f)
 
     def _copy_move_data(self, file_id, folder_id,
             new_filename=None):
