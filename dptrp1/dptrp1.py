@@ -368,7 +368,7 @@ class DigitalPaper():
         self.sync_checkpoint(local_folder, doclist)
 
     def sync_checkpoint(self, local_folder, doclist):
-        checkpoint_file = local_folder + "/.sync.json"
+        checkpoint_file = os.path.join(local_folder, ".sync.json")
         with open(checkpoint_file, "w") as f:
             json.dump(doclist, f)
 
