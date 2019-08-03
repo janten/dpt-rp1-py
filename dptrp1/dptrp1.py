@@ -341,8 +341,11 @@ class DigitalPaper():
         self.set_datetime()
         self.new_folder(remote_folder)
         remote_info = self.traverse_folder(remote_folder)
+
+        # Lists for applying remote changes to local
         to_download = []
         to_delete_local = []
+        # Prepare download list
         for r in remote_info:
             if r['entry_type'] == 'folder':
                 continue
@@ -357,12 +360,13 @@ class DigitalPaper():
                 date_difference = (r_date - c_date).total_seconds()
                 if c_path == r_path:
                     found = True
-                    if date_difference > 0:  # Remote is newer
+                    if date_difference > 0:  # Remote modified after checkpoint
                         to_download.append(r)
                         break
             if not found:
                 to_download.append(r)
 
+        # Prepare local delete list
         for c in checkpoint_info:
             if c['entry_type'] == 'folder':
                 continue
@@ -378,6 +382,41 @@ class DigitalPaper():
             if not found:
                 to_delete_local.append(c)
 
+        # Lists for applying local change to remote
+        to_upload = []
+        to_delete_remote = []
+        local_files = glob(os.path.join(local_folder, "**/*.pdf"), recursive=True)
+        # Prepare upload list
+        for local_path in local_files:
+            relative_path = os.path.relpath(local_path, local_folder)
+            remote_path = os.path.join(remote_folder, relative_path)
+            local_date = datetime.utcfromtimestamp(os.path.getmtime(local_path))
+            found = False
+            for c in checkpoint_info:
+                if c['entry_type'] == 'folder':
+                    continue
+                c_path = c['entry_path']
+                c_date = datetime.strptime(c['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
+                date_difference = (local_date - c_date).total_seconds()
+                if remote_path == c_path:
+                    found = True
+                    if date_difference > 0: # Local is newer
+                        # TODO: What if both local and remote are changed?
+                        to_upload.append(local_path)
+            if not found:
+                to_upload.append(local_path)
+
+        # Prepare remote delete list
+        for c in checkpoint_info:
+            if c['entry_type'] == 'folder':
+                continue
+            remote_path = os.path.relpath(c['entry_path'], remote_folder)
+            local_path = os.path.join(local_folder, remote_path)
+            if not os.path.exists(local_path):
+                to_delete_remote.append(c)
+
+
+        # Apply changes in remote to local
         for file_info in to_download:
             remote_path = os.path.relpath(file_info['entry_path'], remote_folder)
             local_path = os.path.join(local_folder, remote_path)
@@ -387,13 +426,38 @@ class DigitalPaper():
             remote_date = remote_date.replace(tzinfo=timezone.utc).astimezone(tz=None)
             mod_time = time.mktime(remote_date.timetuple())
             os.utime(local_path, (mod_time, mod_time))
+            # If both remote and local have changes, remote wins.
+            if file_info in to_delete_remote:
+                to_delete_remote.remove(file_info)
+            if local_path in to_upload:
+                to_upload.remove(local_path)
 
         for file_info in to_delete_local:
             remote_path = os.path.relpath(file_info['entry_path'], remote_folder)
             local_path = os.path.join(local_folder, remote_path)
             print("X " + local_path)
             os.remove(local_path)
+            if file_info in to_delete_remote:
+                to_delete_remote.remove(file_info)
+            if local_path in to_upload:
+                to_upload.remove(local_path)
 
+
+        # Apply changes in local to remote
+        for remote_file in to_delete_remote:
+            remote_path = remote_file['entry_path']
+            print("X " + remote_path)
+            if remote_file['entry_type'] == 'folder':
+                self.delete_folder(remote_path)
+            else:
+                self.delete_document(remote_path)
+
+        for local_file in to_upload:
+            local_path = local_file
+            relative_path = os.path.relpath(local_path, local_folder)
+            remote_path = os.path.join(remote_folder, relative_path)
+            print("⇡ " + local_path)
+            self.upload_file(local_path, remote_path)
 
         '''
         remote_files = []
