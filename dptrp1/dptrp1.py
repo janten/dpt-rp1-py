@@ -388,7 +388,7 @@ class DigitalPaper():
             remote_path = os.path.relpath(file_info['entry_path'], remote_folder)
             local_path = os.path.join(local_folder, remote_path)
             print("X " + file_info['entry_path'])
-            self.delete_document(file_info['entry_path'])
+            os.remove(local_path)
 
 
         '''
