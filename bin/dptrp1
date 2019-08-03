@@ -74,7 +74,7 @@ def do_delete_document(d, remote_path):
 def do_delete_folder(d, remote_path):
     d.delete_folder(remote_path)
 
-def do_sync(d, local_path, remote_path):
+def do_sync(d, local_path, remote_path = 'Document'):
     """
     Synchronize all PDF documents between a local path (on your PC) and a
     remote path (on the DPT). Older documents will be overwritten by newer ones
