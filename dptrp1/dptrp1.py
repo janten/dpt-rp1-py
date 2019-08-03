@@ -347,17 +347,16 @@ class DigitalPaper():
         to_delete_local = []
         # Prepare download list
         for r in remote_info:
-            if r['entry_type'] == 'folder':
-                continue
             r_path = r['entry_path']
-            r_date = datetime.strptime(r['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
+            if r['entry_type'] == 'document':
+                r_date = datetime.strptime(r['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
             found = False
             for c in checkpoint_info:
-                if c['entry_type'] == 'folder':
-                    continue
                 c_path = c['entry_path']
-                c_date = datetime.strptime(c['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
-                date_difference = (r_date - c_date).total_seconds()
+                date_difference = 0
+                if c['entry_type'] == 'document':
+                    c_date = datetime.strptime(c['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
+                    date_difference = (r_date - c_date).total_seconds()
                 if c_path == r_path:
                     found = True
                     if date_difference > 0:  # Remote modified after checkpoint
@@ -368,13 +367,9 @@ class DigitalPaper():
 
         # Prepare local delete list
         for c in checkpoint_info:
-            if c['entry_type'] == 'folder':
-                continue
             c_path = c['entry_path']
             found = False
             for r in remote_info:
-                if r['entry_type'] == 'folder':
-                    continue
                 r_path = r['entry_path']
                 if c_path == r_path:
                     found = True
@@ -386,6 +381,7 @@ class DigitalPaper():
         to_upload = []
         to_delete_remote = []
         local_files = glob(os.path.join(local_folder, "**/*.pdf"), recursive=True)
+
         # Prepare upload list
         for local_path in local_files:
             relative_path = os.path.relpath(local_path, local_folder)
@@ -407,8 +403,6 @@ class DigitalPaper():
 
         # Prepare remote delete list
         for c in checkpoint_info:
-            if c['entry_type'] == 'folder':
-                continue
             remote_path = os.path.relpath(c['entry_path'], remote_folder)
             local_path = os.path.join(local_folder, remote_path)
             if not os.path.exists(local_path):
