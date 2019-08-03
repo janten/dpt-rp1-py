@@ -417,6 +417,7 @@ class DigitalPaper():
                 print("⇡ " + local_path)
                 self.upload_file(local_path, remote_path)
         '''
+        remote_info = self.traverse_folder(remote_folder)
         self.sync_checkpoint(local_folder, remote_info)
 
     def load_checkpoint(self, local_folder):
