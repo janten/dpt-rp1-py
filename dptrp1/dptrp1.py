@@ -12,7 +12,7 @@ import pickle
 from glob import glob
 from urllib.parse import quote_plus
 from dptrp1.pyDH import DiffieHellman
-from datetime import datetime
+from datetime import datetime, timezone
 from pbkdf2 import PBKDF2
 from Crypto.Hash import SHA256
 from Crypto.Hash.HMAC import HMAC
@@ -383,6 +383,10 @@ class DigitalPaper():
             local_path = os.path.join(local_folder, remote_path)
             print("⇣ " + file_info['entry_path'])
             self.download_file(file_info['entry_path'], local_path)
+            remote_date = datetime.strptime(file_info['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
+            remote_date = remote_date.replace(tzinfo=timezone.utc).astimezone(tz=None)
+            mod_time = time.mktime(remote_date.timetuple())
+            os.utime(local_path, (mod_time, mod_time))
 
         for file_info in to_delete_local:
             remote_path = os.path.relpath(file_info['entry_path'], remote_folder)
