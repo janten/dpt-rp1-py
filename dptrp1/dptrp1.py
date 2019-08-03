@@ -391,7 +391,7 @@ class DigitalPaper():
         for file_info in to_delete_local:
             remote_path = os.path.relpath(file_info['entry_path'], remote_folder)
             local_path = os.path.join(local_folder, remote_path)
-            print("X " + file_info['entry_path'])
+            print("X " + local_path)
             os.remove(local_path)
 
 
