@@ -335,10 +335,61 @@ class DigitalPaper():
             self.upload(f, remote_path)
 
     def sync(self, local_folder, remote_folder):
-        checkpoint_files = self.load_checkpoint(local_folder)
+        checkpoint_info = self.load_checkpoint(local_folder)
         self.set_datetime()
         self.new_folder(remote_folder)
         remote_info = self.traverse_folder(remote_folder)
+        to_download = []
+        to_delete_local = []
+        for r in remote_info:
+            if r['entry_type'] == 'folder':
+                continue
+            r_path = r['entry_path']
+            r_date = datetime.strptime(r['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
+            found = False
+            for c in checkpoint_info:
+                if c['entry_type'] == 'folder':
+                    continue
+                c_path = c['entry_path']
+                c_date = datetime.strptime(c['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
+                date_difference = (r_date - c_date).total_seconds()
+                if c_path == r_path:
+                    found = True
+                    if date_difference > 0:  # Remote is newer
+                        to_download.append(r)
+                        break
+            if not found:
+                to_download.append(r)
+
+        for c in checkpoint_info:
+            if c['entry_type'] == 'folder':
+                continue
+            c_path = c['entry_path']
+            found = False
+            for r in remote_info:
+                if r['entry_type'] == 'folder':
+                    continue
+                r_path = r['entry_path']
+                if c_path == r_path:
+                    found = True
+                    break
+            if not found:
+                to_delete_local.append(c)
+
+        for file_info in to_download:
+            remote_path = os.path.relpath(file_info['entry_path'], remote_folder)
+            local_path = os.path.join(local_folder, remote_path)
+            print("⇣ " + file_info['entry_path'])
+            self.download_file(file_info['entry_path'], local_path)
+
+        for file_info in to_delete_local:
+            remote_path = os.path.relpath(file_info['entry_path'], remote_folder)
+            local_path = os.path.join(local_folder, remote_path)
+            print("X " + file_info['entry_path'])
+            self.delete_document(file_info['entry_path'])
+
+
+        '''
         remote_files = []
         for file_info in remote_info:
             if file_info["entry_type"] == "document":
@@ -365,6 +416,7 @@ class DigitalPaper():
             if unicodedata.normalize("NFC", relative_path) not in remote_files:
                 print("⇡ " + local_path)
                 self.upload_file(local_path, remote_path)
+        '''
         self.sync_checkpoint(local_folder, remote_info)
 
     def load_checkpoint(self, local_folder):
