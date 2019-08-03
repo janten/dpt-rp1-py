@@ -335,6 +335,7 @@ class DigitalPaper():
             self.upload(f, remote_path)
 
     def sync(self, local_folder, remote_folder):
+        checkpoint_files = self.load_checkpoint(local_folder)
         self.set_datetime()
         self.new_folder(remote_folder)
         remote_info = self.traverse_folder(remote_folder)
@@ -366,6 +367,13 @@ class DigitalPaper():
                 self.upload_file(local_path, remote_path)
         doclist = self.list_document_info(remote_folder)
         self.sync_checkpoint(local_folder, doclist)
+
+    def load_checkpoint(self, local_folder):
+        checkpoint_file = os.path.join(local_folder, ".sync.json")
+        if not os.path.exists(checkpoint_file):
+            return {}
+        with open(checkpoint_file, "r") as f:
+            return json.load(f)
 
     def sync_checkpoint(self, local_folder, doclist):
         checkpoint_file = os.path.join(local_folder, ".sync.json")
