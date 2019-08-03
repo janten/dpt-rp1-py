@@ -316,6 +316,8 @@ class DigitalPaper():
     def new_folder(self, remote_path):
         folder_name = os.path.basename(remote_path)
         remote_directory = os.path.dirname(remote_path)
+        if not remote_directory:
+            return
         directory_id = self._get_object_id(remote_directory)
         info = {
             "folder_name": folder_name,
