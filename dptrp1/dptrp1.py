@@ -401,7 +401,6 @@ class DigitalPaper():
                 if remote_path == c_path:
                     found = True
                     if date_difference > 0: # Local is newer
-                        # TODO: What if both local and remote are changed?
                         to_upload.append(local_path)
             if not found:
                 to_upload.append(local_path)
@@ -414,7 +413,6 @@ class DigitalPaper():
             local_path = os.path.join(local_folder, remote_path)
             if not os.path.exists(local_path):
                 to_delete_remote.append(c)
-
 
         # Apply changes in remote to local
         for file_info in to_download:
@@ -442,7 +440,6 @@ class DigitalPaper():
             if local_path in to_upload:
                 to_upload.remove(local_path)
 
-
         # Apply changes in local to remote
         for remote_file in to_delete_remote:
             remote_path = remote_file['entry_path']
@@ -459,34 +456,6 @@ class DigitalPaper():
             print("⇡ " + local_path)
             self.upload_file(local_path, remote_path)
 
-        '''
-        remote_files = []
-        for file_info in remote_info:
-            if file_info["entry_type"] == "document":
-                remote_path = os.path.relpath(file_info["entry_path"], remote_folder)
-                remote_files.append(unicodedata.normalize("NFC", remote_path))
-                remote_date = datetime.strptime(file_info["modified_date"], '%Y-%m-%dT%H:%M:%SZ')
-                local_path = os.path.join(local_folder, remote_path)
-                date_difference = 1 # Positive if remote is newer
-                if os.path.exists(local_path):
-                    local_date = datetime.fromtimestamp(os.path.getmtime(local_path))
-                    date_difference = (remote_date - local_date).total_seconds()
-                if date_difference > 0:
-                    print("⇣ " + file_info["entry_path"])
-                    self.download_file(file_info["entry_path"], local_path)
-                    mod_time = time.mktime(remote_date.timetuple())
-                    os.utime(local_path, (mod_time, mod_time))
-                elif date_difference < 0:
-                    print("⇡ " + local_path)
-                    self.upload_file(local_path, file_info["entry_path"])
-        local_files = glob(os.path.join(local_folder, "**/*.pdf"), recursive=True)
-        for local_path in local_files:
-            relative_path = os.path.relpath(local_path, local_folder)
-            remote_path = os.path.join(remote_folder, relative_path)
-            if unicodedata.normalize("NFC", relative_path) not in remote_files:
-                print("⇡ " + local_path)
-                self.upload_file(local_path, remote_path)
-        '''
         remote_info = self.traverse_folder(remote_folder)
         self.sync_checkpoint(local_folder, remote_info)
 
