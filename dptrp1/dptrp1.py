@@ -491,14 +491,14 @@ class DigitalPaper():
         self.sync_checkpoint(local_folder, remote_info)
 
     def load_checkpoint(self, local_folder):
-        checkpoint_file = os.path.join(local_folder, ".sync.json")
+        checkpoint_file = os.path.join(local_folder, ".sync")
         if not os.path.exists(checkpoint_file):
             return []
         with open(checkpoint_file, "rb") as f:
             return pickle.load(f)
 
     def sync_checkpoint(self, local_folder, doclist):
-        checkpoint_file = os.path.join(local_folder, ".sync.json")
+        checkpoint_file = os.path.join(local_folder, ".sync")
         with open(checkpoint_file, "wb") as f:
             pickle.dump(doclist, f)
 
