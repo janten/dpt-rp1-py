@@ -38,7 +38,6 @@ class DigitalPaper():
 
         self.session = requests.Session()
         self.session.verify = False # disable ssl certificate verification
-        self.folder_list = []   # Temporal list
 
     @property
     def base_url(self):
@@ -324,8 +323,7 @@ class DigitalPaper():
         remote_directory = os.path.dirname(remote_path)
         if not remote_directory:
             return
-        folders = self.list_folders()
-        if remote_directory not in folders:
+        if not self.path_exists(remote_directory):
             self.new_folder(remote_directory)
         self.folder_list.append(remote_path)
         directory_id = self._get_object_id(remote_directory)
