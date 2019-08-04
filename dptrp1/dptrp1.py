@@ -37,6 +37,7 @@ class DigitalPaper():
 
         self.session = requests.Session()
         self.session.verify = False # disable ssl certificate verification
+        self.folder_list = []   # Temporal list
 
     @property
     def base_url(self):
@@ -318,6 +319,10 @@ class DigitalPaper():
         remote_directory = os.path.dirname(remote_path)
         if not remote_directory:
             return
+        folders = self.list_folders()
+        if remote_directory not in folders:
+            self.new_folder(remote_directory)
+        self.folder_list.append(remote_path)
         directory_id = self._get_object_id(remote_directory)
         info = {
             "folder_name": folder_name,
@@ -325,6 +330,14 @@ class DigitalPaper():
         }
 
         r = self._post_endpoint("/folders2", data=info)
+
+    def list_folders(self):
+        if not self.folder_list:
+            data = self.list_all()
+            for d in data:
+                if d['entry_type'] == 'folder':
+                    self.folder_list.append(d['entry_path'])
+        return self.folder_list
 
     def download_file(self, remote_path, local_path):
         os.makedirs(os.path.dirname(local_path), exist_ok=True)
@@ -412,6 +425,9 @@ class DigitalPaper():
         for file_info in to_download:
             remote_path = os.path.relpath(file_info['entry_path'], remote_folder)
             local_path = os.path.join(local_folder, remote_path)
+            if file_info['entry_type'] == 'folder':
+                os.makedirs(local_path, exist_ok = True)
+                continue
             print("⇣ " + file_info['entry_path'])
             self.download_file(file_info['entry_path'], local_path)
             remote_date = datetime.strptime(file_info['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
