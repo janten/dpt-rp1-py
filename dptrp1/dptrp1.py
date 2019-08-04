@@ -354,6 +354,13 @@ class DigitalPaper():
         with open(local_path, 'rb') as f:
             self.upload(f, remote_path)
 
+    def path_exists(self, remote_path):
+        try:
+            remote_id = self._get_object_id(remote_path)
+        except ResolveObjectFailed as e:
+            return False
+        return True
+
     def sync(self, local_folder, remote_folder):
         checkpoint_info = self.load_checkpoint(local_folder)
         self.set_datetime()
@@ -464,11 +471,12 @@ class DigitalPaper():
         # Apply changes in local to remote
         for remote_file in to_delete_remote:
             remote_path = remote_file['entry_path']
-            print("X " + remote_path)
-            if remote_file['entry_type'] == 'folder':
-                self.delete_folder(remote_path)
-            else:
-                self.delete_document(remote_path)
+            if self.path_exists(remote_path):
+                print("X " + remote_path)
+                if remote_file['entry_type'] == 'folder':
+                    self.delete_folder(remote_path)
+                else:
+                    self.delete_document(remote_path)
 
         for local_file in to_upload:
             local_path = local_file
