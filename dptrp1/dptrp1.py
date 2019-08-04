@@ -283,7 +283,11 @@ class DigitalPaper():
         self.delete_document_by_id(remote_id)
 
     def delete_folder(self, remote_path):
-        remote_id = self._get_object_id(remote_path)
+        try:
+            remote_id = self._get_object_id(remote_path)
+        except ResolveObjectFailed as e:
+            # Path not found
+            return
         self.delete_folder_by_id(remote_id)
 
     def delete_document_by_id(self, doc_id):
