@@ -369,7 +369,8 @@ class DigitalPaper():
                 date_difference = 0
                 if c['entry_type'] == 'document':
                     c_date = datetime.strptime(c['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
-                    date_difference = (r_date - c_date).total_seconds()
+                    if r['entry_type'] == 'document':
+                        date_difference = (r_date - c_date).total_seconds()
                 if c_path == r_path:
                     found = True
                     if date_difference > 0:  # Remote modified after checkpoint
