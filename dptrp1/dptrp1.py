@@ -9,6 +9,7 @@ import requests
 import functools
 import unicodedata
 import pickle
+import shutil
 from glob import glob
 from urllib.parse import quote_plus
 from dptrp1.pyDH import DiffieHellman
@@ -448,8 +449,13 @@ class DigitalPaper():
         for file_info in to_delete_local:
             remote_path = os.path.relpath(file_info['entry_path'], remote_folder)
             local_path = os.path.join(local_folder, remote_path)
-            print("X " + local_path)
-            os.remove(local_path)
+            entry_type = file_info['entry_type']
+            if os.path.exists(local_path):
+                print("X " + local_path)
+                if entry_type == 'folder':
+                    shutil.rmtree(local_path)
+                else:
+                    os.remove(local_path)
             if file_info in to_delete_remote:
                 to_delete_remote.remove(file_info)
             if local_path in to_upload:
