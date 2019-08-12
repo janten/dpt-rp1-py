@@ -325,7 +325,6 @@ class DigitalPaper():
             return
         if not self.path_exists(remote_directory):
             self.new_folder(remote_directory)
-        self.folder_list.append(remote_path)
         directory_id = self._get_object_id(remote_directory)
         info = {
             "folder_name": folder_name,
