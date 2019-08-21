@@ -48,7 +48,10 @@ import logging
 
 logger = logging.getLogger("dptmount")
 
-from fuse import FUSE, FuseOSError, Operations, LoggingMixIn
+try:
+    from fuse import FUSE, FuseOSError, Operations, LoggingMixIn
+except ModuleNotFoundError:
+    from fusepy import FUSE, FuseOSError, Operations, LoggingMixIn
 from dptrp1.dptrp1 import DigitalPaper, find_auth_files
 
 import anytree
