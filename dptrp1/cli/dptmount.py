@@ -91,18 +91,13 @@ class DptTablet(LoggingMixIn, Operations):
     def __init_empty_tree(self):
         # Create root node
         self.now = time.time()
-        self.root = anytree.Node(
-            "Document",
-            item=None,
-            localpath="/",
-            lstat=dict(
-                st_mode=(S_IFDIR | 0o755),
-                st_ctime=self.now,
-                st_mtime=self.now,
-                st_atime=self.now,
-                st_nlink=2,
-            ),
-        )
+        self.root = anytree.Node('Document', item = None, localpath='/',
+                         remote_path="Document",
+                         lstat=dict(st_mode=(S_IFDIR | 0o755),
+                                    st_ctime=self.now,
+                                    st_mtime=self.now,
+                                    st_atime=self.now,
+                                    st_nlink=2), )
 
     def __authenticate__(self):
         self.dpt = DigitalPaper(self.dpt_ip_address, self.dpt_serial_number)
