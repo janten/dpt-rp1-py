@@ -369,12 +369,12 @@ class DigitalPaper():
         to_delete_local = []
         # Prepare download list
         for r in remote_info:
-            r_path = r['entry_path']
+            r_path = unicodedata.normalize("NFC", r['entry_path'])
             if r['entry_type'] == 'document':
                 r_date = datetime.strptime(r['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
             found = False
             for c in checkpoint_info:
-                c_path = c['entry_path']
+                c_path = unicodedata.normalize("NFC", c['entry_path'])
                 date_difference = 0
                 if c['entry_type'] == 'document':
                     c_date = datetime.strptime(c['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
@@ -390,10 +390,10 @@ class DigitalPaper():
 
         # Prepare local delete list
         for c in checkpoint_info:
-            c_path = c['entry_path']
+            c_path = unicodedata.normalize("NFC", c['entry_path'])
             found = False
             for r in remote_info:
-                r_path = r['entry_path']
+                r_path = unicodedata.normalize("NFC", r['entry_path'])
                 if c_path == r_path:
                     found = True
                     break
@@ -409,15 +409,16 @@ class DigitalPaper():
         for local_path in local_files:
             relative_path = os.path.relpath(local_path, local_folder)
             remote_path = os.path.join(remote_folder, relative_path)
+            r_path = unicodedata.normalize("NFC", remote_path)
             local_date = datetime.utcfromtimestamp(os.path.getmtime(local_path))
             found = False
             for c in checkpoint_info:
                 if c['entry_type'] == 'folder':
                     continue
-                c_path = c['entry_path']
+                c_path = unicodedata.normalize("NFC", c['entry_path'])
                 c_date = datetime.strptime(c['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
                 date_difference = (local_date - c_date).total_seconds()
-                if remote_path == c_path:
+                if r_path == c_path:
                     found = True
                     if date_difference > 0: # Local is newer
                         to_upload.append(local_path)
@@ -428,7 +429,7 @@ class DigitalPaper():
         for c in checkpoint_info:
             remote_path = os.path.relpath(c['entry_path'], remote_folder)
             local_path = os.path.join(local_folder, remote_path)
-            if not os.path.exists(local_path):
+            if not os.path.exists(unicodedata.normalize("NFC", local_path)):
                 to_delete_remote.append(c)
 
         # Apply changes in remote to local
@@ -447,7 +448,7 @@ class DigitalPaper():
             # If both remote and local have changes, remote wins.
             if file_info in to_delete_remote:
                 to_delete_remote.remove(file_info)
-            if local_path in to_upload:
+            if unicodedata.normalize("NFC", local_path) in to_upload:
                 to_upload.remove(local_path)
 
         for file_info in to_delete_local:
@@ -462,12 +463,12 @@ class DigitalPaper():
                     os.remove(local_path)
             if file_info in to_delete_remote:
                 to_delete_remote.remove(file_info)
-            if local_path in to_upload:
+            if unicodedata.normalize("NFC", local_path) in to_upload:
                 to_upload.remove(local_path)
 
         # Apply changes in local to remote
         for remote_file in to_delete_remote:
-            remote_path = remote_file['entry_path']
+            remote_path = unicodedata.normalize("NFC", remote_file['entry_path'])
             if self.path_exists(remote_path):
                 print("X " + remote_path)
                 if remote_file['entry_type'] == 'folder':
