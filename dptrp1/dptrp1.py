@@ -8,10 +8,12 @@ import urllib3
 import requests
 import functools
 import unicodedata
+import pickle
+import shutil
 from glob import glob
 from urllib.parse import quote_plus
 from dptrp1.pyDH import DiffieHellman
-from datetime import datetime
+from datetime import datetime, timezone
 from pbkdf2 import PBKDF2
 from Crypto.Hash import SHA256
 from Crypto.Hash.HMAC import HMAC
@@ -260,7 +262,7 @@ class DigitalPaper():
         return traverse(self._resolve_object_by_path(remote_path))
 
     def list_document_info(self, remote_path):
-        remote_info = self._resolve_object_by_path(remote_path).json()
+        remote_info = self._resolve_object_by_path(remote_path)
         return remote_info
 
     def download(self, remote_path):
@@ -281,7 +283,11 @@ class DigitalPaper():
         self.delete_document_by_id(remote_id)
 
     def delete_folder(self, remote_path):
-        remote_id = self._get_object_id(remote_path)
+        try:
+            remote_id = self._get_object_id(remote_path)
+        except ResolveObjectFailed as e:
+            # Path not found
+            return
         self.delete_folder_by_id(remote_id)
 
     def delete_document_by_id(self, doc_id):
@@ -315,6 +321,10 @@ class DigitalPaper():
     def new_folder(self, remote_path):
         folder_name = os.path.basename(remote_path)
         remote_directory = os.path.dirname(remote_path)
+        if not remote_directory:
+            return
+        if not self.path_exists(remote_directory):
+            self.new_folder(remote_directory)
         directory_id = self._get_object_id(remote_directory)
         info = {
             "folder_name": folder_name,
@@ -322,6 +332,14 @@ class DigitalPaper():
         }
 
         r = self._post_endpoint("/folders2", data=info)
+
+    def list_folders(self):
+        if not self.folder_list:
+            data = self.list_all()
+            for d in data:
+                if d['entry_type'] == 'folder':
+                    self.folder_list.append(d['entry_path'])
+        return self.folder_list
 
     def download_file(self, remote_path, local_path):
         os.makedirs(os.path.dirname(local_path), exist_ok=True)
@@ -333,37 +351,153 @@ class DigitalPaper():
         with open(local_path, 'rb') as f:
             self.upload(f, remote_path)
 
+    def path_exists(self, remote_path):
+        try:
+            remote_id = self._get_object_id(remote_path)
+        except ResolveObjectFailed as e:
+            return False
+        return True
+
     def sync(self, local_folder, remote_folder):
+        checkpoint_info = self.load_checkpoint(local_folder)
         self.set_datetime()
         self.new_folder(remote_folder)
         remote_info = self.traverse_folder(remote_folder)
-        remote_files = []
-        for file_info in remote_info:
-            if file_info["entry_type"] == "document":
-                remote_path = os.path.relpath(file_info["entry_path"], remote_folder)
-                remote_files.append(unicodedata.normalize("NFC", remote_path))
-                remote_date = datetime.strptime(file_info["modified_date"], '%Y-%m-%dT%H:%M:%SZ')
-                local_path = os.path.join(local_folder, remote_path)
-                date_difference = 1 # Positive if remote is newer
-                if os.path.exists(local_path):
-                    local_date = datetime.fromtimestamp(os.path.getmtime(local_path))
-                    date_difference = (remote_date - local_date).total_seconds()
-                if date_difference > 0:
-                    print("⇣ " + file_info["entry_path"])
-                    self.download_file(file_info["entry_path"], local_path)
-                    mod_time = time.mktime(remote_date.timetuple())
-                    os.utime(local_path, (mod_time, mod_time))
-                elif date_difference < 0:
-                    print("⇡ " + local_path)
-                    self.upload_file(local_path, file_info["entry_path"])
+
+        # Lists for applying remote changes to local
+        to_download = []
+        to_delete_local = []
+        # Prepare download list
+        for r in remote_info:
+            r_path = unicodedata.normalize("NFC", r['entry_path'])
+            if r['entry_type'] == 'document':
+                r_date = datetime.strptime(r['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
+            found = False
+            for c in checkpoint_info:
+                c_path = unicodedata.normalize("NFC", c['entry_path'])
+                date_difference = 0
+                if c['entry_type'] == 'document':
+                    c_date = datetime.strptime(c['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
+                    if r['entry_type'] == 'document':
+                        date_difference = (r_date - c_date).total_seconds()
+                if c_path == r_path:
+                    found = True
+                    if date_difference > 0:  # Remote modified after checkpoint
+                        to_download.append(r)
+                        break
+            if not found:
+                to_download.append(r)
+
+        # Prepare local delete list
+        for c in checkpoint_info:
+            c_path = unicodedata.normalize("NFC", c['entry_path'])
+            found = False
+            for r in remote_info:
+                r_path = unicodedata.normalize("NFC", r['entry_path'])
+                if c_path == r_path:
+                    found = True
+                    break
+            if not found:
+                to_delete_local.append(c)
+
+        # Lists for applying local change to remote
+        to_upload = []
+        to_delete_remote = []
         local_files = glob(os.path.join(local_folder, "**/*.pdf"), recursive=True)
+
+        # Prepare upload list
         for local_path in local_files:
             relative_path = os.path.relpath(local_path, local_folder)
             remote_path = os.path.join(remote_folder, relative_path)
-            if unicodedata.normalize("NFC", relative_path) not in remote_files:
-                print("⇡ " + local_path)
-                self.upload_file(local_path, remote_path)
-        
+            r_path = unicodedata.normalize("NFC", remote_path)
+            local_date = datetime.utcfromtimestamp(os.path.getmtime(local_path))
+            found = False
+            for c in checkpoint_info:
+                if c['entry_type'] == 'folder':
+                    continue
+                c_path = unicodedata.normalize("NFC", c['entry_path'])
+                c_date = datetime.strptime(c['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
+                date_difference = (local_date - c_date).total_seconds()
+                if r_path == c_path:
+                    found = True
+                    if date_difference > 0: # Local is newer
+                        to_upload.append(local_path)
+            if not found:
+                to_upload.append(local_path)
+
+        # Prepare remote delete list
+        for c in checkpoint_info:
+            remote_path = os.path.relpath(c['entry_path'], remote_folder)
+            local_path = os.path.join(local_folder, remote_path)
+            if not os.path.exists(unicodedata.normalize("NFC", local_path)):
+                to_delete_remote.append(c)
+
+        # Apply changes in remote to local
+        for file_info in to_download:
+            remote_path = os.path.relpath(file_info['entry_path'], remote_folder)
+            local_path = os.path.join(local_folder, remote_path)
+            if file_info['entry_type'] == 'folder':
+                os.makedirs(local_path, exist_ok = True)
+                continue
+            print("⇣ " + file_info['entry_path'])
+            self.download_file(file_info['entry_path'], local_path)
+            remote_date = datetime.strptime(file_info['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
+            remote_date = remote_date.replace(tzinfo=timezone.utc).astimezone(tz=None)
+            mod_time = time.mktime(remote_date.timetuple())
+            os.utime(local_path, (mod_time, mod_time))
+            # If both remote and local have changes, remote wins.
+            if file_info in to_delete_remote:
+                to_delete_remote.remove(file_info)
+            if unicodedata.normalize("NFC", local_path) in to_upload:
+                to_upload.remove(local_path)
+
+        for file_info in to_delete_local:
+            remote_path = os.path.relpath(file_info['entry_path'], remote_folder)
+            local_path = os.path.join(local_folder, remote_path)
+            entry_type = file_info['entry_type']
+            if os.path.exists(local_path):
+                print("X " + local_path)
+                if entry_type == 'folder':
+                    shutil.rmtree(local_path)
+                else:
+                    os.remove(local_path)
+            if file_info in to_delete_remote:
+                to_delete_remote.remove(file_info)
+            if unicodedata.normalize("NFC", local_path) in to_upload:
+                to_upload.remove(local_path)
+
+        # Apply changes in local to remote
+        for remote_file in to_delete_remote:
+            remote_path = unicodedata.normalize("NFC", remote_file['entry_path'])
+            if self.path_exists(remote_path):
+                print("X " + remote_path)
+                if remote_file['entry_type'] == 'folder':
+                    self.delete_folder(remote_path)
+                else:
+                    self.delete_document(remote_path)
+
+        for local_file in to_upload:
+            local_path = local_file
+            relative_path = os.path.relpath(local_path, local_folder)
+            remote_path = os.path.join(remote_folder, relative_path)
+            print("⇡ " + local_path)
+            self.upload_file(local_path, remote_path)
+
+        remote_info = self.traverse_folder(remote_folder)
+        self.sync_checkpoint(local_folder, remote_info)
+
+    def load_checkpoint(self, local_folder):
+        checkpoint_file = os.path.join(local_folder, ".sync")
+        if not os.path.exists(checkpoint_file):
+            return []
+        with open(checkpoint_file, "rb") as f:
+            return pickle.load(f)
+
+    def sync_checkpoint(self, local_folder, doclist):
+        checkpoint_file = os.path.join(local_folder, ".sync")
+        with open(checkpoint_file, "wb") as f:
+            pickle.dump(doclist, f)
+
     def _copy_move_data(self, file_id, folder_id,
             new_filename=None):
         data = {"parent_folder_id": folder_id}
@@ -392,7 +526,7 @@ class DigitalPaper():
     def _copy_move_find_ids(self, old_path, new_path):
         old_id = self._get_object_id(old_path)
         new_filename = None
-        
+
         try: # find out whether new_path is a filename or folder
             new_folder_id = self._get_object_id(new_path)
         except ResolveObjectFailed:
