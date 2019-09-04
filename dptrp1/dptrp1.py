@@ -28,9 +28,46 @@ class DigitalPaperException(Exception):
 class ResolveObjectFailed(DigitalPaperException):
     pass
 
-class DigitalPaper():
-    def __init__(self, addr = None):
+class LookUpDPT:
+    def __init__(self):
+        import threading
+        self.addr = None
+        self.id = None
+        self.lock = threading.Lock()
 
+    def add_service(self, zeroconf, type, name):
+        info = zeroconf.get_service_info(type, name)
+        import ipaddress
+        addr = ipaddress.IPv4Address(info.addresses[0])
+        info = requests.get("http://{}:{}/register/information".format(addr, info.port)).json()
+        if info['serial_number'] == self.id:
+            self.addr = str(addr)
+            self.lock.release()
+
+    def find(self, id, timeout=30):
+        from zeroconf import ServiceBrowser, Zeroconf
+        print("Discovering Digital Paper for {} seconds ... ".format(timeout), end="")
+        self.id = id
+        zc = Zeroconf()
+        self.lock.acquire()
+        ServiceBrowser(zc, "_digitalpaper._tcp.local.", self)
+        wait = self.lock.acquire(timeout=timeout) or (self.addr is not None)
+        zc.close()
+        if not wait:
+            print("failed".format(timeout))
+            return None
+        else:
+            print("found digital paper at", self.addr)
+            return self.addr
+
+class DigitalPaper():
+    def __init__(self, addr=None, id=None):
+
+        if addr is None:
+            if id is not None:
+                lookup = LookUpDPT()
+                addr = lookup.find(id)
+                
         if addr is None:
             self.addr = "digitalpaper.local"
         else:
