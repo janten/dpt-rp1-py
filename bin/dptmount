@@ -47,14 +47,10 @@ from stat import S_IFDIR, S_IFLNK, S_IFREG
 import logging
 logger = logging.getLogger('dptmount')
 
-# FUSE
 from fuse import FUSE, FuseOSError, Operations, LoggingMixIn
-# Digital Paper
-from dptrp1.dptrp1 import DigitalPaper
+from dptrp1.dptrp1 import DigitalPaper, find_auth_files
 
 import anytree
-
-
 
 class DptTablet(LoggingMixIn, Operations):
 
@@ -295,8 +291,6 @@ class DptTablet(LoggingMixIn, Operations):
         node = self._add_remote_path_to_tree(parent, remote_path)
         #self.files.pop(path)
         return
-
-
     
 YAML_CONFIG_PATH = os.path.expanduser("~/.config/dpt-rp1.conf")
 if __name__ == '__main__':
@@ -320,12 +314,10 @@ if __name__ == '__main__':
     else:
         logging.basicConfig(filename=args.logfile)
 
-
     if args.verbose:
         logging.getLogger().setLevel(logging.DEBUG)
     else:
         logging.getLogger().setLevel(logging.INFO)
-
 
     # Read YAML config if found
     if os.path.isfile(args.config):
@@ -335,17 +327,17 @@ if __name__ == '__main__':
         sys.exit(-1)
 
     # config
+    dpt_client_id, dpt_key = find_auth_files()
     cfgargs = config['dptrp1']
     params = dict(
         dpt_ip_address = cfgargs.get('addr', None),
-        dpt_serial_number = str(cfgargs.get('id', None)),
-        dpt_client_id = cfgargs['client-id'],
-        dpt_key = cfgargs['key'],
+        dpt_serial_number = cfgargs.get('serial', None),
+        dpt_client_id = cfgargs.get('client-id', dpt_client_id),
+        dpt_key = cfgargs.get('key', dpt_key),
         uid = os.getuid(),
         gid = os.getgid(),        
     )
     
     tablet = DptTablet(**params)
     fuse = FUSE(tablet, args.mountpoint, foreground=True, allow_other=True, nothreads=True, **kwargs)
-
 
