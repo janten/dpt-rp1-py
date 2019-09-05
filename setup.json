@@ -21,7 +21,8 @@
         "urllib3>=1.22",
         "pyyaml",
         "anytree",
-        "fusepy"
+        "fusepy",
+        "zeroconf"
     ],
     "scripts": [
         "dptrp1",

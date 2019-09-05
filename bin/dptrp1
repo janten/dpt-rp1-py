@@ -181,9 +181,13 @@ def build_parser():
     p.add_argument('--key',
             help = "File containing the device's private key",
             default = privatekey)
-    p.add_argument('--addr',
+    group = p.add_mutually_exclusive_group(required=True)
+    group.add_argument('--addr',
             help = "Hostname or IP address of the device",
-            required = True)
+            required = False, default=None)
+    group.add_argument('--id',
+                   help = "Device serial number for auto discovery",
+                   default = None)
     p.add_argument('command',
             help = 'Command to run',
             choices = sorted(commands.keys()))
@@ -194,7 +198,7 @@ def build_parser():
 
 def main():
     args = build_parser().parse_args()
-    dp = DigitalPaper(addr = args.addr)
+    dp = DigitalPaper(addr=args.addr, id=args.id)
     if args.command == "register":
         do_register(dp, args.key, args.client_id)
         return

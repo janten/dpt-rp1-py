@@ -58,8 +58,10 @@ import anytree
 
 class DptTablet(LoggingMixIn, Operations):
 
-    def __init__(self, dpt_ip_address=None, dpt_key=None, dpt_client_id=None, uid=None, gid=None):
+    def __init__(self, dpt_ip_address=None, dpt_serial_number=None,
+                 dpt_key=None, dpt_client_id=None, uid=None, gid=None):
         self.dpt_ip_address = dpt_ip_address
+        self.dpt_serial_number = dpt_serial_number
         self.dpt_key = os.path.expanduser(dpt_key)
         self.dpt_client_id = os.path.expanduser(dpt_client_id)
         self.uid = uid
@@ -90,7 +92,7 @@ class DptTablet(LoggingMixIn, Operations):
                                     st_nlink=2), )
 
     def __authenticate__(self):
-        self.dpt = DigitalPaper(self.dpt_ip_address)
+        self.dpt = DigitalPaper(self.dpt_ip_address, self.dpt_serial_number)
 
         with open(self.dpt_client_id) as fh:
             client_id = fh.readline().strip()
@@ -327,7 +329,7 @@ if __name__ == '__main__':
 
     # Read YAML config if found
     if os.path.isfile(args.config):
-        config = yaml.load(open(args.config, 'r'))
+        config = yaml.safe_load(open(args.config, 'r'))
     else:
         print("Config file not found")
         sys.exit(-1)
@@ -335,7 +337,8 @@ if __name__ == '__main__':
     # config
     cfgargs = config['dptrp1']
     params = dict(
-        dpt_ip_address = cfgargs['addr'],
+        dpt_ip_address = cfgargs.get('addr', None),
+        dpt_serial_number = str(cfgargs.get('id', None)),
         dpt_client_id = cfgargs['client-id'],
         dpt_key = cfgargs['key'],
         uid = os.getuid(),
