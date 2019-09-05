@@ -1,19 +1,19 @@
 {
     "name": "dpt-rp1-py",
-    "version": "0.1.0",
     "description": "Python package to manage a Sony DPT-RP1",
     "license": "MIT",
     "authors": [
         "Jan-Gerd Tenberge",
         "Cuihtlauac Alvarado",
-	"Juan Grigera"
+        "Juan Grigera"
     ],
     "emails": [
         "jan-gerd.tenberge@uni-muenster.de",
         "cuihtlauac.alvarado@orange.com",
-	"juan@grigera.com.ar"
+        "juan@grigera.com.ar"
     ],
     "namespace_packages": [
+
     ],
     "packages": [
         "dptrp1"
