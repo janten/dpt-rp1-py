@@ -9,7 +9,7 @@ import os
 import re
 
 from pathlib import Path
-from dptrp1.dptrp1 import DigitalPaper
+from dptrp1.dptrp1 import DigitalPaper, find_auth_files
 
 def do_screenshot(d, filename):
     pic = d.take_screenshot()
@@ -36,8 +36,7 @@ def do_copy_document(d, old_path, new_path):
 def do_upload(d, local_path, remote_path=''):
     if not remote_path:
         remote_path = 'Document/' + os.path.basename(local_path)
-    with open(local_path, 'rb') as fh:
-        d.upload(fh, remote_path)
+    d.upload_file(local_path, remote_path)
 
 def do_download(d, remote_path, local_path):
     data = d.download(remote_path)
@@ -62,8 +61,6 @@ def do_list_document_info(d, remote_path = False):
         for key in info:
             print("    - " + key + ": " + info[key])
 
-
-
 def do_update_firmware(d, local_path):
     with open(local_path, 'rb') as fwfh:
         d.update_firmware(fwfh)
@@ -81,7 +78,7 @@ def do_sync(d, local_path, remote_path = 'Document'):
     without any additional warning. Also synchronizes the time and date on the
     reader to the computer's time and date.
 
-    Example: dptrp1 --addr 10.0.0.13 sync ~/Dropbox/Papers Document/Papers
+    Example: dptrp1 sync ~/Dropbox/Papers Document/Papers
     """
     d.sync(local_path, remote_path)
 
@@ -160,17 +157,6 @@ commands = {
     "command-help": do_help
 }
 
-def find_auth_files():
-    config_path = os.path.join(Path.home(), ".dpapp")
-    if sys.platform.startswith('darwin'):
-            config_path = os.path.join(Path.home(), "Library/Application Support/Sony Corporation/Digital Paper App")
-    elif sys.platform.startswith('windows'):
-            config_path = os.path.join(Path.home(), "AppData/Roaming/Sony Corporation/Digital Paper App")
-    os.makedirs(config_path, exist_ok=True)
-    deviceid = os.path.join(config_path, "deviceid.dat")
-    privatekey = os.path.join(config_path, "privatekey.dat")
-    return deviceid, privatekey
-
 def build_parser():
     deviceid, privatekey = find_auth_files()
 
@@ -181,13 +167,12 @@ def build_parser():
     p.add_argument('--key',
             help = "File containing the device's private key",
             default = privatekey)
-    group = p.add_mutually_exclusive_group(required=True)
-    group.add_argument('--addr',
-            help = "Hostname or IP address of the device",
-            required = False, default=None)
-    group.add_argument('--id',
-                   help = "Device serial number for auto discovery",
-                   default = None)
+    p.add_argument('--addr',
+            help = "Hostname or IP address of the device. Disables auto discovery.",
+            default=None)
+    p.add_argument('--serial',
+            help = "Device serial number for auto discovery. Auto discovery only works for some minutes after the Digital Paper's Wi-Fi setting is switched on.",
+            default = None)
     p.add_argument('command',
             help = 'Command to run',
             choices = sorted(commands.keys()))
@@ -198,14 +183,16 @@ def build_parser():
 
 def main():
     args = build_parser().parse_args()
-    dp = DigitalPaper(addr=args.addr, id=args.id)
+    dp = DigitalPaper(addr=args.addr, id=args.serial)
     if args.command == "register":
         do_register(dp, args.key, args.client_id)
         return
     if not os.path.exists(args.key) or not os.path.exists(args.client_id):
         print("Could not read device identifier and private key.")
         print("Please use command 'register' first:")
-        print("    dptrp1 --addr " + args.addr + " register")
+        print()
+        print("    {} register".format(sys.argv[0]))
+        print()
         exit(1)
     with open(args.client_id) as fh:
         client_id = fh.readline().strip()

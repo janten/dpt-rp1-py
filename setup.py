@@ -46,6 +46,7 @@ setuptools.setup(
     author_email=", ".join(SETUP_JSON['emails']),
     description=SETUP_JSON['description'],
     long_description=readme(),
+    long_description_content_type='text/markdown',
     license=SETUP_JSON['license'],
     keywords="",
     url=None,
