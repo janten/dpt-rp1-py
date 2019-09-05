@@ -4,10 +4,12 @@
     "description": "Python package to manage a Sony DPT-RP1",
     "license": "MIT",
     "authors": [
-        "Jan-Gerd Tenberge"
+        "Jan-Gerd Tenberge",
+        "Cuihtlauac Alvarado"
     ],
     "emails": [
-        "jan-gerd.tenberge@uni-muenster.de"
+        "jan-gerd.tenberge@uni-muenster.de",
+        "cuihtlauac.alvarado@orange.com"
     ],
     "namespace_packages": [
     ],
