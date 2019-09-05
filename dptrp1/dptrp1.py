@@ -1,5 +1,6 @@
 #!/usr/local/bin/python3
 import os
+import sys
 import uuid
 import time
 import base64
@@ -22,6 +23,18 @@ from Crypto.PublicKey import RSA
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+def find_auth_files():
+    from pathlib import Path
+    config_path = os.path.join(Path.home(), ".dpapp")
+    if sys.platform.startswith('darwin'):
+            config_path = os.path.join(Path.home(), "Library/Application Support/Sony Corporation/Digital Paper App")
+    elif sys.platform.startswith('windows'):
+            config_path = os.path.join(Path.home(), "AppData/Roaming/Sony Corporation/Digital Paper App")
+    os.makedirs(config_path, exist_ok=True)
+    deviceid = os.path.join(config_path, "deviceid.dat")
+    privatekey = os.path.join(config_path, "privatekey.dat")
+    return deviceid, privatekey
+
 class DigitalPaperException(Exception):
     pass
 
@@ -40,13 +53,21 @@ class LookUpDPT:
         import ipaddress
         addr = ipaddress.IPv4Address(info.addresses[0])
         info = requests.get("http://{}:{}/register/information".format(addr, info.port)).json()
+        if not self.id:
+            self.id = info['serial_number']
+            print("Found Digital Paper with serial number {}".format(self.id))
+            print("To discover only this specific device, call:")
+            print()
+            print("    {} --serial {} {}".format(sys.argv[0], self.id, " ".join(sys.argv[1:])))
+            print()
         if info['serial_number'] == self.id:
             self.addr = str(addr)
             self.lock.release()
 
     def find(self, id, timeout=30):
         from zeroconf import ServiceBrowser, Zeroconf
-        print("Discovering Digital Paper for {} seconds ... ".format(timeout), end="")
+        print("Discovering Digital Paper for {} seconds…".format(timeout))
+        sys.stdout.flush()
         self.id = id
         zc = Zeroconf()
         self.lock.acquire()
@@ -54,24 +75,25 @@ class LookUpDPT:
         wait = self.lock.acquire(timeout=timeout) or (self.addr is not None)
         zc.close()
         if not wait:
-            print("failed".format(timeout))
+            print("Failed".format(timeout))
             return None
         else:
-            print("found digital paper at", self.addr)
+            print("Found digital paper at", self.addr)
+            print("To skip the discovery process (and this message), call:")
+            print()
+            print("    {} --addr {} {}".format(sys.argv[0], self.addr, " ".join(sys.argv[1:])))
+            print()
             return self.addr
 
 class DigitalPaper():
     def __init__(self, addr=None, id=None):
-
-        if addr is None:
-            if id is not None:
-                lookup = LookUpDPT()
-                addr = lookup.find(id)
-                
-        if addr is None:
-            self.addr = "digitalpaper.local"
-        else:
+        if addr:
             self.addr = addr
+            if id:
+                print("Ignoring serial number since address is set. Remove --serial {} from call to silence this message.".format(id))
+        else:
+            lookup = LookUpDPT()
+            self.addr = lookup.find(id)
 
         self.session = requests.Session()
         self.session.verify = False # disable ssl certificate verification
@@ -385,8 +407,25 @@ class DigitalPaper():
             f.write(data)
 
     def upload_file(self, local_path, remote_path):
+        if self.path_is_folder(remote_path):
+            local_filename = os.path.basename(local_path)
+            remote_path = os.path.join(remote_path, local_filename)
         with open(local_path, 'rb') as f:
             self.upload(f, remote_path)
+
+    def path_is_folder(self, remote_path):
+        remote_filename = os.path.basename(remote_path)
+        if not remote_filename:
+            # Always a folder if path ends in slash.
+            # Folder may not exist in this case!
+            return True
+        try:
+            remote_obj = self._resolve_object_by_path(remote_path)
+            if remote_obj["entry_type"] == "folder":
+                return True;
+        except ResolveObjectFailed:
+            pass
+        return False
 
     def path_exists(self, remote_path):
         try:
