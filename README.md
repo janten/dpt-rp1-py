@@ -5,7 +5,7 @@ Python script to manage Sony DPT-RP1 without the Digital Paper App. This reposit
 We now have a proper Python package, so you may just run:
 
 ```
-pip install dpt-rp1-py
+pip3 install dpt-rp1-py
 ```
 
 Installing the package also installs the command line utilities `dptrp1` and `dptmount`.
