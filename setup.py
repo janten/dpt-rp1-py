@@ -41,7 +41,7 @@ class PyTest(TestCommand):
 
 setuptools.setup(
     name=SETUP_JSON['name'],
-    version=os.environ['TRAVIS_TAG'].replace("v", ""),
+    version=SETUP_JSON['version'],
     author=", ".join(SETUP_JSON['authors']),
     author_email=", ".join(SETUP_JSON['emails']),
     description=SETUP_JSON['description'],
