@@ -1,11 +1,18 @@
 language: python
 os:
-  - linux
+- linux
 dist: trusty
 sudo: false
 python:
-  - "3.6"
+- '3.6'
 install:
-  - python3 setup.py install
+- python3 setup.py install
 script:
-  - dptrp1 -h
+- dptrp1 -h
+deploy:
+  provider: pypi
+  on:
+    tags: true      
+  user: jan-gerd.tenberge
+  password:
+    secure: ryfSuJmt7cwh+EvRVeVUqJAMU/YTujvcYA4FJKZSM3nBFV7hlKDr3M7u/+sgc52Wba6rOvV63GOg+soPi6zDqWSRw0gGEcA8S0VpvYZLGETLUkbQHW+WwJq/VrRzVAAKHi3B8Vgpyq0+fmjdLYLjFDA9/O+oBNyzWM22gCBM5a4GKW1K9KnfG4bdmpL2iCnt0w+4NlOy8IHH3qYRdQ0R4mB/hxO+EW8EmryiyNOM7oBn5K1bki/zMZGnl3iT8gJCbjuwVuo/NiDedUHbpmCzefKuVM2Z9+1YT0MlNKrtyF/Ia3BDbAN1YcEVxquY74cBWS9y10Mrxvy1i55mL5FSU226uG3CEFf+7K5OYtYNKn8rO6j4tJGcZlU7WRRKaHmxOy0+Fi2eTZfb6jTAR8sheWJDRkgTBc2MevyPvxWfY0aFv1W9BXwICXCxlJ1MXk1yMdaLesNaiHegtNzFQ+WhehVww5p8uyzeDQlLa7ZkwZugwpKydveV0H0NNIBMDsiOxtbqA9vC1zWsGgkRCCz+ylYpnKmZAKY6L2L+WU9PxHRchvmJa3bETL8+PWWArByv1+XwsI78m1WQmFd86x7avsvuGm82I24NpGLm1gketdYRJi72vMI/AvGYKHpsPVzRNelLYux8RJBsYLWR0mwDYUJmKCJhqIme9j0j/WpUl6I=
