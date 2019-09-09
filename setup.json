@@ -7,8 +7,8 @@
         "Jan-Gerd Tenberge",
         "Cuihtlauac Alvarado",
         "Juan Grigera",
-	      "Yunjae Lee",
-	      "Kazuhiko Sakaguchi",
+        "Yunjae Lee",
+        "Kazuhiko Sakaguchi",
         "Yanzi Zhu",
         "Sreepathi Pai"
         "Jochen Schroeder"
@@ -48,3 +48,4 @@
         "Programming Language :: Python :: 3"
     ]
 }
+
