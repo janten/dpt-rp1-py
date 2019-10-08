@@ -28,7 +28,7 @@ def find_auth_files():
     config_path = os.path.join(Path.home(), ".dpapp")
     if sys.platform.startswith('darwin'):
             config_path = os.path.join(Path.home(), "Library/Application Support/Sony Corporation/Digital Paper App")
-    elif sys.platform.startswith('windows'):
+    elif sys.platform.startswith('win'):
             config_path = os.path.join(Path.home(), "AppData/Roaming/Sony Corporation/Digital Paper App")
     os.makedirs(config_path, exist_ok=True)
     deviceid = os.path.join(config_path, "deviceid.dat")
