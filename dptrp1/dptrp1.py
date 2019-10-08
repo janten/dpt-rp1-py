@@ -33,6 +33,20 @@ def find_auth_files():
     os.makedirs(config_path, exist_ok=True)
     deviceid = os.path.join(config_path, "deviceid.dat")
     privatekey = os.path.join(config_path, "privatekey.dat")
+    
+    if not os.path.exists(deviceid) or not os.path.exists(privatekey):
+        # In some (all?) cases, the  actual .dat-files created by the Digital Paper App are not located directly in config_path,
+        # but instead inside of a sub-folder.
+        # Let's do a quick glob-match to see if we can locate them
+        deviceid_matches = glob(os.path.join(config_path,"DigitalPaperApp", "**/deviceid.dat"), recursive=True)
+        privatekey_matches = glob(os.path.join(config_path,"DigitalPaperApp", "**/privatekey.dat"), recursive=True)
+
+        if deviceid_matches and privatekey_matches:
+            # Found a match. Selecting the first file for each for now. 
+            # This might not be correct if the user has several devices with their own keys. Should ideally be configurable
+            deviceid = deviceid_matches[0]
+            privatekey = privatekey_matches[0]
+
     return deviceid, privatekey
 
 class DigitalPaperException(Exception):
