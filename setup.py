@@ -55,8 +55,7 @@ setuptools.setup(
     install_requires=SETUP_JSON['install_requires'],
     tests_require=['pytest'],
     cmdclass={'test': PyTest},
-    scripts=[os.path.join('bin', x) for x in
-             SETUP_JSON['scripts']],
+    entry_points=SETUP_JSON['entry_points'],
     classifiers=SETUP_JSON['classifiers'],
     include_package_data=True,
     zip_safe=False,
