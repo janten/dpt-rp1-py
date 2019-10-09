@@ -26,26 +26,28 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 def find_auth_files():
     from pathlib import Path
     config_path = os.path.join(Path.home(), ".dpapp")
-    if sys.platform.startswith('darwin'):
-            config_path = os.path.join(Path.home(), "Library/Application Support/Sony Corporation/Digital Paper App")
-    elif sys.platform.startswith('win'):
-            config_path = os.path.join(Path.home(), "AppData/Roaming/Sony Corporation/Digital Paper App")
     os.makedirs(config_path, exist_ok=True)
     deviceid = os.path.join(config_path, "deviceid.dat")
     privatekey = os.path.join(config_path, "privatekey.dat")
     
     if not os.path.exists(deviceid) or not os.path.exists(privatekey):
-        # In some (all?) cases, the  actual .dat-files created by the Digital Paper App are not located directly in config_path,
-        # but instead inside of a sub-folder.
-        # Let's do a quick glob-match to see if we can locate them
-        deviceid_matches = glob(os.path.join(config_path,"DigitalPaperApp", "**/deviceid.dat"), recursive=True)
-        privatekey_matches = glob(os.path.join(config_path,"DigitalPaperApp", "**/privatekey.dat"), recursive=True)
+        # Could not find our own auth-files. Let's see if we can find any auth files created by Sony's Digital Paper App
+        search_paths = [
+            os.path.join(Path.home(), "Library/Application Support/Sony Corporation/Digital Paper App"), # Mac
+            os.path.join(Path.home(), "AppData/Roaming/Sony Corporation/Digital Paper App") # Windows
+        ]
 
-        if deviceid_matches and privatekey_matches:
-            # Found a match. Selecting the first file for each for now. 
-            # This might not be correct if the user has several devices with their own keys. Should ideally be configurable
-            deviceid = deviceid_matches[0]
-            privatekey = privatekey_matches[0]
+        for path in search_paths:
+            # Recursively look for deviceid.dat and privatekey.dat in any sub-folders of the search paths
+            deviceid_matches = glob(os.path.join(path, "**/deviceid.dat"), recursive=True)
+            privatekey_matches = glob(os.path.join(path, "**/privatekey.dat"), recursive=True)
+
+            if deviceid_matches and privatekey_matches:
+                # Found a match. Selecting the first file from each for now. 
+                # This might not be correct if the user has several devices with their own keys. Should ideally be configurable
+                deviceid = deviceid_matches[0]
+                privatekey = privatekey_matches[0]
+                break
 
     return deviceid, privatekey
 
