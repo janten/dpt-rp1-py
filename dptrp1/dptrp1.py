@@ -530,6 +530,30 @@ class DigitalPaper():
             local_path = os.path.join(local_folder, remote_path)
             if not os.path.exists(unicodedata.normalize("NFC", local_path)):
                 to_delete_remote.append(c)
+        
+        print("Ready to sync")
+        print("")
+        if to_delete_local:
+            print(f"{len(to_delete_local):4d} files will be DELETED locally")
+        if to_delete_remote:
+            print(f"{len(to_delete_remote):4d} files will be DELETED from device")
+        if to_upload:
+            print(f"{len(to_upload):4d} files will be UPLOADED to device")
+        if to_download:
+            print(f"{len(to_download):4d} files will be DOWNLOADED from device")
+
+        if not (to_delete_local or to_delete_remote or to_upload or to_download):
+            print("All files are in sync. Exiting.")
+            return
+
+        # Conferm that the user actually wants to perform the actions that
+        # have been prepared.
+        print("")
+        confirm = ""
+        while confirm not in ('y', 'yes'):
+            confirm = input(f"Proceed (y/n)? ")
+            if confirm in ('n', 'no'):
+                return
 
         # Apply changes in remote to local
         for file_info in to_download:
