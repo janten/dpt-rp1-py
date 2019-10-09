@@ -20,15 +20,22 @@ from Crypto.Hash import SHA256
 from Crypto.Hash.HMAC import HMAC
 from Crypto.Cipher import AES
 from Crypto.PublicKey import RSA
+from pathlib import Path
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-def find_auth_files():
-    from pathlib import Path
+def get_default_auth_files():
+    """Get the default path where the authentication files for connecting to DPT-RP1 are stored"""
     config_path = os.path.join(Path.home(), ".dpapp")
     os.makedirs(config_path, exist_ok=True)
     deviceid = os.path.join(config_path, "deviceid.dat")
     privatekey = os.path.join(config_path, "privatekey.dat")
+    
+    return deviceid, privatekey
+
+def find_auth_files():
+    """Search for authentication files for connecting to DPT-RP1, both in default path and in paths from Sony's Digital Paper App"""
+    deviceid, privatekey = get_default_auth_files()
     
     if not os.path.exists(deviceid) or not os.path.exists(privatekey):
         # Could not find our own auth-files. Let's see if we can find any auth files created by Sony's Digital Paper App
