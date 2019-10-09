@@ -11,6 +11,7 @@ import functools
 import unicodedata
 import pickle
 import shutil
+from tqdm import tqdm
 from glob import glob
 from urllib.parse import quote_plus
 from dptrp1.pyDH import DiffieHellman
@@ -461,6 +462,7 @@ class DigitalPaper():
         checkpoint_info = self.load_checkpoint(local_folder)
         self.set_datetime()
         self.new_folder(remote_folder)
+        print("Looking for changes on device... ",end="",flush=True)
         remote_info = self.traverse_folder(remote_folder)
 
         # Syncing will require different comparions between local and remote paths.
@@ -505,8 +507,10 @@ class DigitalPaper():
                     break
             if not found:
                 to_delete_local.append(c)
+        print("done")
 
         # Lists for applying local change to remote
+        print("Looking for local changes... ",end="",flush=True)
         to_upload = []
         to_delete_remote = []
         local_files = glob(os.path.join(local_folder, "**/*.pdf"), recursive=True)
@@ -537,7 +541,9 @@ class DigitalPaper():
             local_path = os.path.join(local_folder, remote_path)
             if not os.path.exists(normalize_path(local_path)):
                 to_delete_remote.append(c)
+        print("done")
         
+        print("")
         print("Ready to sync")
         print("")
         if to_delete_local:
@@ -561,15 +567,25 @@ class DigitalPaper():
             confirm = input(f"Proceed (y/n)? ")
             if confirm in ('n', 'no'):
                 return
+        
+        # Syncing can potentially take some time, so let's display a progress bar
+        # to give the user some idea about the progress.
+        # Calling print() will interfere with the progress bar, so all print calls
+        # are replaced by tqdm.write() while the progress bar is in use
+        progress_bar = tqdm(
+            total=len(to_delete_local)+len(to_delete_remote)+len(to_upload)+len(to_download),
+            desc="Synchronizing",
+            unit="files")
 
         # Apply changes in remote to local
         for file_info in to_download:
+            progress_bar.update()
             remote_path = os.path.relpath(file_info['entry_path'], remote_folder)
             local_path = os.path.join(local_folder, remote_path)
             if file_info['entry_type'] == 'folder':
                 os.makedirs(local_path, exist_ok = True)
                 continue
-            print("⇣ " + file_info['entry_path'])
+            tqdm.write("⇣ " + file_info['entry_path'])
             self.download_file(file_info['entry_path'], local_path)
             remote_date = datetime.strptime(file_info['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
             remote_date = remote_date.replace(tzinfo=timezone.utc).astimezone(tz=None)
@@ -578,15 +594,18 @@ class DigitalPaper():
             # If both remote and local have changes, remote wins.
             if file_info in to_delete_remote:
                 to_delete_remote.remove(file_info)
+                progress_bar.update() # One less file to download, so lets move progress bar forward
             if normalize_path(local_path) in to_upload:
                 to_upload.remove(local_path)
+                progress_bar.update() # One less file to upload, so lets move progress bar forward
 
         for file_info in to_delete_local:
+            progress_bar.update()
             remote_path = os.path.relpath(file_info['entry_path'], remote_folder)
             local_path = os.path.join(local_folder, remote_path)
             entry_type = file_info['entry_type']
             if os.path.exists(local_path):
-                print("X " + local_path)
+                tqdm.write("X " + local_path)
                 if entry_type == 'folder':
                     shutil.rmtree(local_path)
                 else:
@@ -598,20 +617,24 @@ class DigitalPaper():
 
         # Apply changes in local to remote
         for remote_file in to_delete_remote:
+            progress_bar.update()
             remote_path = normalize_path(remote_file['entry_path'])
             if self.path_exists(remote_path):
-                print("X " + remote_path)
+                tqdm.write("X " + remote_path)
                 if remote_file['entry_type'] == 'folder':
                     self.delete_folder(remote_path)
                 else:
                     self.delete_document(remote_path)
 
         for local_file in to_upload:
+            progress_bar.update()
             local_path = local_file
             relative_path = os.path.relpath(local_path, local_folder)
             remote_path = normalize_path(os.path.join(remote_folder, relative_path))
-            print("⇡ " + local_path)
+            tqdm.write("⇡ " + local_path)
             self.upload_file(local_path, remote_path)
+        
+        progress_bar.close()
 
         remote_info = self.traverse_folder(remote_folder)
         self.sync_checkpoint(local_folder, remote_info)
