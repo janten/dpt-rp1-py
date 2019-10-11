@@ -333,15 +333,10 @@ class DigitalPaper():
         return response.json()['entry_list']
 
     def traverse_folder(self, remote_path):
-        def traverse(obj):
-            if obj['entry_type'] == 'document':
-                return [obj]
-            else:
-                children = self \
-                  ._get_endpoint("/folders/{remote_id}/entries2".format(remote_id = obj['entry_id'])) \
-                  .json()['entry_list']
-                return [obj] + functools.reduce(lambda acc, c: traverse(c) + acc, children[::-1], [])
-        return traverse(self._resolve_object_by_path(remote_path))
+        # In most cases, the request overhead of traversing folders is larger than the overhead of
+        # requesting all info. So let's just request all info and filter for remote_path on our side
+        all_entries = self.list_all()
+        return list(filter(lambda e: e["entry_path"].startswith(remote_path),all_entries))
 
     def list_document_info(self, remote_path):
         remote_info = self._resolve_object_by_path(remote_path)
