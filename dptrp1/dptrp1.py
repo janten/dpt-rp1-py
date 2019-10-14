@@ -21,6 +21,8 @@ from Crypto.Hash import SHA256
 from Crypto.Hash.HMAC import HMAC
 from Crypto.Cipher import AES
 from Crypto.PublicKey import RSA
+from pathlib import Path
+from collections import defaultdict
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -458,6 +460,7 @@ class DigitalPaper():
         self.new_folder(remote_folder)
         print("Looking for changes on device... ",end="",flush=True)
         remote_info = self.traverse_folder(remote_folder)
+        print("done")
 
         # Syncing will require different comparions between local and remote paths.
         # Let's normalize them to ensure stable comparisions,
@@ -465,77 +468,76 @@ class DigitalPaper():
         # directory separator symbols.
         def normalize_path(path):
             return unicodedata.normalize("NFC", path).replace(os.sep,"/")
+        
+        # Create a defaultdict of defaultdict
+        # so that we can save data to it with two indexes, without having to manually create
+        # nested dictionaries.
+        # Will contain:
+        # file_data[<filename>][<checkpoint/remote/local>_time] = <timestamp>
+        file_data = defaultdict(lambda: defaultdict(lambda: None))
 
-        # Lists for applying remote changes to local
+        # Then we will go changes locally, remotely, and in checkpoint, and save all modificaiton times to the same
+        # data structure for easy comparison
+
+        for f in checkpoint_info:
+            path = normalize_path(f["entry_path"])
+            if 'modified_date' in f:
+                modification_time = datetime.strptime(f['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
+                file_data[path]["checkpoint_time"] = modification_time
+
+        for f in remote_info:
+            path = normalize_path(f["entry_path"])
+            if 'modified_date' in f:
+                modification_time = datetime.strptime(f['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
+                file_data[path]["remote_time"] = modification_time
+        
+        print("Looking for local changes... ",end="",flush=True)
+        for f in glob(os.path.join(local_folder, "**/*.pdf"), recursive=True):
+            relative_path = Path(f).relative_to(local_folder)
+            remote_path = normalize_path(str(Path(remote_folder) / relative_path))
+            modification_time = datetime.utcfromtimestamp(os.path.getmtime(f))
+            file_data[remote_path]["local_time"] = modification_time    
+        print("done")
+
+        # Let's loop through the data structure
+        # to create list of actions to take
         to_download = []
         to_delete_local = []
-        # Prepare download list
-        for r in remote_info:
-            r_path = normalize_path(r['entry_path'])
-            if r['entry_type'] == 'document':
-                r_date = datetime.strptime(r['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
-            found = False
-            for c in checkpoint_info:
-                c_path = normalize_path(c['entry_path'])
-                date_difference = 0
-                if c['entry_type'] == 'document':
-                    c_date = datetime.strptime(c['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
-                    if r['entry_type'] == 'document':
-                        date_difference = (r_date - c_date).total_seconds()
-                if c_path == r_path:
-                    found = True
-                    if date_difference > 0:  # Remote modified after checkpoint
-                        to_download.append(r)
-                        break
-            if not found:
-                to_download.append(r)
-
-        # Prepare local delete list
-        for c in checkpoint_info:
-            c_path = normalize_path(c['entry_path'])
-            found = False
-            for r in remote_info:
-                r_path = normalize_path(r['entry_path'])
-                if c_path == r_path:
-                    found = True
-                    break
-            if not found:
-                to_delete_local.append(c)
-        print("done")
-
-        # Lists for applying local change to remote
-        print("Looking for local changes... ",end="",flush=True)
         to_upload = []
         to_delete_remote = []
-        local_files = glob(os.path.join(local_folder, "**/*.pdf"), recursive=True)
 
-        # Prepare upload list
-        for local_path in local_files:
-            relative_path = os.path.relpath(local_path, local_folder)
-            remote_path = os.path.join(remote_folder, relative_path)
-            r_path = normalize_path(remote_path)
-            local_date = datetime.utcfromtimestamp(os.path.getmtime(local_path))
-            found = False
-            for c in checkpoint_info:
-                if c['entry_type'] == 'folder':
+        for filename, data in file_data.items():
+            if data["checkpoint_time"] is None:
+                # File does not exist in checkpoint, so it is new
+                if data["remote_time"]:
+                    to_download.append(filename)
                     continue
-                c_path = normalize_path(c['entry_path'])
-                c_date = datetime.strptime(c['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
-                date_difference = (local_date - c_date).total_seconds()
-                if r_path == c_path:
-                    found = True
-                    if date_difference > 0: # Local is newer
-                        to_upload.append(local_path)
-            if not found:
-                to_upload.append(local_path)
+                if data["local_time"]:
+                    to_upload.append(filename)
+                    continue
+            
+            # If we get to here, file exists in checkpoint
+            modified_local = data["local_time"] and data["local_time"] > data["checkpoint_time"]
+            modified_remote = data["remote_time"] and data["remote_time"] > data["checkpoint_time"]
+            deleted_local = data["local_time"] is None
+            deleted_remote = data["remote_time"] is None
 
-        # Prepare remote delete list
-        for c in checkpoint_info:
-            remote_path = os.path.relpath(c['entry_path'], remote_folder)
-            local_path = os.path.join(local_folder, remote_path)
-            if not os.path.exists(normalize_path(local_path)):
-                to_delete_remote.append(c)
-        print("done")
+            if modified_local and modified_remote:
+                print(f"Warning, sync conflict!  {filename} is changed both locally and remotely.")
+                if data["local_time"] > data["remote_time"]:
+                    print("Local change is newer and will take precedence.")
+                    to_upload.append(filename)
+                else:
+                    print("Remote change is newer and will take precedence.")
+                    to_download.append(filename)
+            elif modified_local:
+                to_upload.append(filename)
+            elif modified_remote:
+                to_download.append(filename)
+            elif deleted_local:
+                to_delete_remote.append(filename)
+            elif deleted_remote:
+                to_delete_local.append(filename)
         
         print("")
         print("Ready to sync")
@@ -572,65 +574,43 @@ class DigitalPaper():
             unit="files")
 
         # Apply changes in remote to local
-        for file_info in to_download:
-            progress_bar.update()
-            remote_path = os.path.relpath(file_info['entry_path'], remote_folder)
-            local_path = os.path.join(local_folder, remote_path)
-            if file_info['entry_type'] == 'folder':
-                os.makedirs(local_path, exist_ok = True)
-                continue
-            tqdm.write("⇣ " + file_info['entry_path'])
-            self.download_file(file_info['entry_path'], local_path)
-            remote_date = datetime.strptime(file_info['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
-            remote_date = remote_date.replace(tzinfo=timezone.utc).astimezone(tz=None)
-            mod_time = time.mktime(remote_date.timetuple())
+        for remote_path in to_download:
+            relative_path = Path(remote_path).relative_to(remote_folder)
+            local_path = Path(local_folder) / relative_path
+            tqdm.write("⇣ " + str(remote_path))
+            self.download_file(remote_path, local_path)
+            remote_time = file_data[remote_path]['remote_time'].replace(tzinfo=timezone.utc).astimezone(tz=None)
+            mod_time = time.mktime(remote_time.timetuple())
             os.utime(local_path, (mod_time, mod_time))
-            # If both remote and local have changes, remote wins.
-            if file_info in to_delete_remote:
-                to_delete_remote.remove(file_info)
-                progress_bar.update() # One less file to download, so lets move progress bar forward
-            if normalize_path(local_path) in to_upload:
-                to_upload.remove(local_path)
-                progress_bar.update() # One less file to upload, so lets move progress bar forward
-
-        for file_info in to_delete_local:
             progress_bar.update()
-            remote_path = os.path.relpath(file_info['entry_path'], remote_folder)
-            local_path = os.path.join(local_folder, remote_path)
-            entry_type = file_info['entry_type']
+
+        for remote_path in to_delete_local:
+            relative_path = Path(remote_path).relative_to(remote_folder)
+            local_path = Path(local_folder) / relative_path
             if os.path.exists(local_path):
-                tqdm.write("X " + local_path)
-                if entry_type == 'folder':
-                    shutil.rmtree(local_path)
-                else:
-                    os.remove(local_path)
-            if file_info in to_delete_remote:
-                to_delete_remote.remove(file_info)
-            if normalize_path(local_path) in to_upload:
-                to_upload.remove(local_path)
+                tqdm.write("X " + str(local_path))
+                os.remove(local_path)
+            progress_bar.update()
 
         # Apply changes in local to remote
         for remote_file in to_delete_remote:
+            if self.path_exists(remote_file):
+                tqdm.write("X " + str(remote_file))
+                self.delete_document(remote_file)
             progress_bar.update()
-            remote_path = normalize_path(remote_file['entry_path'])
-            if self.path_exists(remote_path):
-                tqdm.write("X " + remote_path)
-                if remote_file['entry_type'] == 'folder':
-                    self.delete_folder(remote_path)
-                else:
-                    self.delete_document(remote_path)
 
-        for local_file in to_upload:
-            progress_bar.update()
-            local_path = local_file
-            relative_path = os.path.relpath(local_path, local_folder)
-            remote_path = normalize_path(os.path.join(remote_folder, relative_path))
-            tqdm.write("⇡ " + local_path)
+        for remote_path in to_upload:
+            relative_path = Path(remote_path).relative_to(remote_folder)
+            local_path = Path(local_folder) / relative_path
+            tqdm.write("⇡ " + str(local_path))
             self.upload_file(local_path, remote_path)
+            progress_bar.update()
         
         progress_bar.close()
 
+        print("Refreshing file information... ",end="",flush=True)
         remote_info = self.traverse_folder(remote_folder)
+        print("done")
         self.sync_checkpoint(local_folder, remote_info)
 
     def load_checkpoint(self, local_folder):
