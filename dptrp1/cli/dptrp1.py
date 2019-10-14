@@ -9,7 +9,7 @@ import os
 import re
 
 from pathlib import Path
-from dptrp1.dptrp1 import DigitalPaper, find_auth_files
+from dptrp1.dptrp1 import DigitalPaper, find_auth_files, get_default_auth_files
 
 def do_screenshot(d, filename):
     pic = d.take_screenshot()
@@ -158,15 +158,13 @@ commands = {
 }
 
 def build_parser():
-    deviceid, privatekey = find_auth_files()
-
     p = argparse.ArgumentParser(description = "Remote control for Sony DPT-RP1")
     p.add_argument('--client-id',
             help = "File containing the device's client id",
-            default = deviceid)
+            default = None)
     p.add_argument('--key',
             help = "File containing the device's private key",
-            default = privatekey)
+            default = None)
     p.add_argument('--addr',
             help = "Hostname or IP address of the device. Disables auto discovery.",
             default=None)
@@ -185,8 +183,19 @@ def main():
     args = build_parser().parse_args()
     dp = DigitalPaper(addr=args.addr, id=args.serial)
     if args.command == "register":
-        do_register(dp, args.key, args.client_id)
+        # When registering the device, we default to storing auth files in our own configuration directory
+        default_deviceid, default_privatekey = get_default_auth_files()        
+        do_register(dp, args.key or default_privatekey, args.client_id or default_deviceid)
         return
+    
+    # When connecting to a device, we default to looking for auth files in 
+    # both our own configuration directory and in Sony's paths
+    found_deviceid, found_privatekey = find_auth_files()
+    if not args.key:
+        args.key = found_privatekey
+    if not args.client_id:
+        args.client_id = found_deviceid
+
     if not os.path.exists(args.key) or not os.path.exists(args.client_id):
         print("Could not read device identifier and private key.")
         print("Please use command 'register' first:")
