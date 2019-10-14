@@ -31,7 +31,8 @@
 
     ],
     "packages": [
-        "dptrp1"
+        "dptrp1",
+        "dptrp1.cli"
     ],
     "install_requires": [
         "httpsig>=1.1.2",
@@ -43,10 +44,12 @@
         "fusepy",
         "zeroconf"
     ],
-    "scripts": [
-        "dptrp1",
-        "dptmount"
-    ],
+    "entry_points": {
+        "console_scripts": [
+            "dptrp1=dptrp1.cli.dptrp1:main",
+            "dptmount=dptrp1.cli.dptmount:main"
+        ]
+    },
     "classifiers": [
         "Development Status :: 3 - Alpha",
         "Programming Language :: Python :: 3"

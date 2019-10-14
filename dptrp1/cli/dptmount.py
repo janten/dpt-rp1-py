@@ -293,7 +293,7 @@ class DptTablet(LoggingMixIn, Operations):
         return
     
 YAML_CONFIG_PATH = os.path.expanduser("~/.config/dpt-rp1.conf")
-if __name__ == '__main__':
+def main():
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('mountpoint')
@@ -341,3 +341,5 @@ if __name__ == '__main__':
     tablet = DptTablet(**params)
     fuse = FUSE(tablet, args.mountpoint, foreground=True, allow_other=True, nothreads=True, **kwargs)
 
+if __name__ == '__main__':
+    main()
