@@ -628,8 +628,8 @@ class DigitalPaper():
 
         print("Refreshing file information... ",end="",flush=True)
         remote_info = self.traverse_folder(remote_folder,fields=['entry_path','modified_date','entry_type'])
-        print("done")
         self.sync_checkpoint(local_folder, remote_info)
+        print("done")
 
     def load_checkpoint(self, local_folder):
         checkpoint_file = os.path.join(local_folder, ".sync")
