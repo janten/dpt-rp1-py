@@ -486,7 +486,7 @@ class DigitalPaper():
 
         for f in checkpoint_info:
             path = normalize_path(f["entry_path"])
-            if 'modified_date' in f:
+            if path.startswith(remote_folder) and 'modified_date' in f:
                 modification_time = datetime.strptime(f['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
                 file_data[path]["checkpoint_time"] = modification_time
 
