@@ -556,14 +556,10 @@ class DigitalPaper():
         print("")
         print("Ready to sync")
         print("")
-        if to_delete_local:
-            print(f"{len(to_delete_local):4d} files will be DELETED locally")
-        if to_delete_remote:
-            print(f"{len(to_delete_remote):4d} files will be DELETED from device")
-        if to_upload:
-            print(f"{len(to_upload):4d} files will be UPLOADED to device")
-        if to_download:
-            print(f"{len(to_download):4d} files will be DOWNLOADED from device")
+        actions = [(to_delete_local,"DELETED locally"),(to_delete_remote,'DELETED from device'),(to_upload,'UPLOADED to device'),(to_download,'DOWNLOADED from device')]
+        for file_list,description in actions:
+            if file_list:
+                print(f"{len(file_list):4d} files will be {description}")
 
         if not (to_delete_local or to_delete_remote or to_upload or to_download):
             print("All files are in sync. Exiting.")
@@ -574,9 +570,17 @@ class DigitalPaper():
         print("")
         confirm = ""
         while confirm not in ('y', 'yes'):
-            confirm = input(f"Proceed (y/n)? ")
+            confirm = input(f"Proceed (y/n/?)? ")
             if confirm in ('n', 'no'):
                 return
+            if confirm in ('?','list','l'):
+                for file_list,description in actions:
+                    if file_list:
+                        print("")
+                        print(f"The following files will be {description}:")
+                        print("\t" + "\n\t".join(file_list))
+                        print("")
+                    
         
         # Syncing can potentially take some time, so let's display a progress bar
         # to give the user some idea about the progress.
