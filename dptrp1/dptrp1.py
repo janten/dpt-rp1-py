@@ -497,11 +497,20 @@ class DigitalPaper():
                 file_data[path]["remote_time"] = modification_time
         
         print("Looking for local changes... ",end="",flush=True)
-        for f in glob(os.path.join(local_folder, "**/*.pdf"), recursive=True):
-            relative_path = Path(f).relative_to(local_folder)
-            remote_path = normalize_path(str(Path(remote_folder) / relative_path))
-            modification_time = datetime.utcfromtimestamp(os.path.getmtime(f))
-            file_data[remote_path]["local_time"] = modification_time    
+        # Recursively traverse the local path looking for PDF files.
+        # Use relatively low-level os.scandir()-api instead of a higher-level api such as glob.glob()
+        # because os.scandir() gives access to mtime without having to perform an additional syscall on Windows,
+        # leading to much faster scanning times on Windows
+        def traverse_local_folder(path):
+            for entry in os.scandir(path):
+                if entry.is_dir():
+                    traverse_local_folder(entry.path)
+                elif entry.name.lower().endswith(".pdf"):
+                    relative_path = Path(entry.path).relative_to(local_folder)
+                    remote_path = normalize_path((Path(remote_folder) / relative_path).as_posix())
+                    modification_time = datetime.utcfromtimestamp(entry.stat().st_mtime)
+                    file_data[remote_path]["local_time"] = modification_time
+        traverse_local_folder(local_folder)
         print("done")
 
         # Let's loop through the data structure
