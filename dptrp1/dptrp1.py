@@ -334,10 +334,15 @@ class DigitalPaper():
         response = self._get_endpoint(f"/folders/{folder_id}/entries")
         return response.json()['entry_list']
 
-    def traverse_folder(self, remote_path):
+    def traverse_folder(self, remote_path,fields=[]):
         # In most cases, the request overhead of traversing folders is larger than the overhead of
         # requesting all info. So let's just request all info and filter for remote_path on our side
-        all_entries = self.list_all()
+        if fields:
+            field_query = '&fields=' + ",".join(fields)
+        else:
+            field_query = ''
+        all_entries = self._get_endpoint(f'/documents2?entry_type=all'+field_query).json()['entry_list']
+
         return list(filter(lambda e: e["entry_path"].startswith(remote_path),all_entries))
 
     def list_document_info(self, remote_path):
@@ -459,7 +464,7 @@ class DigitalPaper():
         self.set_datetime()
         self.new_folder(remote_folder)
         print("Looking for changes on device... ",end="",flush=True)
-        remote_info = self.traverse_folder(remote_folder)
+        remote_info = self.traverse_folder(remote_folder,fields=['entry_path','modified_date','entry_type'])
         print("done")
 
         # Syncing will require different comparions between local and remote paths.
@@ -609,7 +614,7 @@ class DigitalPaper():
         progress_bar.close()
 
         print("Refreshing file information... ",end="",flush=True)
-        remote_info = self.traverse_folder(remote_folder)
+        remote_info = self.traverse_folder(remote_folder,fields=['entry_path','modified_date','entry_type'])
         print("done")
         self.sync_checkpoint(local_folder, remote_info)
 
