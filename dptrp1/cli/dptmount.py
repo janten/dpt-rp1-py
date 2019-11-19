@@ -287,8 +287,8 @@ class DptTablet(LoggingMixIn, Operations):
         self._add_remote_path_to_tree(new_folder_node, newpath)
 
     def create(self, path, mode, fi=None):
-        # TODO: check if files is necessary
-        logging.debug("create path {}".format(path))
+        #TODO: check if files is necessary
+        logger.debug("create path {}".format(path))
         self.files[path] = dict(
             st_mode=(S_IFREG | mode),
             st_nlink=1,
@@ -305,7 +305,7 @@ class DptTablet(LoggingMixIn, Operations):
     def write(self, path, buf, offset, fh):
         stream = self.documents_data[fh][:offset] + buf
         self.documents_data[fh] = stream
-        logging.debug("written len {}".format(len(stream)))
+        logger.debug("written len {}".format(len(stream)))
         return len(buf)
 
     def flush(self, path, fh):
