@@ -248,14 +248,9 @@ class DptTablet(LoggingMixIn, Operations):
         if not self._is_read_only_flags(flags):
             return FuseOSError(EACCES)
 
-        if node in self.documents_data:
-            # very simple caching of the data to avoid downloading again
-            # TODO: data should be kept after file is closed... but we would need some kind of hashing
-            data = self.documents_data[self.documents_fds[node]]
-        else:
-            logger.info("Downloading %s" % node.item["entry_path"])
-            remote_path = node.item["entry_path"]
-            data = self.dpt.download(remote_path)
+        logger.info('Downloading %s' % node.item['entry_path'])
+        remote_path = node.item['entry_path']
+        data = self.dpt.download(remote_path)
 
         self.fd += 1
         self.documents_data[self.fd] = data
