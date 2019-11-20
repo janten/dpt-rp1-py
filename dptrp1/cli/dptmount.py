@@ -56,6 +56,41 @@ from dptrp1.dptrp1 import DigitalPaper, find_auth_files
 
 import anytree
 
+class FileHandle(object):
+
+    def __init__(self, fs, local_path, new=False):
+        self.fs = fs
+        dpath, fname = os.path.split(local_path)
+        self.parent = self.fs._map_local_remote(dpath)
+        self.remote_path = os.path.join(self.parent.remote_path, fname)
+        if new:
+            self.status = "clean"
+        else:
+            node = self.fs._map_local_remote(local_path)
+            assert self.remote_path == node.item['entry_path']
+            self.status = "unread"
+        self.data = bytearray()
+
+    def read(self, length, offset):
+        if self.status == "unread":
+            logger.info('Downloading %s', self.remote_path)
+            self.status = "clean"
+            self.data = self.fs.dpt.download(self.remote_path)
+        return self.data[offset:offset + length]
+
+    def write(self, buf, offset):
+        self.status = "dirty"
+        self.data[offset:] = buf
+        return len(buf)
+
+    def flush(self):
+        if self.status != "dirty":
+            return
+        stream = io.BytesIO(self.data)
+        self.fs.dpt.upload(stream, self.remote_path)
+        # XXX do we sometimes need to remove an old node?
+        self.fs._add_remote_path_to_tree(self.parent, self.remote_path) # TBI
+        self.status = "clean"
 
 class DptTablet(LoggingMixIn, Operations):
     def __init__(
@@ -83,8 +118,7 @@ class DptTablet(LoggingMixIn, Operations):
         self._load_document_list()
         logger.debug(anytree.RenderTree(self.root))
 
-        self.documents_data = {}
-        self.documents_fds = {}
+        self.handle = {}
         self.files = {}
         self.fd = 0
 
@@ -243,34 +277,22 @@ class DptTablet(LoggingMixIn, Operations):
     # File methods
     # ============
     def open(self, path, flags):
-        node = self._map_local_remote(path)
-
         if not self._is_read_only_flags(flags):
             return FuseOSError(EACCES)
-
-        logger.info('Downloading %s' % node.item['entry_path'])
-        remote_path = node.item['entry_path']
-        data = self.dpt.download(remote_path)
-
         self.fd += 1
-        self.documents_data[self.fd] = data
-        self.documents_fds[node] = self.fd
-        logger.info("file handle %d opened" % self.fd)
+        self.handle[self.fd] = FileHandle(self, path, new=False)
+        logger.info('file handle %d opened' % self.fd)
         return self.fd
 
     def release(self, path, fh):
         # TODO: something is going wrong with releasing the file handles for new created docs
         logger.info("file handle %d closed" % fh)
         node = self._map_local_remote(path)
-        del self.documents_data[fh]
-        try:
-            del self.documents_fds[node]
-        except KeyError:
-            del self.files[path]
+        del self.handle[fh]
         return 0
 
     def read(self, path, length, offset, fh):
-        return self.documents_data[fh][offset : offset + length]
+        return self.handle[fh].read(length, offset)
 
     def rename(self, oldpath, newpath):
         old_node = self._map_local_remote(oldpath)
@@ -294,36 +316,15 @@ class DptTablet(LoggingMixIn, Operations):
         )
 
         self.fd += 1
-        self.documents_data[self.fd] = bytearray()
+        self.handle[self.fd] = FileHandle(self, path, new=True)
         return self.fd
 
     def write(self, path, buf, offset, fh):
-        stream = self.documents_data[fh][:offset] + buf
-        self.documents_data[fh] = stream
-        logger.debug("written len {}".format(len(stream)))
-        return len(buf)
+        return self.handle[fh].write(buf, offset)
 
     def flush(self, path, fh):
-        stream = io.BytesIO(self.documents_data[fh])
-        dpath, fname = os.path.split(path)
-        parent = self._map_local_remote(dpath)
-        remote_path = os.path.join(parent.remote_path, fname)
-        self.dpt.upload(stream, remote_path)
-
-        duplicate = anytree.search.find(
-            parent,
-            filter_=lambda node, remote_path=remote_path: node.remote_path
-            == remote_path,
-        )
-        if duplicate is None:
-            node = self._add_remote_path_to_tree(parent, remote_path)
-        else:
-            item = self.dpt._resolve_object_by_path(remote_path)
-            duplicate.item = item
-            duplicate.lstat = self._get_lstat(item)
-        # self.files.pop(path)
-        return
-
+        self.handle[fh].flush()
+        self.files.pop(path, None)
 
 YAML_CONFIG_PATH = os.path.expanduser("~/.config/dpt-rp1.conf")
 
