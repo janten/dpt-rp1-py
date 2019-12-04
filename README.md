@@ -8,6 +8,8 @@ We now have a proper Python package, so you may just run:
 pip3 install dpt-rp1-py
 ```
 
+Users of Arch-based distros can also install it from the AUR ([dpt-rp1-py](https://aur.archlinux.org/packages/dpt-rp1-py/) or [dpt-rp1-py-git](https://aur.archlinux.org/packages/dpt-rp1-py-git/)).
+
 Installing the package also installs the command line utilities `dptrp1` and `dptmount`.
 
 
