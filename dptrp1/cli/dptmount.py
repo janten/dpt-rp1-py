@@ -288,7 +288,14 @@ class DptTablet(LoggingMixIn, Operations):
         parent = self._map_local_remote(dpath)
         remote_path = os.path.join(parent.remote_path, fname)
         self.dpt.upload(stream, remote_path)
-        node = self._add_remote_path_to_tree(parent, remote_path)
+
+        duplicate = anytree.search.find(parent, filter_=lambda node, remote_path=remote_path: node.remote_path == remote_path)
+        if duplicate is None:
+            node = self._add_remote_path_to_tree(parent, remote_path)
+        else:
+            item = self.dpt._resolve_object_by_path(remote_path)
+            duplicate.item = item
+            duplicate.lstat = self._get_lstat(item)
         #self.files.pop(path)
         return
     
