@@ -122,7 +122,7 @@ class DigitalPaper():
 
     @property
     def base_url(self):
-        if ":" in self.addr and self.addr[0] != "[":
+        if self.addr and ":" in self.addr and self.addr[0] != "[":
             port = ""
         else:
             port = ":8443"
