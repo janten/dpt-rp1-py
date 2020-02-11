@@ -102,20 +102,38 @@ def do_wifi_enable(d):
 def do_wifi_disable(d):
     print(d.disable_wifi())
 
-def do_add_wifi(d):
-    print(d.configure_wifi(ssid = "vecna2",
-                     security = "psk",
-                     passwd = "elijah is a cat",
-                     dhcp = "true",
-                     static_address = "",
-                     gateway = "",
-                     network_mask = "",
-                     dns1 = "",
-                     dns2 = "",
-                     proxy = "false"))
+def do_add_wifi(d, cfg_file=''):
+    try:
+        cfg = json.load(open(cfg_file))
+    except JSONDecodeError:
+        quit("JSONDecodeError: Check the contents of %s" % cfg_file)
+    except FileNotFoundError:
+        quit("File Not Found: %s" % cfg_file)
+    if not cfg:
+        print(d.configure_wifi(ssid = "vecna2",
+                         security = "psk",
+                         passwd = "elijah is a cat",
+                         dhcp = "true",
+                         static_address = "",
+                         gateway = "",
+                         network_mask = "",
+                         dns1 = "",
+                         dns2 = "",
+                         proxy = "false"))
+    else:
+        print(d.configure_wifi(**cfg))
 
-def do_delete_wifi(d):
-    print(d.delete_wifi(ssid = "vecna2", security = "psk"))
+def do_delete_wifi(d, cfg_file=''):
+    try:
+        cfg = json.load(open(cfg_file))
+    except ValueError:
+        quit("JSONDecodeError: Check the contents of %s" % cfg_file)
+    except FileNotFoundError:
+        quit("File Not Found: %s" % cfg_file)
+    if not cfg:
+        print(d.delete_wifi(ssid = "vecna2", security = "psk"))
+    else:
+        print(d.delete_wifi(**cfg))
 
 def do_register(d, key_file, id_file):
     _, key, device_id = d.register()
@@ -184,11 +202,11 @@ def main():
     dp = DigitalPaper(addr=args.addr, id=args.serial)
     if args.command == "register":
         # When registering the device, we default to storing auth files in our own configuration directory
-        default_deviceid, default_privatekey = get_default_auth_files()        
+        default_deviceid, default_privatekey = get_default_auth_files()
         do_register(dp, args.key or default_privatekey, args.client_id or default_deviceid)
         return
-    
-    # When connecting to a device, we default to looking for auth files in 
+
+    # When connecting to a device, we default to looking for auth files in
     # both our own configuration directory and in Sony's paths
     found_deviceid, found_privatekey = find_auth_files()
     if not args.key:
@@ -212,6 +230,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-

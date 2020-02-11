@@ -1,0 +1,12 @@
+{
+  "security": "psk",
+  "ssid": "BadBomb",
+  "passwd": "TickingLikeAHotSamosa",
+  "dhcp": "true",
+  "static_address": "",
+  "gateway": "",
+  "network_mask": "",
+  "dns1": "",
+  "dns2": "",
+  "proxy": "false"
+}

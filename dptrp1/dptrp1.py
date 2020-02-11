@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3
+#!/usr/bin/env python3
 import os
 import sys
 import uuid
@@ -29,13 +29,13 @@ def get_default_auth_files():
     os.makedirs(config_path, exist_ok=True)
     deviceid = os.path.join(config_path, "deviceid.dat")
     privatekey = os.path.join(config_path, "privatekey.dat")
-    
+
     return deviceid, privatekey
 
 def find_auth_files():
     """Search for authentication files for connecting to DPT-RP1, both in default path and in paths from Sony's Digital Paper App"""
     deviceid, privatekey = get_default_auth_files()
-    
+
     if not os.path.exists(deviceid) or not os.path.exists(privatekey):
         # Could not find our own auth-files. Let's see if we can find any auth files created by Sony's Digital Paper App
         search_paths = [
@@ -49,7 +49,7 @@ def find_auth_files():
             privatekey_matches = glob(os.path.join(path, "**/privatekey.dat"), recursive=True)
 
             if deviceid_matches and privatekey_matches:
-                # Found a match. Selecting the first file from each for now. 
+                # Found a match. Selecting the first file from each for now.
                 # This might not be correct if the user has several devices with their own keys. Should ideally be configurable
                 deviceid = deviceid_matches[0]
                 privatekey = privatekey_matches[0]

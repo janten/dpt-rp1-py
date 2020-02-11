@@ -83,3 +83,20 @@ If you have already registered on macOS, the Digital Paper app stores the files 
 * Currently there is no caching, therefore operations can be slow as they require uploading or downloading from the 
 device. However, this avoids having to resolve conflicts if a document has been changed both on the Digital Paper and
 the caching directory.
+
+## Usage
+
+If paired over bluetooth, use `172.25.47.1` (double check IP from bluetooth connection network access point)
+
+Else, over Wifi:
+
+```
+# Try multiple times
+dptrp1 --addr 192.168.0.107 register
+
+dptrp1 --addr 192.168.0.107 list-folders
+
+dptrp1 --addr 192.168.0.107 wifi-add ./samples/wifi_2.5G.json
+
+dptrp1 --addr 192.168.0.107 wifi-del ./samples/wifi_del_2.5G.json
+```
