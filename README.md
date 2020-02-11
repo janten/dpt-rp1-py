@@ -53,7 +53,7 @@ This Repository contains a `dptmount` script to mount the Digital Paper as a use
 - On Linux, you may need to install libfuse.
 
 ### How to use 
-Create a yaml file with configuration details at _~/.config/dpt-rp1.conf_. You must specify either an address (with `addr`) or a Device ID (with `serial`). Everything else is optional. All entries must be strings, the serial number must be wrapped in quotation marks.
+Create a yaml file with configuration details at _~/.config/dpt-rp1.conf_. You must specify either an address (with `addr`) or a Device ID (with `serial`). All entries must be strings, the serial number must be wrapped in quotation marks.
 
 ```
 dptrp1:
@@ -62,8 +62,8 @@ dptrp1:
   client-id: ~/.config/dpt/deviceid.dat
   key: ~/.config/dpt/privatekey.dat
 ```
-
-Mount the Digital Paper to a directory with `dptmount /my/mountpoint/`. 
+If you register with `dptrp1 register` command, the client-id shall be $HOME/.dpapp/deviceid.dat, and key shall be $HOME/.dpapp/privatekey.dat.
+Mount the Digital Paper to a directory with `dptmount --config ~/.config/dpt-rp1.conf /mnt/mountpoint`
 
 #### Finding the private key and client ID on Windows
 
