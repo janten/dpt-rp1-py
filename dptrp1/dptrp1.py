@@ -481,20 +481,25 @@ class DigitalPaper():
         # file_data[<filename>][<checkpoint/remote/local>_time] = <timestamp>
         file_data = defaultdict(lambda: defaultdict(lambda: None))
 
+        # When it comes to folders, we want to handle them separately and not care about creation/deletion.
+        # We therefore use a slightly different data structure:
+        # folder_data[<filename>][checkpoint/remote/local_exists] = True/False
+        folder_data = defaultdict(lambda: defaultdict(lambda: False))
+
         # Then we will go changes locally, remotely, and in checkpoint, and save all modificaiton times to the same
-        # data structure for easy comparison
+        # data structure for easy comparison, and the same with folders.
 
-        for f in checkpoint_info:
-            path = normalize_path(f["entry_path"])
-            if path.startswith(remote_folder) and 'modified_date' in f:
-                modification_time = datetime.strptime(f['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
-                file_data[path]["checkpoint_time"] = modification_time
-
-        for f in remote_info:
-            path = normalize_path(f["entry_path"])
-            if 'modified_date' in f:
-                modification_time = datetime.strptime(f['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
-                file_data[path]["remote_time"] = modification_time
+        # The checkpoint and remote_info contain the same data-structure, because the checkpoint is simply a dump of 
+        # remote_info at a previous point in time. Therefore, we use the same code to look through both of them:
+        for location_info,location in [(checkpoint_info,"checkpoint"),(remote_info,"remote")]:
+            for f in location_info:
+                path = normalize_path(f["entry_path"])
+                if path.startswith(remote_folder):
+                    if f["entry_type"] == "document":
+                        modification_time = datetime.strptime(f['modified_date'], '%Y-%m-%dT%H:%M:%SZ')
+                        file_data[path][f"{location}_time"] = modification_time
+                    elif f["entry_type"] == "folder":
+                        folder_data[path][f"{location}_exists"] = True
         
         print("Looking for local changes... ",end="",flush=True)
         # Recursively traverse the local path looking for PDF files.
@@ -502,6 +507,11 @@ class DigitalPaper():
         # because os.scandir() gives access to mtime without having to perform an additional syscall on Windows,
         # leading to much faster scanning times on Windows
         def traverse_local_folder(path):
+            # Let's store to folder_data that this folder exists
+            relative_path = Path(path).relative_to(local_folder)
+            remote_path = normalize_path((Path(remote_folder) / relative_path).as_posix())
+            folder_data[remote_path]["local_exists"] = True
+            # And recursively go through all items inside of the folder
             for entry in os.scandir(path):
                 if entry.is_dir():
                     traverse_local_folder(entry.path)
@@ -553,15 +563,54 @@ class DigitalPaper():
             elif deleted_remote:
                 to_delete_local.append(filename)
         
+        # Just syncing the files will automatically create the necessary folders to store the given files, but it won't sync empty folders,
+        # or folder deletion. Therefore, let's go through the folder_data as well, to see which additional folder operations need to be performed:
+        folders_to_delete_remote = []
+        folders_to_delete_local = []
+        folders_to_create_remote = []
+        folders_to_create_local = []
+        for foldername, data in folder_data.items():
+            # data contains information about whether the given foldername exists locally, remotely, and in the checkpoint.
+            # In addition, we plan to upload/download some files, in which case we won't need to manually create the folders.
+            # So let's updte data to describe the expected situation after uploading/downloding those files, to decide which additional
+            # folder operations need to be performed.
+            data["remote_exists"] = data["remote_exists"] or any([f.startswith(foldername) for f in to_upload])
+            data["local_exists"] = data["local_exists"] or any([f.startswith(foldername) for f in to_download])
+
+            # Depending on whether the folder exists is remote/local/checkpoint, let's decide whether to create/delete the folder from remote/local.
+            create_remote = data["local_exists"] and (not data["checkpoint_exists"]) and (not data["remote_exists"])
+            create_local = data["remote_exists"] and (not data["checkpoint_exists"]) and (not data["local_exists"])
+            delete_remote = (not data["local_exists"]) and data["checkpoint_exists"] and data["remote_exists"]
+            delete_local = (not data["remote_exists"]) and data["checkpoint_exists"] and data["local_exists"]
+            
+            if create_remote:
+                folders_to_create_remote.append(foldername)
+            if create_local:
+                folders_to_create_local.append(foldername)
+            if delete_remote:
+                folders_to_delete_remote.append(foldername)
+            if delete_local:
+                folders_to_delete_local.append(foldername)
+
+        # If a folder structure is deleted, let's sort the deletion so that we always select the innermost, empty, folder first.
+        folders_to_delete_remote.sort(reverse=True)
+        folders_to_delete_local.sort(reverse=True)
+
+        
         print("")
         print("Ready to sync")
         print("")
-        actions = [(to_delete_local,"DELETED locally"),(to_delete_remote,'DELETED from device'),(to_upload,'UPLOADED to device'),(to_download,'DOWNLOADED from device')]
+        actions = [
+            (to_delete_local+folders_to_delete_local,"DELETED locally"),
+            (to_delete_remote+folders_to_delete_remote,'DELETED from device'),
+            (to_upload+folders_to_create_remote,'UPLOADED to device'),
+            (to_download+folders_to_create_local,'DOWNLOADED from device')]
         for file_list,description in actions:
             if file_list:
                 print(f"{len(file_list):4d} files will be {description}")
 
-        if not (to_delete_local or to_delete_remote or to_upload or to_download):
+        if not (to_delete_local or to_delete_remote or to_upload or to_download
+            or  folders_to_delete_local or folders_to_delete_remote or folders_to_create_local or folders_to_create_remote):
             print("All files are in sync. Exiting.")
             return
 
@@ -609,12 +658,33 @@ class DigitalPaper():
                 tqdm.write("X " + str(local_path))
                 os.remove(local_path)
             progress_bar.update()
+        
+        for remote_path in folders_to_delete_local:
+            relative_path = Path(remote_path).relative_to(remote_folder)
+            local_path = Path(local_folder) / relative_path
+            if os.path.exists(local_path):
+                tqdm.write("X " + str(local_path))
+                os.rmdir(local_path)
+            progress_bar.update()
+
+        for remote_path in folders_to_create_local:
+            relative_path = Path(remote_path).relative_to(remote_folder)
+            local_path = Path(local_folder) / relative_path
+            tqdm.write("⇣ " + str(remote_path))
+            os.makedirs(local_path,exist_ok=True)
+            progress_bar.update()
 
         # Apply changes in local to remote
         for remote_file in to_delete_remote:
             if self.path_exists(remote_file):
                 tqdm.write("X " + str(remote_file))
                 self.delete_document(remote_file)
+            progress_bar.update()
+        
+        for remote_deletion_folder in folders_to_delete_remote:
+            if self.path_exists(remote_deletion_folder):
+                tqdm.write("X " + str(remote_deletion_folder))
+                self.delete_folder(remote_deletion_folder)
             progress_bar.update()
 
         for remote_path in to_upload:
@@ -624,6 +694,13 @@ class DigitalPaper():
             self.upload_file(local_path, remote_path)
             progress_bar.update()
         
+        for remote_path in folders_to_create_remote:
+            relative_path = Path(remote_path).relative_to(remote_folder)
+            local_path = Path(local_folder) / relative_path
+            tqdm.write("⇡ " + str(local_path))
+            self.new_folder(remote_path)
+            progress_bar.update()
+
         progress_bar.close()
 
         print("Refreshing file information... ",end="",flush=True)
