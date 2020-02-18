@@ -664,7 +664,13 @@ class DigitalPaper():
             local_path = Path(local_folder) / relative_path
             if os.path.exists(local_path):
                 tqdm.write("X " + str(local_path))
-                os.rmdir(local_path)
+                try: 
+                    os.rmdir(local_path)
+                except OSError as e:
+                    if e.errno == 39:
+                        tqdm.write(f"WARNING: The folder {local_path} is not empty and will not be deleted.")
+                    else:
+                        raise
             progress_bar.update()
 
         for remote_path in folders_to_create_local:
