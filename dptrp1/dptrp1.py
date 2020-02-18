@@ -426,7 +426,12 @@ class DigitalPaper():
         return self.folder_list
 
     def download_file(self, remote_path, local_path):
-        os.makedirs(os.path.dirname(local_path), exist_ok=True)
+        local_folder = os.path.dirname(local_path)
+        # Make sure that local_folder exists so that we can write data there.
+        # If local_path is just a filename, local_folder will be '', and
+        # we won't need to create any directories.
+        if local_folder != '':
+            os.makedirs(os.path.dirname(local_path), exist_ok=True)
         data = self.download(remote_path)
         with open(local_path, 'wb') as f:
             f.write(data)
