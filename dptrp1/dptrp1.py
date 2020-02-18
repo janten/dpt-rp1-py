@@ -530,13 +530,23 @@ class DigitalPaper():
         to_upload = []
         to_delete_remote = []
 
+        missing_checkpoint_files = []
+
         for filename, data in file_data.items():
             if data["checkpoint_time"] is None:
-                # File does not exist in checkpoint, so it is new
+                if data["remote_time"] and data["local_time"]:
+                    # File exists both on device and locally, but not in checkpoint.
+                    # Corrupt or missing checkpoint?
+                    # The safest bet is to assume that the two files are identical, and not sync in either directions.
+                    missing_checkpoint_files.append(filename)
+                    continue
+
                 if data["remote_time"]:
+                    # File only exists on remote, so it's new and should be downloaded
                     to_download.append(filename)
                     continue
                 if data["local_time"]:
+                    # File only exists locally, sot it's new and should be uploaded
                     to_upload.append(filename)
                     continue
             
@@ -562,6 +572,17 @@ class DigitalPaper():
                 to_delete_remote.append(filename)
             elif deleted_remote:
                 to_delete_local.append(filename)
+        
+        if missing_checkpoint_files:
+            print("\nWarning: The following files exist both locally and on the DPT-RP1, but do not seem to have been synchronized using this tool:")
+
+            max_print = 20 # Let's only print the first max_print filenames to avoid completely flooding 
+                           # stdout with unusable information if missing metadata means that this happens 
+                           # to all files in the user's library
+            print("  " + "\n  ".join(missing_checkpoint_files[:max_print]))
+            if len(missing_checkpoint_files) > max_print:
+                print(f"  ... and {len(missing_checkpoint_files)-max_print} additional files")
+            print("The files will be assumed to be identical.\n")
         
         # Just syncing the files will automatically create the necessary folders to store the given files, but it won't sync empty folders,
         # or folder deletion. Therefore, let's go through the folder_data as well, to see which additional folder operations need to be performed:
