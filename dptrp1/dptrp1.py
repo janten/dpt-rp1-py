@@ -581,14 +581,14 @@ class DigitalPaper():
                 to_delete_local.append(filename)
         
         if missing_checkpoint_files:
-            print("\nWarning: The following files exist both locally and on the DPT-RP1, but do not seem to have been synchronized using this tool:")
+            print("\nWarning: The following files exist both locally and on the DPT, but do not seem to have been synchronized using this tool:")
 
             max_print = 20 # Let's only print the first max_print filenames to avoid completely flooding 
                            # stdout with unusable information if missing metadata means that this happens 
                            # to all files in the user's library
-            print("  " + "\n  ".join(missing_checkpoint_files[:max_print]))
+            print("\t" + "\n\t".join(missing_checkpoint_files[:max_print]))
             if len(missing_checkpoint_files) > max_print:
-                print(f"  ... and {len(missing_checkpoint_files)-max_print} additional files")
+                print(f"\t... and {len(missing_checkpoint_files)-max_print} additional files")
             print("The files will be assumed to be identical.\n")
         
         # Just syncing the files will automatically create the necessary folders to store the given files, but it won't sync empty folders,
