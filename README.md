@@ -32,7 +32,7 @@ Note that the root path for DPT-RP1 is `Document/`. Example command to download 
 The DPT-RP1 uses SSL encryption to communicate with the computer.  This requires registering the DPT-RP1 with the computer, which results in two pieces of information -- the client ID and the key file -- that you'll need to run the script. You can get this information in three ways.
 
 #### Registering without the Digital Paper App
-This method requires your DPT-RP1 and your computer to be on the same network segment via WiFi, Bluetooth or a USB connection. The USB connection works on Windows and macOS but may not work on a Linux machine.
+This method requires your DPT-RP1 and your computer to be on the same network segment via WiFi, Bluetooth or a USB connection. The USB connection works on Windows and macOS but may not work on a Linux machine. If your WiFi network is not part of the "Saved Network List" (for example if you don't have the app), you can still use the DPT-RP1 as a WiFi access point and connect your computer to it.
 
 ```
 dptrp1 register
@@ -53,7 +53,7 @@ This Repository contains a `dptmount` script to mount the Digital Paper as a use
 - On Linux, you may need to install libfuse.
 
 ### How to use 
-Create a yaml file with configuration details at _~/.config/dpt-rp1.conf_. You must specify either an address (with `addr`) or a Device ID (with `serial`). Everything else is optional. All entries must be strings, the serial number must be wrapped in quotation marks.
+Create a yaml file with configuration details at _~/.config/dpt-rp1.conf_. You must specify either an address (with `addr`) or a Device ID (with `serial`). All entries must be strings, the serial number must be wrapped in quotation marks.
 
 ```
 dptrp1:
@@ -62,8 +62,8 @@ dptrp1:
   client-id: ~/.config/dpt/deviceid.dat
   key: ~/.config/dpt/privatekey.dat
 ```
-
-Mount the Digital Paper to a directory with `dptmount /my/mountpoint/`. 
+If you register with `dptrp1 register` command, the client-id shall be $HOME/.dpapp/deviceid.dat, and key shall be $HOME/.dpapp/privatekey.dat.
+Mount the Digital Paper to a directory with `dptmount --config ~/.config/dpt-rp1.conf /mnt/mountpoint`
 
 #### Finding the private key and client ID on Windows
 
@@ -83,3 +83,20 @@ If you have already registered on macOS, the Digital Paper app stores the files 
 * Currently there is no caching, therefore operations can be slow as they require uploading or downloading from the 
 device. However, this avoids having to resolve conflicts if a document has been changed both on the Digital Paper and
 the caching directory.
+
+## Usage
+
+If paired over bluetooth, use `172.25.47.1` (double check IP from bluetooth connection network access point)
+
+Else, over Wifi:
+
+```
+# Try multiple times
+dptrp1 --addr 192.168.0.107 register
+
+dptrp1 --addr 192.168.0.107 list-folders
+
+dptrp1 --addr 192.168.0.107 wifi-add ./samples/wifi_2.5G.json
+
+dptrp1 --addr 192.168.0.107 wifi-del ./samples/wifi_del_2.5G.json
+```
