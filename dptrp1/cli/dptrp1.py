@@ -189,6 +189,11 @@ def build_parser():
     p.add_argument('--serial',
             help = "Device serial number for auto discovery. Auto discovery only works for some minutes after the Digital Paper's Wi-Fi setting is switched on.",
             default = None)
+    p.add_argument('--yes','-y',
+            help = "Automatically answer yes to confirmation prompts, for running non-interactively.",
+            action = 'store_true',
+            dest = 'assume_yes',
+            default = False)
     p.add_argument('command',
             help = 'Command to run',
             choices = sorted(commands.keys()))
@@ -199,7 +204,7 @@ def build_parser():
 
 def main():
     args = build_parser().parse_args()
-    dp = DigitalPaper(addr=args.addr, id=args.serial)
+    dp = DigitalPaper(addr=args.addr, id=args.serial, assume_yes=args.assume_yes)
     if args.command == "register":
         # When registering the device, we default to storing auth files in our own configuration directory
         default_deviceid, default_privatekey = get_default_auth_files()

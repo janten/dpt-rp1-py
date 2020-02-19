@@ -111,7 +111,7 @@ class LookUpDPT:
             return self.addr
 
 class DigitalPaper():
-    def __init__(self, addr=None, id=None):
+    def __init__(self, addr=None, id=None, assume_yes=False):
         if addr:
             self.addr = addr
             if id:
@@ -122,6 +122,8 @@ class DigitalPaper():
 
         self.session = requests.Session()
         self.session.verify = False # disable ssl certificate verification
+
+        self.assume_yes = assume_yes # Whether to disable interactive prompts (currently only in sync())
 
     @property
     def base_url(self):
@@ -644,7 +646,7 @@ class DigitalPaper():
         # have been prepared.
         print("")
         confirm = ""
-        while confirm not in ('y', 'yes'):
+        while not (confirm in ('y', 'yes') or self.assume_yes):
             confirm = input(f"Proceed (y/n/?)? ")
             if confirm in ('n', 'no'):
                 return
