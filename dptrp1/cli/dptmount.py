@@ -30,7 +30,7 @@ Juan Grigera <juan@grigera.com.ar>
 
 upload functionality by Jochen Schroeder <cycomanic@gmail.com>
 """
-    
+
 # debian-dependency: python3-fusepy
 # pip3 install fusepy
 
@@ -45,17 +45,25 @@ from errno import ENOENT, EACCES
 from stat import S_IFDIR, S_IFLNK, S_IFREG
 
 import logging
-logger = logging.getLogger('dptmount')
+
+logger = logging.getLogger("dptmount")
 
 from fuse import FUSE, FuseOSError, Operations, LoggingMixIn
 from dptrp1.dptrp1 import DigitalPaper, find_auth_files
 
 import anytree
 
-class DptTablet(LoggingMixIn, Operations):
 
-    def __init__(self, dpt_ip_address=None, dpt_serial_number=None,
-                 dpt_key=None, dpt_client_id=None, uid=None, gid=None):
+class DptTablet(LoggingMixIn, Operations):
+    def __init__(
+        self,
+        dpt_ip_address=None,
+        dpt_serial_number=None,
+        dpt_key=None,
+        dpt_client_id=None,
+        uid=None,
+        gid=None,
+    ):
         self.dpt_ip_address = dpt_ip_address
         self.dpt_serial_number = dpt_serial_number
         self.dpt_key = os.path.expanduser(dpt_key)
@@ -68,7 +76,7 @@ class DptTablet(LoggingMixIn, Operations):
         self.__init_empty_tree()
 
         # Cache this for the session
-        logger.info('Loading initial document list')
+        logger.info("Loading initial document list")
         self._load_document_list()
         logger.debug(anytree.RenderTree(self.root))
 
@@ -76,16 +84,22 @@ class DptTablet(LoggingMixIn, Operations):
         self.documents_fds = {}
         self.files = {}
         self.fd = 0
-       
+
     def __init_empty_tree(self):
         # Create root node
         self.now = time.time()
-        self.root = anytree.Node('Document', item = None, localpath='/',
-                         lstat=dict(st_mode=(S_IFDIR | 0o755),
-                                    st_ctime=self.now,
-                                    st_mtime=self.now,
-                                    st_atime=self.now,
-                                    st_nlink=2), )
+        self.root = anytree.Node(
+            "Document",
+            item=None,
+            localpath="/",
+            lstat=dict(
+                st_mode=(S_IFDIR | 0o755),
+                st_ctime=self.now,
+                st_mtime=self.now,
+                st_atime=self.now,
+                st_nlink=2,
+            ),
+        )
 
     def __authenticate__(self):
         self.dpt = DigitalPaper(self.dpt_ip_address, self.dpt_serial_number)
@@ -93,7 +107,7 @@ class DptTablet(LoggingMixIn, Operations):
         with open(self.dpt_client_id) as fh:
             client_id = fh.readline().strip()
 
-        with open(self.dpt_key, 'rb') as fh:
+        with open(self.dpt_key, "rb") as fh:
             key = fh.read()
 
         self.dpt.authenticate(client_id, key)
@@ -103,51 +117,63 @@ class DptTablet(LoggingMixIn, Operations):
         del node
 
     def _add_node_to_tree(self, parent, item):
-        return anytree.Node(item['entry_name'], parent=parent, item=item, remote_path=item["entry_path"],
-                                lstat=self._get_lstat(item), localpath=os.path.join(parent.localpath, item['entry_name']))
+        return anytree.Node(
+            item["entry_name"],
+            parent=parent,
+            item=item,
+            remote_path=item["entry_path"],
+            lstat=self._get_lstat(item),
+            localpath=os.path.join(parent.localpath, item["entry_name"]),
+        )
 
     def _add_remote_path_to_tree(self, parent, remote_path):
         item = self.dpt._resolve_object_by_path(remote_path)
         return self._add_node_to_tree(parent, item)
-        
+
     def _load_document_list(self):
         # TODO maybe some smarter caching?
         self._recurse_load_document_list(self.root)
 
     def _recurse_load_document_list(self, parent):
-        parentnodepath = '/'.join([str(node.name) for node in parent.path])
-        
+        parentnodepath = "/".join([str(node.name) for node in parent.path])
+
         for item in self.dpt.list_objects_in_folder(parentnodepath):
             node = self._add_node_to_tree(parent, item)
-            if item['entry_type'] == 'folder':
+            if item["entry_type"] == "folder":
                 self._recurse_load_document_list(node)
 
     def _get_lstat(self, item):
-        if 'reading_date' in item:
-            atime = calendar.timegm(time.strptime(item['reading_date'], '%Y-%m-%dT%H:%M:%SZ'))
+        if "reading_date" in item:
+            atime = calendar.timegm(
+                time.strptime(item["reading_date"], "%Y-%m-%dT%H:%M:%SZ")
+            )
         else:
             # access time = now if never read...
             atime = self.now
 
         lstat = dict(
-            st_atime = atime,
-            st_gid = self.gid,
-            st_uid = self.uid,
-            st_ctime = calendar.timegm(time.strptime(item['created_date'], '%Y-%m-%dT%H:%M:%SZ')),
+            st_atime=atime,
+            st_gid=self.gid,
+            st_uid=self.uid,
+            st_ctime=calendar.timegm(
+                time.strptime(item["created_date"], "%Y-%m-%dT%H:%M:%SZ")
+            ),
         )
-        
+
         # usual thing for directories is st_link keeps number of subdirectories
-        if item['entry_type'] == 'folder':
-            lstat['st_nlink'] = 2
+        if item["entry_type"] == "folder":
+            lstat["st_nlink"] = 2
             # todo: increment nlink in parent dir
-            lstat['st_mode'] = (S_IFDIR | 0o755)
-            lstat['st_mtime'] = self.now
+            lstat["st_mode"] = S_IFDIR | 0o755
+            lstat["st_mtime"] = self.now
         else:
-            lstat['st_mode'] = (S_IFREG | 0o644)
-            lstat['st_mtime'] = calendar.timegm(time.strptime(item['modified_date'], '%Y-%m-%dT%H:%M:%SZ'))
-            lstat['st_nlink'] = 1
-            lstat['st_size'] =  int(item['file_size'])
-            
+            lstat["st_mode"] = S_IFREG | 0o644
+            lstat["st_mtime"] = calendar.timegm(
+                time.strptime(item["modified_date"], "%Y-%m-%dT%H:%M:%SZ")
+            )
+            lstat["st_nlink"] = 1
+            lstat["st_size"] = int(item["file_size"])
+
             #'st_inot': item['entry_id'], 'entry_id': 'fe13e1df-1cfe-4fe3-9e83-3e12e78b8a47',
 
         # 'entry_name': '10.1017.pdf', 'entry_path': 'Document/10.1017.pdf', 'entry_type': 'document',
@@ -157,7 +183,9 @@ class DptTablet(LoggingMixIn, Operations):
         return lstat
 
     def _map_local_remote(self, full_local):
-        return anytree.search.find(self.root, filter_=lambda node: node.localpath == full_local)
+        return anytree.search.find(
+            self.root, filter_=lambda node: node.localpath == full_local
+        )
 
     def _is_read_only_flags(self, flags):
         # from pcachefs
@@ -186,7 +214,7 @@ class DptTablet(LoggingMixIn, Operations):
         node = self._map_local_remote(path)
         entries = node.children
 
-        dirents = ['.', '..']
+        dirents = [".", ".."]
         dirents.extend([e.name for e in entries])
         logger.debug(dirents)
         return dirents
@@ -222,25 +250,24 @@ class DptTablet(LoggingMixIn, Operations):
         if not self._is_read_only_flags(flags):
             return FuseOSError(EACCES)
 
-        
         if node in self.documents_data:
             # very simple caching of the data to avoid downloading again
             # TODO: data should be kept after file is closed... but we would need some kind of hashing
             data = self.documents_data[self.documents_fds[node]]
         else:
-            logger.info('Downloading %s' % node.item['entry_path'])
-            remote_path = node.item['entry_path']
+            logger.info("Downloading %s" % node.item["entry_path"])
+            remote_path = node.item["entry_path"]
             data = self.dpt.download(remote_path)
-        
+
         self.fd += 1
         self.documents_data[self.fd] = data
         self.documents_fds[node] = self.fd
-        logger.info('file handle %d opened' % self.fd)
+        logger.info("file handle %d opened" % self.fd)
         return self.fd
 
     def release(self, path, fh):
-        #TODO: something is going wrong with releasing the file handles for new created docs
-        logger.info('file handle %d closed' % fh)
+        # TODO: something is going wrong with releasing the file handles for new created docs
+        logger.info("file handle %d closed" % fh)
         node = self._map_local_remote(path)
         del self.documents_data[fh]
         try:
@@ -248,9 +275,9 @@ class DptTablet(LoggingMixIn, Operations):
         except KeyError:
             del self.files[path]
         return 0
-    
+
     def read(self, path, length, offset, fh):
-        return self.documents_data[fh][offset:offset + length]
+        return self.documents_data[fh][offset : offset + length]
 
     def rename(self, oldpath, newpath):
         old_node = self._map_local_remote(oldpath)
@@ -262,7 +289,7 @@ class DptTablet(LoggingMixIn, Operations):
         self._add_remote_path_to_tree(new_folder_node, newpath)
 
     def create(self, path, mode, fi=None):
-        #TODO: check if files is necessary
+        # TODO: check if files is necessary
         logging.debug("create path {}".format(path))
         self.files[path] = dict(
             st_mode=(S_IFREG | mode),
@@ -270,7 +297,8 @@ class DptTablet(LoggingMixIn, Operations):
             st_size=0,
             st_ctime=time.time(),
             st_mtime=time.time(),
-            st_atime=time.time())
+            st_atime=time.time(),
+        )
 
         self.fd += 1
         self.documents_data[self.fd] = bytearray()
@@ -289,25 +317,41 @@ class DptTablet(LoggingMixIn, Operations):
         remote_path = os.path.join(parent.remote_path, fname)
         self.dpt.upload(stream, remote_path)
 
-        duplicate = anytree.search.find(parent, filter_=lambda node, remote_path=remote_path: node.remote_path == remote_path)
+        duplicate = anytree.search.find(
+            parent,
+            filter_=lambda node, remote_path=remote_path: node.remote_path
+            == remote_path,
+        )
         if duplicate is None:
             node = self._add_remote_path_to_tree(parent, remote_path)
         else:
             item = self.dpt._resolve_object_by_path(remote_path)
             duplicate.item = item
             duplicate.lstat = self._get_lstat(item)
-        #self.files.pop(path)
+        # self.files.pop(path)
         return
-    
+
+
 YAML_CONFIG_PATH = os.path.expanduser("~/.config/dpt-rp1.conf")
+
+
 def main():
     import argparse
-    parser = argparse.ArgumentParser()
-    parser.add_argument('mountpoint')
 
-    parser.add_argument("--config", default=YAML_CONFIG_PATH, help="config file, default is %s" % YAML_CONFIG_PATH)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("mountpoint")
+
+    parser.add_argument(
+        "--config",
+        default=YAML_CONFIG_PATH,
+        help="config file, default is %s" % YAML_CONFIG_PATH,
+    )
     parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
-    parser.add_argument("--logfile", default=False, help="Log to a file (default: log to standard output)")
+    parser.add_argument(
+        "--logfile",
+        default=False,
+        help="Log to a file (default: log to standard output)",
+    )
     parser.add_argument("--big_writes", default=True, help="Enable writes of big")
     args = parser.parse_args()
     kwarg = ["big_writes"]
@@ -328,25 +372,33 @@ def main():
 
     # Read YAML config if found
     if os.path.isfile(args.config):
-        config = yaml.safe_load(open(args.config, 'r'))
+        config = yaml.safe_load(open(args.config, "r"))
     else:
         print("Config file not found")
         sys.exit(-1)
 
     # config
     dpt_client_id, dpt_key = find_auth_files()
-    cfgargs = config['dptrp1']
+    cfgargs = config["dptrp1"]
     params = dict(
-        dpt_ip_address = cfgargs.get('addr', None),
-        dpt_serial_number = cfgargs.get('serial', None),
-        dpt_client_id = cfgargs.get('client-id', dpt_client_id),
-        dpt_key = cfgargs.get('key', dpt_key),
-        uid = os.getuid(),
-        gid = os.getgid(),        
+        dpt_ip_address=cfgargs.get("addr", None),
+        dpt_serial_number=cfgargs.get("serial", None),
+        dpt_client_id=cfgargs.get("client-id", dpt_client_id),
+        dpt_key=cfgargs.get("key", dpt_key),
+        uid=os.getuid(),
+        gid=os.getgid(),
     )
-    
-    tablet = DptTablet(**params)
-    fuse = FUSE(tablet, args.mountpoint, foreground=True, allow_other=True, nothreads=True, **kwargs)
 
-if __name__ == '__main__':
+    tablet = DptTablet(**params)
+    fuse = FUSE(
+        tablet,
+        args.mountpoint,
+        foreground=True,
+        allow_other=True,
+        nothreads=True,
+        **kwargs
+    )
+
+
+if __name__ == "__main__":
     main()

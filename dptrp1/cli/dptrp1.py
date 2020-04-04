@@ -11,39 +11,46 @@ import re
 from pathlib import Path
 from dptrp1.dptrp1 import DigitalPaper, find_auth_files, get_default_auth_files
 
+
 def do_screenshot(d, filename):
     """
     Take a screenshot of the device's screen and save it to the given local path.
     """
     pic = d.take_screenshot()
-    with open(filename, 'wb') as f:
+    with open(filename, "wb") as f:
         f.write(pic)
+
 
 def do_list_documents(d):
     data = d.list_documents()
     for d in data:
-        print(d['entry_path'])
+        print(d["entry_path"])
+
 
 def do_list_folders(d, *remote_paths):
     data = d.list_all()
     for d in data:
-        if d['entry_type'] == 'folder':
-            print(d['entry_path'] + '/')
+        if d["entry_type"] == "folder":
+            print(d["entry_path"] + "/")
+
 
 def do_move_document(d, old_path, new_path):
     d.move_file(old_path, new_path)
 
+
 def do_copy_document(d, old_path, new_path):
     d.copy_file(old_path, new_path)
 
-def do_upload(d, local_path, remote_path=''):
+
+def do_upload(d, local_path, remote_path=""):
     """
     Upload a local document to the reader.
     Will upload to Document/ if only the local path is specified.
     """
     if not remote_path:
-        remote_path = 'Document/' + os.path.basename(local_path)
+        remote_path = "Document/" + os.path.basename(local_path)
     d.upload_file(local_path, remote_path)
+
 
 def do_download(d, remote_path, local_path):
     """
@@ -52,13 +59,14 @@ def do_download(d, remote_path, local_path):
     data = d.download(remote_path)
 
     if os.path.isdir(local_path):
-        re.sub('/?$', '/', local_path)
+        re.sub("/?$", "/", local_path)
         local_path += os.path.basename(remote_path)
 
-    with open(local_path, 'wb') as f:
+    with open(local_path, "wb") as f:
         f.write(data)
 
-def do_list_document_info(d, remote_path = False):
+
+def do_list_document_info(d, remote_path=False):
     """
     Print metadata about a document on the device.
     If no path is given, information is printed for every document on the device.
@@ -66,26 +74,30 @@ def do_list_document_info(d, remote_path = False):
     if not remote_path:
         infos = d.list_all()
         for info in infos:
-            print(info['entry_path'])
+            print(info["entry_path"])
             for key in info:
                 print("    - " + key + ": " + info[key])
     else:
         info = d.list_document_info(remote_path)
-        print(info['entry_path'])
+        print(info["entry_path"])
         for key in info:
             print("    - " + key + ": " + info[key])
 
+
 def do_update_firmware(d, local_path):
-    with open(local_path, 'rb') as fwfh:
+    with open(local_path, "rb") as fwfh:
         d.update_firmware(fwfh)
+
 
 def do_delete_document(d, remote_path):
     d.delete_document(remote_path)
 
+
 def do_delete_folder(d, remote_path):
     d.delete_folder(remote_path)
 
-def do_sync(d, local_path, remote_path = 'Document'):
+
+def do_sync(d, local_path, remote_path="Document"):
     """
     Synchronize all PDF documents between a local path (on your PC) and a
     remote path (on the DPT). Older documents will be overwritten by newer ones
@@ -96,27 +108,34 @@ def do_sync(d, local_path, remote_path = 'Document'):
     """
     d.sync(local_path, remote_path)
 
+
 def do_new_folder(d, remote_path):
     d.new_folder(remote_path)
+
 
 def do_wifi_list(d):
     data = d.wifi_list()
     print(json.dumps(data, indent=2))
 
+
 def do_wifi_scan(d):
     data = d.wifi_scan()
     print(json.dumps(data, indent=2))
 
+
 def do_wifi(d):
-    print(d.wifi_enabled()['value'])
+    print(d.wifi_enabled()["value"])
+
 
 def do_wifi_enable(d):
     print(d.enable_wifi())
 
+
 def do_wifi_disable(d):
     print(d.disable_wifi())
 
-def do_add_wifi(d, cfg_file=''):
+
+def do_add_wifi(d, cfg_file=""):
     try:
         cfg = json.load(open(cfg_file))
     except JSONDecodeError:
@@ -124,20 +143,25 @@ def do_add_wifi(d, cfg_file=''):
     except FileNotFoundError:
         quit("File Not Found: %s" % cfg_file)
     if not cfg:
-        print(d.configure_wifi(ssid = "vecna2",
-                         security = "psk",
-                         passwd = "elijah is a cat",
-                         dhcp = "true",
-                         static_address = "",
-                         gateway = "",
-                         network_mask = "",
-                         dns1 = "",
-                         dns2 = "",
-                         proxy = "false"))
+        print(
+            d.configure_wifi(
+                ssid="vecna2",
+                security="psk",
+                passwd="elijah is a cat",
+                dhcp="true",
+                static_address="",
+                gateway="",
+                network_mask="",
+                dns1="",
+                dns2="",
+                proxy="false",
+            )
+        )
     else:
         print(d.configure_wifi(**cfg))
 
-def do_delete_wifi(d, cfg_file=''):
+
+def do_delete_wifi(d, cfg_file=""):
     try:
         cfg = json.load(open(cfg_file))
     except ValueError:
@@ -145,18 +169,20 @@ def do_delete_wifi(d, cfg_file=''):
     except FileNotFoundError:
         quit("File Not Found: %s" % cfg_file)
     if not cfg:
-        print(d.delete_wifi(ssid = "vecna2", security = "psk"))
+        print(d.delete_wifi(ssid="vecna2", security="psk"))
     else:
         print(d.delete_wifi(**cfg))
+
 
 def do_register(d, key_file, id_file):
     _, key, device_id = d.register()
 
-    with open(key_file, 'w') as f:
+    with open(key_file, "w") as f:
         f.write(key)
 
-    with open(id_file, 'w') as f:
+    with open(id_file, "w") as f:
         f.write(device_id)
+
 
 def do_help(command):
     """
@@ -164,62 +190,71 @@ def do_help(command):
     """
     print(inspect.getdoc(commands[command]))
 
+
 commands = {
     "screenshot": do_screenshot,
-    "list-documents" : do_list_documents,
-    "document-info" : do_list_document_info,
-    "upload" : do_upload,
-    "download" : do_download,
-    "delete" : do_delete_document,
-    "delete-folder" : do_delete_folder,
-    "new-folder" : do_new_folder,
+    "list-documents": do_list_documents,
+    "document-info": do_list_document_info,
+    "upload": do_upload,
+    "download": do_download,
+    "delete": do_delete_document,
+    "delete-folder": do_delete_folder,
+    "new-folder": do_new_folder,
     "move-document": do_move_document,
     "copy-document": do_copy_document,
-    "list-folders" : do_list_folders,
+    "list-folders": do_list_folders,
     "wifi-list": do_wifi_list,
     "wifi-scan": do_wifi_scan,
     "wifi-add": do_add_wifi,
     "wifi-del": do_delete_wifi,
     "wifi": do_wifi,
-    "wifi-enable" : do_wifi_enable,
-    "wifi-disable" : do_wifi_disable,
-    "register" : do_register,
+    "wifi-enable": do_wifi_enable,
+    "wifi-disable": do_wifi_disable,
+    "register": do_register,
     "update-firmware": do_update_firmware,
     "sync": do_sync,
-    "help": do_help
+    "help": do_help,
 }
 
+
 def build_parser():
-    p = argparse.ArgumentParser(description = "Remote control for Sony DPT-RP1")
-    p.add_argument('--client-id',
-            help = "File containing the device's client id",
-            default = None)
-    p.add_argument('--key',
-            help = "File containing the device's private key",
-            default = None)
-    p.add_argument('--addr',
-            help = "Hostname or IP address of the device. Disables auto discovery.",
-            default=None)
-    p.add_argument('--serial',
-            help = "Device serial number for auto discovery. Auto discovery only works for some minutes after the Digital Paper's Wi-Fi setting is switched on.",
-            default = None)
-    p.add_argument('--yes','-y',
-            help = "Automatically answer yes to confirmation prompts, for running non-interactively.",
-            action = 'store_true',
-            dest = 'assume_yes',
-            default = False)
-    p.add_argument('--quiet','-q',
-            help = "Suppress informative messages.",
-            action = 'store_true',
-            dest = 'quiet',
-            default = False)
-    p.add_argument('command',
-            help = 'Command to run',
-            choices = sorted(commands.keys()))
-    p.add_argument('command_args',
-            help = 'Arguments for the command',
-            nargs = '*')
+    p = argparse.ArgumentParser(description="Remote control for Sony DPT-RP1")
+    p.add_argument(
+        "--client-id", help="File containing the device's client id", default=None
+    )
+    p.add_argument(
+        "--key", help="File containing the device's private key", default=None
+    )
+    p.add_argument(
+        "--addr",
+        help="Hostname or IP address of the device. Disables auto discovery.",
+        default=None,
+    )
+    p.add_argument(
+        "--serial",
+        help="Device serial number for auto discovery. Auto discovery only works for some minutes after the Digital Paper's Wi-Fi setting is switched on.",
+        default=None,
+    )
+    p.add_argument(
+        "--yes",
+        "-y",
+        help="Automatically answer yes to confirmation prompts, for running non-interactively.",
+        action="store_true",
+        dest="assume_yes",
+        default=False,
+    )
+    p.add_argument(
+        "--quiet",
+        "-q",
+        help="Suppress informative messages.",
+        action="store_true",
+        dest="quiet",
+        default=False,
+    )
+    p.add_argument("command", help="Command to run", choices=sorted(commands.keys()))
+    p.add_argument("command_args", help="Arguments for the command", nargs="*")
     return p
+
 
 def main():
     args = build_parser().parse_args()
@@ -227,12 +262,16 @@ def main():
         # Help is available without a device
         commands[args.command](*args.command_args)
         return
-    
-    dp = DigitalPaper(addr=args.addr, id=args.serial, assume_yes=args.assume_yes, quiet=args.quiet)
+
+    dp = DigitalPaper(
+        addr=args.addr, id=args.serial, assume_yes=args.assume_yes, quiet=args.quiet
+    )
     if args.command == "register":
         # When registering the device, we default to storing auth files in our own configuration directory
         default_deviceid, default_privatekey = get_default_auth_files()
-        do_register(dp, args.key or default_privatekey, args.client_id or default_deviceid)
+        do_register(
+            dp, args.key or default_privatekey, args.client_id or default_deviceid
+        )
         return
 
     # When connecting to a device, we default to looking for auth files in
@@ -252,10 +291,11 @@ def main():
         exit(1)
     with open(args.client_id) as fh:
         client_id = fh.readline().strip()
-    with open(args.key, 'rb') as fh:
+    with open(args.key, "rb") as fh:
         key = fh.read()
     dp.authenticate(client_id, key)
     commands[args.command](dp, *args.command_args)
+
 
 if __name__ == "__main__":
     main()
