@@ -12,6 +12,9 @@ from pathlib import Path
 from dptrp1.dptrp1 import DigitalPaper, find_auth_files, get_default_auth_files
 
 def do_screenshot(d, filename):
+    """
+    Take a screenshot of the device's screen and save it to the given local path.
+    """
     pic = d.take_screenshot()
     with open(filename, 'wb') as f:
         f.write(pic)
@@ -34,11 +37,18 @@ def do_copy_document(d, old_path, new_path):
     d.copy_file(old_path, new_path)
 
 def do_upload(d, local_path, remote_path=''):
+    """
+    Upload a local document to the reader.
+    Will upload to Document/ if only the local path is specified.
+    """
     if not remote_path:
         remote_path = 'Document/' + os.path.basename(local_path)
     d.upload_file(local_path, remote_path)
 
 def do_download(d, remote_path, local_path):
+    """
+    Download a document from the reader to your computer.
+    """
     data = d.download(remote_path)
 
     if os.path.isdir(local_path):
@@ -49,6 +59,10 @@ def do_download(d, remote_path, local_path):
         f.write(data)
 
 def do_list_document_info(d, remote_path = False):
+    """
+    Print metadata about a document on the device.
+    If no path is given, information is printed for every document on the device.
+    """
     if not remote_path:
         infos = d.list_all()
         for info in infos:
@@ -144,7 +158,7 @@ def do_register(d, key_file, id_file):
     with open(id_file, 'w') as f:
         f.write(device_id)
 
-def do_help(d, command):
+def do_help(command):
     """
     Print additional information about a command, if available.
     """
@@ -172,7 +186,7 @@ commands = {
     "register" : do_register,
     "update-firmware": do_update_firmware,
     "sync": do_sync,
-    "command-help": do_help
+    "help": do_help
 }
 
 def build_parser():
@@ -194,6 +208,11 @@ def build_parser():
             action = 'store_true',
             dest = 'assume_yes',
             default = False)
+    p.add_argument('--quiet','-q',
+            help = "Suppress informative messages.",
+            action = 'store_true',
+            dest = 'quiet',
+            default = False)
     p.add_argument('command',
             help = 'Command to run',
             choices = sorted(commands.keys()))
@@ -204,7 +223,12 @@ def build_parser():
 
 def main():
     args = build_parser().parse_args()
-    dp = DigitalPaper(addr=args.addr, id=args.serial, assume_yes=args.assume_yes)
+    if args.command in ["help", "command-help"]:
+        # Help is available without a device
+        commands[args.command](*args.command_args)
+        return
+    
+    dp = DigitalPaper(addr=args.addr, id=args.serial, assume_yes=args.assume_yes, quiet=args.quiet)
     if args.command == "register":
         # When registering the device, we default to storing auth files in our own configuration directory
         default_deviceid, default_privatekey = get_default_auth_files()

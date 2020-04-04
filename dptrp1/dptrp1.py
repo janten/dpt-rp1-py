@@ -67,11 +67,12 @@ class ResolveObjectFailed(DigitalPaperException):
     pass
 
 class LookUpDPT:
-    def __init__(self):
+    def __init__(self, quiet=False):
         import threading
         self.addr = None
         self.id = None
         self.lock = threading.Lock()
+        self.quiet = quiet
 
     def add_service(self, zeroconf, type, name):
         info = zeroconf.get_service_info(type, name)
@@ -80,18 +81,20 @@ class LookUpDPT:
         info = requests.get("http://{}:{}/register/information".format(addr, info.port)).json()
         if not self.id:
             self.id = info['serial_number']
-            print("Found Digital Paper with serial number {}".format(self.id))
-            print("To discover only this specific device, call:")
-            print()
-            print("    {} --serial {} {}".format(sys.argv[0], self.id, " ".join(sys.argv[1:])))
-            print()
+            if not self.quiet:
+                print("Found Digital Paper with serial number {}".format(self.id))
+                print("To discover only this specific device, call:")
+                print()
+                print("    {} --serial {} {}".format(sys.argv[0], self.id, " ".join(sys.argv[1:])))
+                print()
         if info['serial_number'] == self.id:
             self.addr = str(addr)
             self.lock.release()
 
     def find(self, id, timeout=30):
         from zeroconf import ServiceBrowser, Zeroconf
-        print("Discovering Digital Paper for {} seconds…".format(timeout))
+        if not self.quiet:
+            print("Discovering Digital Paper for {} seconds…".format(timeout))
         sys.stdout.flush()
         self.id = id
         zc = Zeroconf()
@@ -103,26 +106,26 @@ class LookUpDPT:
             print("Failed".format(timeout))
             return None
         else:
-            print("Found digital paper at", self.addr)
-            print("To skip the discovery process (and this message), call:")
-            print()
-            print("    {} --addr {} {}".format(sys.argv[0], self.addr, " ".join(sys.argv[1:])))
-            print()
+            if not self.quiet:
+                print("Found digital paper at", self.addr)
+                print("To skip the discovery process (and this message), call:")
+                print()
+                print("    {} --addr {} {}".format(sys.argv[0], self.addr, " ".join(sys.argv[1:])))
+                print()
             return self.addr
 
 class DigitalPaper():
-    def __init__(self, addr=None, id=None, assume_yes=False):
+    def __init__(self, addr=None, id=None, assume_yes=False, quiet=False):
         if addr:
             self.addr = addr
             if id:
                 print("Ignoring serial number since address is set. Remove --serial {} from call to silence this message.".format(id))
         else:
-            lookup = LookUpDPT()
+            lookup = LookUpDPT(quiet=quiet)
             self.addr = lookup.find(id)
 
         self.session = requests.Session()
         self.session.verify = False # disable ssl certificate verification
-
         self.assume_yes = assume_yes # Whether to disable interactive prompts (currently only in sync())
 
     @property
@@ -941,9 +944,9 @@ class DigitalPaper():
     ### Etc
 
     def take_screenshot(self):
-        url = "{base_url}/system/controls/screen_shot" \
+        url = "{base_url}/system/controls/screen_shot2" \
                 .format(base_url = self.base_url)
-        r = self.session.get(url)
+        r = self.session.get(url, params={"query": "jpeg"})
         return r.content
 
     def ping(self):
