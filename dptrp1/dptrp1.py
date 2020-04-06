@@ -570,7 +570,8 @@ class DigitalPaper:
             for entry in os.scandir(path):
                 if entry.is_dir():
                     traverse_local_folder(entry.path)
-                elif entry.name.lower().endswith(".pdf"):
+                # Only handle PDF files, ignore files starting with a dot.
+                elif entry.name.lower().endswith(".pdf") and not entry.name.startswith("."):
                     relative_path = Path(entry.path).relative_to(local_folder)
                     remote_path = normalize_path(
                         (Path(remote_folder) / relative_path).as_posix()
