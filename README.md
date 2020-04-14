@@ -8,35 +8,99 @@ We now have a proper Python package, so you may just run:
 pip3 install dpt-rp1-py
 ```
 
-Installing the package also installs the command line utilities `dptrp1` and `dptmount`.
-
-
-### From Source
-To install the library from the sources, clone this repository, then run `python3 setup.py install` or `pip3 install .` from the root directory. To install as a developer use `python3 setup.py develop` (see [the setuptools docs](http://setuptools.readthedocs.io/en/latest/setuptools.html#development-mode)) and work on the source as usual.
+Installing the package also installs the command line utilities `dptrp1` and `dptmount`. To install the library from the sources, clone this repository, then run `python3 setup.py install` or `pip3 install .` from the root directory. To install as a developer use `python3 setup.py develop` (see [the setuptools docs](http://setuptools.readthedocs.io/en/latest/setuptools.html#development-mode)) and work on the source as usual.
 
 ## Using the command line utility
+To see if you can successfully connect to the reader, try the command `dptrp1 list-documents`. If you have Sony's Digital Paper App installed, this should work without any further configuration. If this fails, register your reader with the app using `dptrp1 register`.
+
+### Basic usage
+Here you see some basic usage examples for the utility. Text following a dollar sign is the command as entered on the command line on MacOS or Linux. Your paths may look slightly different on Windows. Throughout this document, _reader_ or _device_ refers to you Digital Paper device.
+
+#### Listing all documents on the device
 ```
-dptrp1 command [arguments]
+$ dptrp1 list-documents                                                                                 
+Document/Note/Graph_20171022.pdf
+Document/Work/Scans/Contract.pdf
+Document/Papers/svetachov2010.pdf
+Document/Papers/sporns2012.pdf
 ```
 
-To see if you can successfully connect to the reader, try the command `dptrp1 list-documents`. If you have Sony's Digital Paper App installed, this should work without any further configuration. If this fails, register your reader with the app using `dptrp1  register`.
+#### Getting general usage instructions
+```
+$ dptrp1 -h
+usage: dptrp1 [-h] [--client-id CLIENT_ID] [--key KEY] [--addr ADDR]
+              [--serial SERIAL] [--yes] [--quiet]
+              {copy-document,[...],wifi-scan}
+              [command_args [command_args ...]]
+
+Remote control for Sony DPT-RP1
+
+positional arguments:
+  {copy-document,[...],wifi-scan}
+                        Command to run
+  command_args          Arguments for the command
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --client-id CLIENT_ID
+                        File containing the device's client id
+  --key KEY             File containing the device's private key
+  --addr ADDR           Hostname or IP address of the device. Disables auto
+                        discovery.
+  --serial SERIAL       Device serial number for auto discovery. Auto
+                        discovery only works for some minutes after the
+                        Digital Paper's Wi-Fi setting is switched on.
+  --yes, -y             Automatically answer yes to confirmation prompts, for
+                        running non-interactively.
+  --quiet, -q           Suppress informative messages.
+
+```
+
+#### Getting help for the upload command
+```
+$ dptrp1 help upload
+
+    Usage: dptrp1 upload <local_path> [<remote_path>]
+
+    Upload a local document to the reader.
+    Will upload to Document/ if only the local path is specified.
+```
+    
+#### Uploading a document to the reader
+```
+$ dptrp1 upload ~/Desktop/scan.pdf
+```
+
+#### Opening the second page of a document on the reader
+```
+$ dptrp1 display-document Document/scan.pdf 2
+```
+
+#### Connecting to a WiFi network
+This command requires the path to a WiFi configuration file as a parameter. Look at the [sample configuration](https://github.com/janten/dpt-rp1-py/blob/master/samples/wifi_2.5G.json) file and put your network name in the _ssid_ field and your password into the _passwd_ field. You can generally leave the other fields unchanged.
+
+```
+$ dptrp1 wifi-add config.json
+```
 
 ### Supported commands
-You can get a list of the implemented commands by running `dptrp1` with no additional arguments. Supported commands include _help_, _copy-document_, _delete_, _delete-folder_, _download_, _list-documents_, _list-folders_, _move-document_, _new-folder_, _register_, _screenshot_, _sync_, _update-firmware_, _upload_, _wifi_, _wifi-add_, _wifi-del_, _wifi-disable_, _wifi-enable_, _wifi-list_, and _wifi-scan_.
+You can get a list of the implemented commands by running `dptrp1` with no additional arguments. The most important commands for everyday use are _register_, _help_, _upload_, _download_, and _sync_.
 
-For some commands, you can get additional help by calling `dptrp1 help <command>`, e.g. `dptrp1 help sync`.
+You can get additional information about a specific command by calling `dptrp1 help <command>`, e.g. `dptrp1 help sync`.
 
-Note that the root path for DPT-RP1 is `Document/`. Example command to download a document `file.pdf` from the root folder ("System Storage") of DPT-RP1: `dptrp1 download Document/file.pdf ./file.pdf`. Example command to upload a document `file.pdf` to a folder named `Articles` on DPT-RP1: `dptrp1 upload ./file.pdf Document/Articles/file.pdf`
+Note that the root path for DPT-RP1 is always `Document/`, which is misleadingly displayed as "System Storage" on the device. To download a document called _file.pdf_ from a folder called _Articles_ of the DPT-RP1, the correct command is `dptrp1 download Document/Articles/file.pdf`.
 
 ### Registering the DPT-RP1
 The DPT-RP1 uses SSL encryption to communicate with the computer.  This requires registering the DPT-RP1 with the computer, which results in two pieces of information -- the client ID and the key file -- that you'll need to run the script. You can get this information in three ways.
 
 #### Registering without the Digital Paper App
-This method requires your DPT-RP1 and your computer to be on the same network segment via WiFi, Bluetooth or a USB connection. The USB connection works on Windows and macOS but may not work on a Linux machine. If your WiFi network is not part of the "Saved Network List" (for example if you don't have the app), you can still use the DPT-RP1 as a WiFi access point and connect your computer to it.
+This method requires your DPT-RP1 and your computer to be on the same network segment via WiFi, Bluetooth or a USB connection. The USB connection works on Windows and MacOS but may not work on a Linux machine.
 
 ```
 dptrp1 register
 ```
+
+If you want to use a WiFi connection, make sure that the reader and your computer are connected to the same WiFi network. Some versions of the DPT-RP1 do not allow you to connect to a WiFi network from the device itself. In this case, use Bluetooth or USB first to configure the WiFi network (using the _wifi-add_ command) or update the firmware (using _update-firmware_).
 
 The tool can generally figure out the correct IP address of the device automatically, but you may also specify it with the `--addr <address>` option. If you're on WiFi, go to _Wi-Fi Settings_ on the device and tap the connected network to see the device's address. If you use a Bluetooth connection, it's likely _172.25.47.1_. You can also try the hostname _digitalpaper.local_. Use the _register_ command like seen below, substituting the IP address of the device.
 
@@ -62,8 +126,8 @@ dptrp1:
   client-id: ~/.config/dpt/deviceid.dat
   key: ~/.config/dpt/privatekey.dat
 ```
-If you register with `dptrp1 register` command, the client-id shall be $HOME/.dpapp/deviceid.dat, and key shall be $HOME/.dpapp/privatekey.dat.
-Mount the Digital Paper to a directory with `dptmount --config ~/.config/dpt-rp1.conf /mnt/mountpoint`
+
+If you register with `dptrp1 register` command, the client-id shall be $HOME/.dpapp/deviceid.dat, and key shall be $HOME/.dpapp/privatekey.dat. Mount the Digital Paper to a directory with `dptmount --config ~/.config/dpt-rp1.conf /mnt/mountpoint`
 
 #### Finding the private key and client ID on Windows
 
@@ -83,20 +147,3 @@ If you have already registered on macOS, the Digital Paper app stores the files 
 * Currently there is no caching, therefore operations can be slow as they require uploading or downloading from the 
 device. However, this avoids having to resolve conflicts if a document has been changed both on the Digital Paper and
 the caching directory.
-
-## Usage
-
-If paired over bluetooth, use `172.25.47.1` (double check IP from bluetooth connection network access point)
-
-Else, over Wifi:
-
-```
-# Try multiple times
-dptrp1 --addr 192.168.0.107 register
-
-dptrp1 --addr 192.168.0.107 list-folders
-
-dptrp1 --addr 192.168.0.107 wifi-add ./samples/wifi_2.5G.json
-
-dptrp1 --addr 192.168.0.107 wifi-del ./samples/wifi_del_2.5G.json
-```
