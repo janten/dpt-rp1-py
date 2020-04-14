@@ -412,6 +412,13 @@ class DigitalPaper:
             return
         self.delete_document_by_id(remote_id)
 
+    def display_document(self, document_id, page=1):
+        info = {
+            "document_id": document_id,
+            "page": page
+        }
+        r = self._put_endpoint("/viewer/controls/open2", data=info)
+
     def delete_folder(self, remote_path):
         try:
             remote_id = self._get_object_id(remote_path)
