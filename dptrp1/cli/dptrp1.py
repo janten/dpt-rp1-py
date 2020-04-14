@@ -83,15 +83,20 @@ def do_list_document_info(d, remote_path=False):
         for key in info:
             print("    - " + key + ": " + info[key])
 
+
 def do_dispay_document(d, remote_path, page=1):
     """
     Displays the given document on the reader.
     The path must be a valid path on the device.
     To display a local document, upload it first.
+    Optionally pass a page number to open a specific page, number 1 being the front page.
     Will show the first page if the page parameter is omitted.
+    
+    Example: dptrp1 display-document Document/Magazines/Comic.pdf 5
     """
     info = d.list_document_info(remote_path)
     d.display_document(info["entry_id"], page)
+
 
 def do_update_firmware(d, local_path):
     with open(local_path, "rb") as fwfh:
@@ -192,6 +197,7 @@ def do_register(d, key_file, id_file):
     with open(id_file, "w") as f:
         f.write(device_id)
 
+
 def format_parameter(parameter):
     desc = ""
     if parameter.default != inspect.Parameter.empty:
@@ -200,6 +206,7 @@ def format_parameter(parameter):
     if parameter.default != inspect.Parameter.empty:
         desc += "]"
     return desc
+
 
 def do_help(command):
     """
@@ -213,6 +220,7 @@ def do_help(command):
     except:
         pass
     print(commands[command].__doc__)
+
 
 commands = {
     "screenshot": do_screenshot,

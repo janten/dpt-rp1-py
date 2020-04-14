@@ -413,10 +413,7 @@ class DigitalPaper:
         self.delete_document_by_id(remote_id)
 
     def display_document(self, document_id, page=1):
-        info = {
-            "document_id": document_id,
-            "page": page
-        }
+        info = {"document_id": document_id, "page": page}
         r = self._put_endpoint("/viewer/controls/open2", data=info)
 
     def delete_folder(self, remote_path):
@@ -578,7 +575,9 @@ class DigitalPaper:
                 if entry.is_dir():
                     traverse_local_folder(entry.path)
                 # Only handle PDF files, ignore files starting with a dot.
-                elif entry.name.lower().endswith(".pdf") and not entry.name.startswith("."):
+                elif entry.name.lower().endswith(".pdf") and not entry.name.startswith(
+                    "."
+                ):
                     relative_path = Path(entry.path).relative_to(local_folder)
                     remote_path = normalize_path(
                         (Path(remote_folder) / relative_path).as_posix()
