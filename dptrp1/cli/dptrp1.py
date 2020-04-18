@@ -204,7 +204,7 @@ def format_parameter(parameter):
         desc += "["
     desc += "<{}>".format(parameter.name)
     if parameter.default != inspect.Parameter.empty:
-        desc += "]"
+        desc += " = " + str(parameter.default) + "]"
     return desc
 
 
@@ -220,6 +220,26 @@ def do_help(command):
     except:
         pass
     print(commands[command].__doc__)
+
+
+def do_get_config(d, path):
+    """
+    Saves the current device configuration to the given path.
+    The configuration will be saved as a JSON file compatible with the set-configuration command.
+    """
+    config = d.get_config()
+    with open(path, "w") as file:
+        json.dump(config, file, indent=4, sort_keys=True)
+
+
+def do_set_config(d, path):
+    """
+    Reads the JSON-encoded configuration file and applies the configuration to the device.
+    Use get-configuration first to read the current configuration.
+    """
+    with open(path) as file:
+        config = json.load(file)
+    d.set_config(config)
 
 
 commands = {
@@ -246,6 +266,8 @@ commands = {
     "sync": do_sync,
     "help": do_help,
     "display-document": do_dispay_document,
+    "get-configuration": do_get_config,
+    "set-configuration": do_set_config,
 }
 
 
@@ -326,7 +348,13 @@ def main():
     with open(args.key, "rb") as fh:
         key = fh.read()
     dp.authenticate(client_id, key)
-    commands[args.command](dp, *args.command_args)
+
+    try:
+        commands[args.command](dp, *args.command_args)
+    except Exception as e:
+        print("An error occured:", e, file=sys.stderr)
+        print("For help, call:", sys.argv[0], "help", args.command)
+        sys.exit(1)
 
 
 if __name__ == "__main__":

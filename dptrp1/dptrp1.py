@@ -990,6 +990,22 @@ class DigitalPaper:
 
     ### Configuration
 
+    def get_config(self):
+        """
+        Returns the current configuration.
+        Return value will be a dictionary of dictionaries.
+        """
+        data = self._get_endpoint("/system/configs/").json()
+        return data
+
+    def set_config(self, config):
+        """
+        Update the device configuration.
+        Input uses the same format that get_config() returns.
+        """
+        for key, setting in config.items():
+            data = self._put_endpoint("/system/configs/" + key, data=setting)
+
     def get_timeout(self):
         data = self._get_endpoint("/system/configs/timeout_to_standby").json()
         return data["value"]
@@ -1061,6 +1077,7 @@ class DigitalPaper:
     ### Etc
 
     def take_screenshot(self):
+        # Or "{base_url}/system/controls/screen_shot" for a PNG image.
         url = "{base_url}/system/controls/screen_shot2".format(base_url=self.base_url)
         r = self.session.get(url, params={"query": "jpeg"})
         return r.content
