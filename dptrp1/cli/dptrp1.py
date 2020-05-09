@@ -20,6 +20,10 @@ def do_screenshot(d, filename):
     with open(filename, "wb") as f:
         f.write(pic)
 
+def do_list_templates(d):
+    data = d.list_templates()
+    for d in data:
+        print(d)
 
 def do_list_documents(d):
     data = d.list_documents()
@@ -51,6 +55,11 @@ def do_upload(d, local_path, remote_path=""):
         remote_path = "Document/" + os.path.basename(local_path)
     d.upload_file(local_path, remote_path)
 
+def do_upload_template(d, local_path, remote_path=''):
+    if not remote_path:
+        remote_path = os.path.basename(local_path)
+    with open(local_path, 'rb') as f:
+        d.upload_template(f, remote_path)
 
 def do_download(d, remote_path, local_path):
     """
@@ -245,8 +254,10 @@ def do_set_config(d, path):
 commands = {
     "screenshot": do_screenshot,
     "list-documents": do_list_documents,
+    "list-templates" : do_list_templates,
     "document-info": do_list_document_info,
     "upload": do_upload,
+    "upload-template" : do_upload_template,
     "download": do_download,
     "delete": do_delete_document,
     "delete-folder": do_delete_folder,

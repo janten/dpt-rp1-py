@@ -359,6 +359,10 @@ class DigitalPaper:
         return r
 
     ### File management
+    def list_templates(self):
+        data = self._get_endpoint('/viewer/configs/note_templates').json()
+        return data['template_list']
+
     def list_documents(self):
         data = self._get_endpoint("/documents2").json()
         return data["entry_list"]
@@ -429,6 +433,24 @@ class DigitalPaper:
 
     def delete_folder_by_id(self, folder_id):
         self._delete_endpoint(f"/folders/{folder_id}")
+
+    def upload_template(self, fh, remote_path):
+        filename = os.path.basename(remote_path)
+        info = {
+            "templateName": filename,
+            "document_source": ""
+        }
+        r = self._post_endpoint("/viewer/configs/note_templates", data=info)
+        doc = r.json()
+        print("doc is: {}".format(doc))
+        print ("r is : {}".format(r))
+        doc_url = "/viewer/configs/note_templates/{}/file".format(doc["note_template_id"])
+
+        files = {
+            'file': (quote_plus(filename), fh, 'rb')
+        }
+        output = self._put_endpoint(doc_url, files=files)
+        print("output is {}".format(output))
 
     def upload(self, fh, remote_path):
         # Uploading a document should replace the existing document
