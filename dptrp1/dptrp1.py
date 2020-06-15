@@ -387,13 +387,39 @@ class DigitalPaper:
             field_query = "&fields=" + ",".join(fields)
         else:
             field_query = ""
-        all_entries = self._get_endpoint(
+        entry_data = self._get_endpoint(
             f"/documents2?entry_type=all" + field_query
-        ).json()["entry_list"]
+        ).json()
+
+        if entry_data["count"] != len(entry_data["entry_list"]):
+            # The device seems to not want to return more than 1300 items in the entry_list, meaning that we will miss entries if the device
+            # has more files/folders than this. Luckly, it can easily be detected by comparing the number of entries with the count.
+            # Perhaps there is some way to request the remaining entries from the same endpoint through some form of pagination,
+            # but we do not know how. Let's fall back to the slower recursive traversal
+            print("Warning: Fast folder traversal did not work. Falling back to slower, recursive folder traversal.")
+            return self.traverse_folder_recursively(remote_path)
+        
+        all_entries = entry_data["entry_list"]
 
         return list(
             filter(lambda e: e["entry_path"].startswith(remote_path), all_entries)
         )
+    
+    def traverse_folder_recursively(self, remote_path):
+        # This is the old recursive implementation of traverse_folder.
+        # It is slower because the main overhead when communicating with the DPT-RP1 is the request latency,
+        # and this recursive implementation makes one request per folder. However, the faster implementation
+        # above fails when there are more than 1300 items, in which case we fall back to this older implementation
+        def traverse(obj):
+            if obj['entry_type'] == 'document':
+                return [obj]
+            else:
+                children = self \
+                  ._get_endpoint("/folders/{remote_id}/entries2".format(remote_id = obj['entry_id'])) \
+                  .json()['entry_list']
+                return [obj] + functools.reduce(lambda acc, c: traverse(c) + acc, children[::-1], [])
+        return traverse(self._resolve_object_by_path(remote_path))
+
 
     def list_document_info(self, remote_path):
         remote_info = self._resolve_object_by_path(remote_path)
