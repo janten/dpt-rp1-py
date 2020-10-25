@@ -23,7 +23,7 @@ def do_screenshot(d, filename):
 def do_list_templates(d):
     data = d.list_templates()
     for d in data:
-        print(d)
+        print(d["template_name"])
 
 def do_list_documents(d):
     data = d.list_documents()
@@ -55,11 +55,16 @@ def do_upload(d, local_path, remote_path=""):
         remote_path = "Document/" + os.path.basename(local_path)
     d.upload_file(local_path, remote_path)
 
-def do_upload_template(d, local_path, remote_path=''):
-    if not remote_path:
-        remote_path = os.path.basename(local_path)
+def do_upload_template(d, local_path, template_name=''):
+    """
+    Upload a local document as a template for the reader.
+    The template name will be set as the file name if
+    only the local path is specified.
+    """
+    if not template_name:
+        template_name = os.path.basename(local_path)
     with open(local_path, 'rb') as f:
-        d.upload_template(f, remote_path)
+        d.upload_template(f, template_name)
 
 def do_download(d, remote_path, local_path):
     """
@@ -115,6 +120,8 @@ def do_update_firmware(d, local_path):
 def do_delete_document(d, remote_path):
     d.delete_document(remote_path)
 
+def do_delete_template(d,remote_path):
+    d.delete_template(remote_path)
 
 def do_delete_folder(d, remote_path):
     d.delete_folder(remote_path)
@@ -261,6 +268,7 @@ commands = {
     "download": do_download,
     "delete": do_delete_document,
     "delete-folder": do_delete_folder,
+    "delete-template": do_delete_template,
     "new-folder": do_new_folder,
     "move-document": do_move_document,
     "copy-document": do_copy_document,

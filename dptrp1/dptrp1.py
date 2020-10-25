@@ -441,6 +441,13 @@ class DigitalPaper:
             # Path not found
             return
         self.delete_document_by_id(remote_id)
+    
+    def delete_template(self,template_name):
+        template_list = self.list_templates()
+        for t in template_list:
+            if t['template_name']==template_name:
+                remote_id = t['note_template_id']
+                self.delete_template_by_id(remote_id)
 
     def display_document(self, document_id, page=1):
         info = {"document_id": document_id, "page": page}
@@ -459,6 +466,9 @@ class DigitalPaper:
 
     def delete_folder_by_id(self, folder_id):
         self._delete_endpoint(f"/folders/{folder_id}")
+    
+    def delete_template_by_id(self, template_id):
+        self._delete_endpoint(f"/viewer/configs/note_templates/{template_id}")
 
     def upload_template(self, fh, remote_path):
         filename = os.path.basename(remote_path)
@@ -468,15 +478,10 @@ class DigitalPaper:
         }
         r = self._post_endpoint("/viewer/configs/note_templates", data=info)
         doc = r.json()
-        print("doc is: {}".format(doc))
-        print ("r is : {}".format(r))
         doc_url = "/viewer/configs/note_templates/{}/file".format(doc["note_template_id"])
-
-        files = {
-            'file': (quote_plus(filename), fh, 'rb')
-        }
-        output = self._put_endpoint(doc_url, files=files)
-        print("output is {}".format(output))
+        
+        files = { 'file': (quote_plus(filename), fh, 'rb') }
+        self._put_endpoint(doc_url, files=files)
 
     def upload(self, fh, remote_path):
         # Uploading a document should replace the existing document
