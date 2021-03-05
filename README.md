@@ -1,5 +1,5 @@
 # dpt-rp1-py
-Python script to manage Sony DPT-RP1 without the Digital Paper App. This repository includes a Python library and a command line utility to manage documents on the DPT-RP1. Tested on Windows, Linux, and macOS. Should also work for Sony's other digital paper readers.
+Python script to manage electronic paper devices made by Sony (Digital Paper, DPT-RP1, DPT-CP1) or Fujitsu (Quaderno) without the Digital Paper App. This repository includes a Python library and a command line utility to manage documents on the reader. Tested on Windows, Linux, and macOS. Should also work for Sony's other digital paper readers.
 
 Throughout this document, _reader_ or _device_ refers to your Digital Paper device.
 
