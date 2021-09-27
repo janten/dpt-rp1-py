@@ -23,7 +23,7 @@ except Exception as e:
 
 
 def readme():
-    with open(os.path.join(DIRECTORY, "README.md")) as f:
+    with open(os.path.join(DIRECTORY, "README.md"), encoding='utf-8') as f:
         return f.read()
 
 
