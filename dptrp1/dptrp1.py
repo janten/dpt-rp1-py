@@ -90,6 +90,9 @@ class LookUpDPT:
         self.lock = threading.Lock()
         self.quiet = quiet
 
+    def update_service(self, zeroconf, service_type, name):
+        pass
+
     def add_service(self, zeroconf, type, name):
         info = zeroconf.get_service_info(type, name)
         import ipaddress
