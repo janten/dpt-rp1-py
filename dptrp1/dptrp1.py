@@ -394,7 +394,7 @@ class DigitalPaper:
             f"/documents2?entry_type=all" + field_query
         ).json()
 
-        if entry_data["count"] != len(entry_data["entry_list"]):
+        if entry_data.get("count") != len(entry_data.get("entry_list", [])):
             # The device seems to not want to return more than 1300 items in the entry_list, meaning that we will miss entries if the device
             # has more files/folders than this. Luckly, it can easily be detected by comparing the number of entries with the count.
             # Perhaps there is some way to request the remaining entries from the same endpoint through some form of pagination,
