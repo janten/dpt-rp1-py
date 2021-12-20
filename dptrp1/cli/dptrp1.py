@@ -54,7 +54,7 @@ def do_upload(d, local_path, remote_path=""):
     """
     if not remote_path:
         remote_path = ROOT_FOLDER + "/" + os.path.basename(local_path)
-    d.upload_file(local_path, remote_path)
+    d.upload_file(local_path, add_prefix(remote_path))
 
 def do_upload_template(d, local_path, template_name=''):
     """
@@ -99,7 +99,7 @@ def do_list_document_info(d, remote_path=''):
             print("    - " + key + ": " + info[key])
 
 
-def do_dispay_document(d, remote_path, page=1):
+def do_display_document(d, remote_path, page=1):
     """
     Displays the given document on the reader.
     The path must be a valid path on the device.
@@ -109,7 +109,7 @@ def do_dispay_document(d, remote_path, page=1):
     
     Example: dptrp1 display-document Document/Magazines/Comic.pdf 5
     """
-    info = d.list_document_info(remote_path)
+    info = d.list_document_info(add_prefix(remote_path))
     d.display_document(info["entry_id"], page)
 
 
@@ -287,7 +287,7 @@ commands = {
     "update-firmware": do_update_firmware,
     "sync": do_sync,
     "help": do_help,
-    "display-document": do_dispay_document,
+    "display-document": do_display_document,
     "get-configuration": do_get_config,
     "set-configuration": do_set_config,
 }
