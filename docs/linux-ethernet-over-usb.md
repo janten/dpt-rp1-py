@@ -62,6 +62,20 @@ The full URI for the DPT-RP1 would be:
 
 This syntax is accepted by urllib3 v1.22 and above.
 
+# Accessing the Fujitsu Quaderno Gen 2 over USB in Linux
 
+The instructions in this guide will work, at the exception of the last part, trying to find the IPv6 local address:
+Instead of `digitalpaper.local`, the Quaderno name is `Android.local`.
 
+    $ avahi-resolve -n Android.local
+    Android.local	fe80::xxxx:xxxx:xxxx:xxxx
+
+Another way to find the device IP address if you don't know the name is to run `avahi-browse`:
+
+	 $ avahi-browse -avr
+	 = usb0 IPv6 Digital Paper FMVDP41                         _dp_fujitsu._tcp     local
+    hostname = [Android.local]
+    address = [fe80::xxxx:xxxx:xxxx:xxxx]
+    port = [8080]
+    txt = []
 
