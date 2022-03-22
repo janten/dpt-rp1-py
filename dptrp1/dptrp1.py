@@ -239,7 +239,7 @@ class DigitalPaper:
         r = self.session.post(register_hash_url, json=m2)
         m3 = r.json()
 
-        if base64.b64decode(m3["a"]) != n2:
+        if base64.b64decode(m3.get("a", "")) != n2:
             print("Nonce N2 doesn't match")
             return
 
