@@ -10,29 +10,45 @@
   }:
     flake-utils.lib.eachDefaultSystem (system: let
       pkgs = nixpkgs.legacyPackages.${system};
-    in rec {
-      packages.default = pkgs.python3Packages.buildPythonApplication {
+      propagatedBuildInputs = with pkgs.python3Packages; [
+        anytree
+        fusepy
+        httpsig
+        pbkdf2
+        pyyaml
+        requests
+        setuptools
+        tqdm
+        urllib3
+        zeroconf
+      ];
+      dpt-rp1-py = pkgs.python3Packages.buildPythonApplication {
+        inherit propagatedBuildInputs;
+
         pname = "dpt-rp1-py";
         version = "0.1.16";
 
         src = ./.;
         doCheck = false;
 
-        propagatedBuildInputs = with python3Packages; [
-          anytree
-          fusepy
-          httpsig
-          pbkdf2
-          pyyaml
-          requests
-          setuptools
-          tqdm
-          urllib3
-          zeroconf
-        ];
-
         pythonImportsCheck = ["dptrp1"];
       };
-      apps.default = flake-utils.lib.mkApp {drv = packages.default;};
+    in rec {
+      devShell = pkgs.mkShell {
+        inherit propagatedBuildInputs;
+        nativeBuildInputs = [];
+      };
+      packages.default = dpt-rp1-py;
+      apps = {
+        dptrp1 = flake-utils.lib.mkApp {
+          drv = packages.default;
+          name = "dptrp1";
+        };
+        dptmount = flake-utils.lib.mkApp {
+          drv = packages.default;
+          name = "dptmount";
+        };
+        default = apps.dptrp1;
+      };
     });
 }
