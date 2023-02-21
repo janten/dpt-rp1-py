@@ -388,7 +388,7 @@ def main():
         tablet,
         args.mountpoint,
         foreground=True,
-        allow_other=True,
+        allow_other=False,
         nothreads=True,
         **kwargs
     )
