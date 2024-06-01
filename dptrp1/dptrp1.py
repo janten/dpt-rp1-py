@@ -367,8 +367,8 @@ class DigitalPaper:
         return data['template_list']
 
     def list_documents(self):
-        data = self._get_endpoint("/documents2").json()
-        return data["entry_list"]
+        data = self.traverse_folder_recursively("Document")
+        return data
 
     def list_all(self):
         data = self._get_endpoint("/documents2?entry_type=all").json()
