@@ -29,7 +29,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def get_default_auth_files():
     """Get the default path where the authentication files for connecting to DPT-RP1 are stored"""
-    config_path = os.path.join(os.path.expanduser("~"), ".dpapp")
+    config_path = os.path.join(os.path.expanduser("~"), ".config", "dpt")
     os.makedirs(config_path, exist_ok=True)
     deviceid = os.path.join(config_path, "deviceid.dat")
     privatekey = os.path.join(config_path, "privatekey.dat")
