@@ -351,9 +351,8 @@ class DigitalPaper:
         sig_maker = httpsig.Signer(secret=key, algorithm="rsa-sha256")
         nonce = self._get_nonce(client_id)
         signed_nonce = sig_maker.sign(nonce)
-        url = "{base_url}/auth".format(base_url=self.base_url)
         data = {"client_id": client_id, "nonce_signed": signed_nonce}
-        r = self.session.put(url, json=data)
+        r = self._put_endpoint("/auth", data=data)
         # cookiejar cannot parse the cookie format used by the tablet,
         # so we have to set it manually.
         _, credentials = r.headers["Set-Cookie"].split("; ")[0].split("=")
@@ -430,10 +429,8 @@ class DigitalPaper:
     def download(self, remote_path):
         remote_id = self._get_object_id(remote_path)
 
-        url = "{base_url}/documents/{remote_id}/file".format(
-            base_url=self.base_url, remote_id=remote_id
-        )
-        response = self.session.get(url)
+        path = "/documents/{remote_id}/file".format(remote_id=remote_id)
+        response = self._get_endpoint(path)
         return response.content
 
     def delete_document(self, remote_path):
@@ -1113,8 +1110,7 @@ class DigitalPaper:
         return data["value"]
 
     def get_api_version(self):
-        url = f"http://{self.addr}:8080/api_version"
-        resp = self.session.get(url)
+        resp = self._reg_endpoint_request("GET", "/api_version")
         return resp.json()["value"]
 
     def get_mac_address(self):
@@ -1137,16 +1133,14 @@ class DigitalPaper:
 
     def take_screenshot(self):
         # Or "{base_url}/system/controls/screen_shot" for a PNG image.
-        url = "{base_url}/system/controls/screen_shot2".format(base_url=self.base_url)
-        r = self.session.get(url, params={"query": "jpeg"})
+        r = self._get_endpoint("/system/controls/screen_shot2", params={"query": "jpeg"})
         return r.content
 
     def ping(self):
         """
         Returns True if we are authenticated.
         """
-        url = f"{self.base_url}/ping"
-        r = self.session.get(url)
+        r = self._get_endpoint("/ping")
         return r.ok
 
     ## Update firmware
@@ -1193,6 +1187,7 @@ class DigitalPaper:
     def _endpoint_request(self, method, endpoint, data=None, files=None):
         req = requests.Request(method, self.base_url, json=data, files=files)
         prep = self.session.prepare_request(req)
+        prep.url = prep.url.replace('%25', '%')
         # modifying the prepared request, so that the "endpoint" part of
         # the URL will not be modified by urllib.
         prep.url += endpoint.lstrip("/")
