@@ -187,19 +187,18 @@ class DigitalPaper:
             - client_id: the client id
         """
 
-        reg_url = "http://{addr}:8080".format(addr=self.addr)
-        register_pin_url = "{base_url}/register/pin".format(base_url=reg_url)
-        register_hash_url = "{base_url}/register/hash".format(base_url=reg_url)
-        register_ca_url = "{base_url}/register/ca".format(base_url=reg_url)
-        register_url = "{base_url}/register".format(base_url=reg_url)
-        register_cleanup_url = "{base_url}/register/cleanup".format(base_url=reg_url)
+        register_pin_url = "/register/pin"
+        register_hash_url = "/register/hash"
+        register_ca_url = "/register/ca"
+        register_url = "/register"
+        register_cleanup_url = "/register/cleanup"
 
         print("Cleaning up...")
-        r = self.session.put(register_cleanup_url)
+        r = self._reg_endpoint_request("PUT", register_cleanup_url)
         print(r)
 
         print("Requesting PIN...")
-        r = self.session.post(register_pin_url)
+        r = self._reg_endpoint_request("POST", register_pin_url)
         m1 = r.json()
 
         n1 = base64.b64decode(m1["a"])
@@ -236,7 +235,7 @@ class DigitalPaper:
         )
 
         print("Encoding nonce...")
-        r = self.session.post(register_hash_url, json=m2)
+        r = self._reg_endpoint_request("POST", register_hash_url, data=m2)
         m3 = r.json()
 
         if base64.b64decode(m3.get("a", "")) != n2:
@@ -276,7 +275,7 @@ class DigitalPaper:
         )
 
         print("Getting certificate from device CA...")
-        r = self.session.post(register_ca_url, json=m4)
+        r = self._reg_endpoint_request("POST", register_ca_url, data=m4)
         print(r)
 
         m5 = r.json()
@@ -335,11 +334,11 @@ class DigitalPaper:
         )
 
         print("Registering device...")
-        r = self.session.post(register_url, json=m6)
+        r = self._reg_endpoint_request("POST", register_url, data=m6)
         print(r)
 
         print("Cleaning up...")
-        r = self.session.put(register_cleanup_url)
+        r = self._reg_endpoint_request("PUT", register_cleanup_url)
         print(r)
 
         return (
@@ -1181,6 +1180,16 @@ class DigitalPaper:
             self._put_endpoint("/system/controls/update_firmware")
 
     ### Utility
+    def _reg_endpoint_request(self, method, endpoint, data=None, files=None):
+        base_url = "http://{addr}:8080".format(addr=self.addr)
+        req = requests.Request(method, base_url, json=data, files=files)
+        prep = self.session.prepare_request(req)
+        prep.url = prep.url.replace('%25', '%')
+        # modifying the prepared request, so that the "endpoint" part of
+        # the URL will not be modified by urllib.
+        prep.url += endpoint.lstrip("/")
+        return self.session.send(prep)
+
     def _endpoint_request(self, method, endpoint, data=None, files=None):
         req = requests.Request(method, self.base_url, json=data, files=files)
         prep = self.session.prepare_request(req)
