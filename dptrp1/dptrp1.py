@@ -367,8 +367,8 @@ class DigitalPaper:
         return data['template_list']
 
     def list_documents(self):
-        data = self._get_endpoint("/documents2").json()
-        return data["entry_list"]
+        data = self.traverse_folder_recursively("Document")
+        return data
 
     def list_all(self):
         data = self._get_endpoint("/documents2?entry_type=all").json()
@@ -487,20 +487,24 @@ class DigitalPaper:
         self._put_endpoint(doc_url, files=files)
 
     def upload(self, fh, remote_path):
-        # Uploading a document should replace the existing document
-        self.delete_document(remote_path)
         filename = os.path.basename(remote_path)
-        remote_directory = os.path.dirname(remote_path)
-        self.new_folder(remote_directory)
-        directory_id = self._get_object_id(remote_directory)
-        info = {
-            "file_name": filename,
-            "parent_folder_id": directory_id,
-            "document_source": "",
-        }
-        r = self._post_endpoint("/documents2", data=info)
-        doc = r.json()
-        doc_id = doc["document_id"]
+
+        try:
+            # If there exists a document in the specified remote path, overwrite it.
+            doc_id = self._get_object_id(remote_path)
+        except ResolveObjectFailed as e:
+            remote_directory = os.path.dirname(remote_path)
+            self.new_folder(remote_directory)
+            directory_id = self._get_object_id(remote_directory)
+            info = {
+                "file_name": filename,
+                "parent_folder_id": directory_id,
+                "document_source": "",
+            }
+            r = self._post_endpoint("/documents2", data=info)
+            doc = r.json()
+            doc_id = doc["document_id"]
+
         doc_url = "/documents/{doc_id}/file".format(doc_id=doc_id)
 
         files = {"file": (quote_plus(filename), fh, "rb")}

@@ -1,6 +1,6 @@
 {
     "name": "dpt-rp1-py",
-    "version": "0.1.16",
+    "version": "0.1.17",
     "description": "Python package to manage a Sony DPT-RP1",
     "license": "MIT",
     "authors": [
@@ -45,7 +45,8 @@
         "anytree",
         "fusepy",
         "zeroconf>=0.29.0",
-        "tqdm"
+        "tqdm",
+        "setuptools"
     ],
     "entry_points": {
         "console_scripts": [
