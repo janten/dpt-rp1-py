@@ -140,7 +140,7 @@ dptrp1:
   key: ~/.config/dpt/privatekey.dat
 ```
 
-If you register with `dptrp1 register` command, the client-id shall be $HOME/.dpapp/deviceid.dat, and key shall be $HOME/.dpapp/privatekey.dat. Mount the Digital Paper to a directory with `dptmount --config ~/.config/dpt-rp1.conf /mnt/mountpoint`
+If you register with `dptrp1 register` command, the client-id shall be $HOME/.config/dpt/deviceid.dat, and key shall be $HOME/.config/dpt/privatekey.dat. Mount the Digital Paper to a directory with `dptmount --config ~/.config/dpt-rp1.conf /mnt/mountpoint`
 
 #### Finding the private key and client ID on Windows
 
