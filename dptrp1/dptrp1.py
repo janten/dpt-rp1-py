@@ -187,19 +187,18 @@ class DigitalPaper:
             - client_id: the client id
         """
 
-        reg_url = "http://{addr}:8080".format(addr=self.addr)
-        register_pin_url = "{base_url}/register/pin".format(base_url=reg_url)
-        register_hash_url = "{base_url}/register/hash".format(base_url=reg_url)
-        register_ca_url = "{base_url}/register/ca".format(base_url=reg_url)
-        register_url = "{base_url}/register".format(base_url=reg_url)
-        register_cleanup_url = "{base_url}/register/cleanup".format(base_url=reg_url)
+        register_pin_url = "/register/pin"
+        register_hash_url = "/register/hash"
+        register_ca_url = "/register/ca"
+        register_url = "/register"
+        register_cleanup_url = "/register/cleanup"
 
         print("Cleaning up...")
-        r = self.session.put(register_cleanup_url)
+        r = self._reg_endpoint_request("PUT", register_cleanup_url)
         print(r)
 
         print("Requesting PIN...")
-        r = self.session.post(register_pin_url)
+        r = self._reg_endpoint_request("POST", register_pin_url)
         m1 = r.json()
 
         n1 = base64.b64decode(m1["a"])
@@ -236,7 +235,7 @@ class DigitalPaper:
         )
 
         print("Encoding nonce...")
-        r = self.session.post(register_hash_url, json=m2)
+        r = self._reg_endpoint_request("POST", register_hash_url, data=m2)
         m3 = r.json()
 
         if base64.b64decode(m3.get("a", "")) != n2:
@@ -276,7 +275,7 @@ class DigitalPaper:
         )
 
         print("Getting certificate from device CA...")
-        r = self.session.post(register_ca_url, json=m4)
+        r = self._reg_endpoint_request("POST", register_ca_url, data=m4)
         print(r)
 
         m5 = r.json()
@@ -335,11 +334,11 @@ class DigitalPaper:
         )
 
         print("Registering device...")
-        r = self.session.post(register_url, json=m6)
+        r = self._reg_endpoint_request("POST", register_url, data=m6)
         print(r)
 
         print("Cleaning up...")
-        r = self.session.put(register_cleanup_url)
+        r = self._reg_endpoint_request("PUT", register_cleanup_url)
         print(r)
 
         return (
@@ -352,9 +351,8 @@ class DigitalPaper:
         sig_maker = httpsig.Signer(secret=key, algorithm="rsa-sha256")
         nonce = self._get_nonce(client_id)
         signed_nonce = sig_maker.sign(nonce)
-        url = "{base_url}/auth".format(base_url=self.base_url)
         data = {"client_id": client_id, "nonce_signed": signed_nonce}
-        r = self.session.put(url, json=data)
+        r = self._put_endpoint("/auth", data=data)
         # cookiejar cannot parse the cookie format used by the tablet,
         # so we have to set it manually.
         _, credentials = r.headers["Set-Cookie"].split("; ")[0].split("=")
@@ -431,10 +429,8 @@ class DigitalPaper:
     def download(self, remote_path):
         remote_id = self._get_object_id(remote_path)
 
-        url = "{base_url}/documents/{remote_id}/file".format(
-            base_url=self.base_url, remote_id=remote_id
-        )
-        response = self.session.get(url)
+        path = "/documents/{remote_id}/file".format(remote_id=remote_id)
+        response = self._get_endpoint(path)
         return response.content
 
     def delete_document(self, remote_path):
@@ -1114,8 +1110,7 @@ class DigitalPaper:
         return data["value"]
 
     def get_api_version(self):
-        url = f"http://{self.addr}:8080/api_version"
-        resp = self.session.get(url)
+        resp = self._reg_endpoint_request("GET", "/api_version")
         return resp.json()["value"]
 
     def get_mac_address(self):
@@ -1138,16 +1133,14 @@ class DigitalPaper:
 
     def take_screenshot(self):
         # Or "{base_url}/system/controls/screen_shot" for a PNG image.
-        url = "{base_url}/system/controls/screen_shot2".format(base_url=self.base_url)
-        r = self.session.get(url, params={"query": "jpeg"})
+        r = self._get_endpoint("/system/controls/screen_shot2", params={"query": "jpeg"})
         return r.content
 
     def ping(self):
         """
         Returns True if we are authenticated.
         """
-        url = f"{self.base_url}/ping"
-        r = self.session.get(url)
+        r = self._get_endpoint("/ping")
         return r.ok
 
     ## Update firmware
@@ -1181,9 +1174,20 @@ class DigitalPaper:
             self._put_endpoint("/system/controls/update_firmware")
 
     ### Utility
+    def _reg_endpoint_request(self, method, endpoint, data=None, files=None):
+        base_url = "http://{addr}:8080".format(addr=self.addr)
+        req = requests.Request(method, base_url, json=data, files=files)
+        prep = self.session.prepare_request(req)
+        prep.url = prep.url.replace('%25', '%')
+        # modifying the prepared request, so that the "endpoint" part of
+        # the URL will not be modified by urllib.
+        prep.url += endpoint.lstrip("/")
+        return self.session.send(prep)
+
     def _endpoint_request(self, method, endpoint, data=None, files=None):
         req = requests.Request(method, self.base_url, json=data, files=files)
         prep = self.session.prepare_request(req)
+        prep.url = prep.url.replace('%25', '%')
         # modifying the prepared request, so that the "endpoint" part of
         # the URL will not be modified by urllib.
         prep.url += endpoint.lstrip("/")
