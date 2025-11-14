@@ -570,9 +570,7 @@ class DigitalPaper:
         self.set_datetime()
         self.new_folder(remote_folder)
         print("Looking for changes on device... ", end="", flush=True)
-        remote_info = self.traverse_folder(
-            remote_folder, fields=["entry_path", "modified_date", "entry_type"]
-        )
+        remote_info = self.traverse_folder_recursively(remote_folder)
         print("done")
 
         # Syncing will require different comparions between local and remote paths.
