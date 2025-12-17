@@ -281,7 +281,7 @@ class DptTablet(LoggingMixIn, Operations):
     def mkdir(self, path, mode):
         ppath, dirname = os.path.split(path)
         parent = self._map_local_remote(ppath)
-        remote_path = os.path.join(parent.remote_path, dirname)
+        remote_path = "/".join([parent.remote_path, dirname])
         self.dpt.new_folder(remote_path)
         node = self._add_remote_path_to_tree(parent, remote_path)
         return 0
