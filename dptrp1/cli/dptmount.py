@@ -62,7 +62,7 @@ class FileHandle(object):
         self.fs = fs
         dpath, fname = os.path.split(local_path)
         self.parent = self.fs._map_local_remote(dpath)
-        self.remote_path = os.path.join(self.parent.remote_path, fname)
+        self.remote_path = "/".join([self.parent.remote_path, fname])
         if new:
             self.status = "clean"
         else:
@@ -216,7 +216,7 @@ class DptTablet(LoggingMixIn, Operations):
 
     def _map_local_remote(self, full_local):
         return anytree.search.find(
-            self.root, filter_=lambda node: node.localpath == full_local
+            self.root, filter_=lambda node: node.localpath.replace("\\", "/") == full_local
         )
 
     def _is_read_only_flags(self, flags):
@@ -226,6 +226,18 @@ class DptTablet(LoggingMixIn, Operations):
 
     # Filesystem methods
     # ==================
+    def statfs(self, path):
+        storage = self.dpt.get_storage()
+        # This is a common block size - report is in blocks not bytes.
+        block_size = 4096
+        return {
+            'f_bsize': block_size,
+            'f_frsize': block_size,
+            'f_blocks': int(storage["capacity"]) // block_size,
+            'f_bfree': int(storage["available"]) // block_size,
+            'f_bavail': int(storage["available"]) // block_size,
+        }
+
     def chmod(self, path, mode):
         # TODO: should support chown/chmod
         return 0
@@ -269,7 +281,7 @@ class DptTablet(LoggingMixIn, Operations):
     def mkdir(self, path, mode):
         ppath, dirname = os.path.split(path)
         parent = self._map_local_remote(ppath)
-        remote_path = os.path.join(parent.remote_path, dirname)
+        remote_path = "/".join([parent.remote_path, dirname])
         self.dpt.new_folder(remote_path)
         node = self._add_remote_path_to_tree(parent, remote_path)
         return 0
@@ -379,8 +391,9 @@ def main():
         dpt_serial_number=cfgargs.get("serial", None),
         dpt_client_id=cfgargs.get("client-id", dpt_client_id),
         dpt_key=cfgargs.get("key", dpt_key),
-        uid=os.getuid(),
-        gid=os.getgid(),
+        # On windows, use 'everyone' permission for WinFSP integration.
+        uid=os.getuid() if hasattr(os, "getuid") else 65792,
+        gid=os.getgid() if hasattr(os, "getgid") else 65792,
     )
 
     tablet = DptTablet(**params)
