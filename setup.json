@@ -51,7 +51,8 @@
     "entry_points": {
         "console_scripts": [
             "dptrp1=dptrp1.cli.dptrp1:main",
-            "dptmount=dptrp1.cli.dptmount:main"
+            "dptmount=dptrp1.cli.dptmount:main",
+            "dptusb=dptrp1.cli.dptusb:main"
         ]
     },
     "classifiers": [
