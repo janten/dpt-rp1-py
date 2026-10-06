@@ -4,7 +4,6 @@ import sys
 import uuid
 import time
 import base64
-import httpsig
 import urllib3
 import requests
 import functools
@@ -21,6 +20,7 @@ from Crypto.Hash import SHA256
 from Crypto.Hash.HMAC import HMAC
 from Crypto.Cipher import AES
 from Crypto.PublicKey import RSA
+from Crypto.Signature import pkcs1_15
 from pathlib import Path
 from collections import defaultdict
 
@@ -356,10 +356,12 @@ class DigitalPaper:
         )
 
     def authenticate(self, client_id, key):
-        sig_maker = httpsig.Signer(secret=key, algorithm="rsa-sha256")
-        nonce = self._get_nonce(client_id)
-        signed_nonce = sig_maker.sign(nonce)
-        data = {"client_id": client_id, "nonce_signed": signed_nonce}
+        nonce = self._get_nonce(client_id).encode('utf-8')
+        private_key = RSA.import_key(key)
+        hash_nonce = SHA256.new(nonce)
+        signed_nonce = pkcs1_15.new(private_key).sign(hash_nonce)
+        signed_nonce_decoded = base64.b64encode(signed_nonce).decode('utf-8')
+        data = {"client_id": client_id, "nonce_signed": signed_nonce_decoded}
         r = self._put_endpoint("/auth", data=data)
         # cookiejar cannot parse the cookie format used by the tablet,
         # so we have to set it manually.
