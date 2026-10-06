@@ -62,10 +62,10 @@ The full URI for the DPT-RP1 would be:
 
 This syntax is accepted by urllib3 v1.22 and above.
 
-# Accessing the Fujitsu Quaderno Gen 2 over USB in Linux
+# Accessing the Fujitsu Quaderno Gen 2 (also Readmoo mooInk Pro 2) over USB in Linux
 
 The instructions in this guide will work, at the exception of the last part, trying to find the IPv6 local address:
-Instead of `digitalpaper.local`, the Quaderno name is `Android.local`.
+Instead of `digitalpaper.local`, the Quaderno/mooInk name is `Android.local`.
 
     $ avahi-resolve -n Android.local
     Android.local	fe80::xxxx:xxxx:xxxx:xxxx

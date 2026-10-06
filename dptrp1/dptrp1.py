@@ -126,7 +126,7 @@ class LookUpDPT:
         self.id = id
         zc = Zeroconf()
         self.lock.acquire()
-        ServiceBrowser(zc, ["_digitalpaper._tcp.local.", "_dp_fujitsu._tcp.local."], self)
+        ServiceBrowser(zc, ["_digitalpaper._tcp.local.", "_dp_fujitsu._tcp.local.", "_dp_readmoo._tcp.local."], self)
         wait = self.lock.acquire(timeout=timeout) or (self.addr is not None)
         zc.close()
         if not wait:
