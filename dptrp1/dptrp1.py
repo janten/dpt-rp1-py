@@ -2,29 +2,31 @@
 import os
 import sys
 import uuid
-import time
 import base64
 import urllib3
 import requests
 import functools
 import unicodedata
-import pickle
-import shutil
+from hashlib import pbkdf2_hmac
+from hmac import compare_digest
 from tqdm import tqdm
 from glob import glob
 from urllib.parse import quote_plus
 from dptrp1.pyDH import DiffieHellman
+from dptrp1 import _sync
 from datetime import datetime, timezone
-from pbkdf2 import PBKDF2
 from Crypto.Hash import SHA256
 from Crypto.Hash.HMAC import HMAC
 from Crypto.Cipher import AES
 from Crypto.PublicKey import RSA
 from Crypto.Signature import pkcs1_15
+from Crypto.Util.Padding import pad as _pkcs7_pad, unpad as _pkcs7_unpad
 from pathlib import Path
 from collections import defaultdict
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+DEFAULT_TIMEOUT = (5, 60)  # connection and idle-read timeouts, in seconds
 
 
 def get_default_auth_files():
@@ -97,10 +99,19 @@ class LookUpDPT:
         info = zeroconf.get_service_info(type, name)
         import ipaddress
 
+        if info is None or not info.addresses:
+            return
         addr = ipaddress.IPv4Address(info.addresses[0])
-        info = requests.get(
-            "http://{}:{}/register/information".format(addr, info.port)
-        ).json()
+        try:
+            response = requests.get(
+                "http://{}:{}/register/information".format(addr, info.port), timeout=(5, 10)
+            )
+            response.raise_for_status()
+            info = response.json()
+        except (requests.RequestException, ValueError):
+            return
+        if not isinstance(info, dict) or "serial_number" not in info:
+            return
         if not self.id:
             self.id = info["serial_number"]
             if not self.quiet:
@@ -147,7 +158,7 @@ class LookUpDPT:
 
 
 class DigitalPaper:
-    def __init__(self, addr=None, id=None, assume_yes=False, quiet=False):
+    def __init__(self, addr=None, id=None, assume_yes=False, quiet=False, *, timeout=DEFAULT_TIMEOUT):
         if addr:
             self.addr = addr
             if id:
@@ -161,6 +172,7 @@ class DigitalPaper:
             self.addr = lookup.find(id)
 
         self.session = requests.Session()
+        self.timeout = timeout
         self.session.verify = False  # disable ssl certificate verification
         self.assume_yes = assume_yes  # Whether to disable interactive prompts (currently only in sync())
 
@@ -223,9 +235,7 @@ class DigitalPaper:
         zz = dh.gen_shared_key(yb_int)
         zz = zz.to_bytes(256, "big")
 
-        derivedKey = PBKDF2(
-            passphrase=zz, salt=n1 + mac + n2, iterations=10000, digestmodule=SHA256
-        ).read(48)
+        derivedKey = pbkdf2_hmac("sha256", zz, n1 + mac + n2, 10000, dklen=48)
 
         authKey = derivedKey[:32]
         keyWrapKey = derivedKey[32:]
@@ -254,7 +264,7 @@ class DigitalPaper:
         m3hmac = base64.b64decode(m3["e"])
         hmac = HMAC(authKey, digestmod=SHA256)
         hmac.update(n1 + n2 + mac + ya + m2hmac + n2 + eHash)
-        if m3hmac != hmac.digest():
+        if not compare_digest(m3hmac, hmac.digest()):
             print("M3 HMAC doesn't match")
             return
 
@@ -297,7 +307,7 @@ class DigitalPaper:
 
         hmac = HMAC(authKey, digestmod=SHA256)
         hmac.update(n1 + rHash + wrappedRs + m4hmac + n2 + wrappedEsCert)
-        if hmac.digest() != m5hmac:
+        if not compare_digest(hmac.digest(), m5hmac):
             print("HMAC doesn't match!")
             return
 
@@ -307,7 +317,7 @@ class DigitalPaper:
 
         hmac = HMAC(authKey, digestmod=SHA256)
         hmac.update(es + psk + yb + ya)
-        if hmac.digest() != eHash:
+        if not compare_digest(hmac.digest(), eHash):
             print("eHash does not match!")
             return
 
@@ -391,7 +401,7 @@ class DigitalPaper:
         response = self._get_endpoint(f"/folders/{folder_id}/entries")
         return response.json()["entry_list"]
 
-    def traverse_folder(self, remote_path, fields=[]):
+    def traverse_folder(self, remote_path, fields=None):
         # In most cases, the request overhead of traversing folders is larger than the overhead of
         # requesting all info. So let's just request all info and filter for remote_path on our side
         if fields:
@@ -413,7 +423,8 @@ class DigitalPaper:
         all_entries = entry_data["entry_list"]
 
         return list(
-            filter(lambda e: e["entry_path"].startswith(remote_path), all_entries)
+            filter(lambda e: e["entry_path"] == remote_path.rstrip("/")
+                   or e["entry_path"].startswith(remote_path.rstrip("/") + "/"), all_entries)
         )
     
     def traverse_folder_recursively(self, remote_path):
@@ -529,12 +540,7 @@ class DigitalPaper:
         r = self._post_endpoint("/folders2", data=info)
 
     def list_folders(self):
-        if not self.folder_list:
-            data = self.list_all()
-            for d in data:
-                if d["entry_type"] == "folder":
-                    self.folder_list.append(d["entry_path"])
-        return self.folder_list
+        return [entry["entry_path"] for entry in self.list_all() if entry["entry_type"] == "folder"]
 
     def download_file(self, remote_path, local_path):
         local_folder = os.path.dirname(local_path)
@@ -576,12 +582,22 @@ class DigitalPaper:
         return True
 
     def sync(self, local_folder, remote_folder):
+        local_folder = Path(local_folder).resolve()
+        if not local_folder.is_dir():
+            raise ValueError("The local sync directory must exist")
+        remote_folder = _sync.remote_path(remote_folder).as_posix()
         checkpoint_info = self.load_checkpoint(local_folder)
         self.set_datetime()
         self.new_folder(remote_folder)
         print("Looking for changes on device... ", end="", flush=True)
         remote_info = self.traverse_folder_recursively(remote_folder)
         print("done")
+
+        # Validate the complete plan before transferring or deleting any files.
+        for entry in checkpoint_info + remote_info:
+            target = _sync.local_path(local_folder, remote_folder, entry["entry_path"])
+            if entry["entry_type"] == "document" and target == local_folder:
+                raise ValueError("A document cannot replace the local sync directory")
 
         # Syncing will require different comparions between local and remote paths.
         # Let's normalize them to ensure stable comparisions,
@@ -613,11 +629,11 @@ class DigitalPaper:
         ]:
             for f in location_info:
                 path = normalize_path(f["entry_path"])
-                if path.startswith(remote_folder):
+                if path == remote_folder or path.startswith(remote_folder + "/"):
                     if f["entry_type"] == "document":
                         modification_time = datetime.strptime(
                             f["modified_date"], "%Y-%m-%dT%H:%M:%SZ"
-                        )
+                        ).replace(tzinfo=timezone.utc)
                         file_data[path][f"{location}_time"] = modification_time
                     elif f["entry_type"] == "folder":
                         folder_data[path][f"{location}_exists"] = True
@@ -627,7 +643,13 @@ class DigitalPaper:
         # Use relatively low-level os.scandir()-api instead of a higher-level api such as glob.glob()
         # because os.scandir() gives access to mtime without having to perform an additional syscall on Windows,
         # leading to much faster scanning times on Windows
+        visited_directories = set()
+
         def traverse_local_folder(path):
+            resolved = Path(path).resolve()
+            if not resolved.is_relative_to(local_folder) or resolved in visited_directories:
+                raise ValueError(f"Symlink or repeated directory in sync tree: {path}")
+            visited_directories.add(resolved)
             # Let's store to folder_data that this folder exists
             relative_path = Path(path).relative_to(local_folder)
             remote_path = normalize_path(
@@ -636,6 +658,8 @@ class DigitalPaper:
             folder_data[remote_path]["local_exists"] = True
             # And recursively go through all items inside of the folder
             for entry in os.scandir(path):
+                if entry.is_symlink():
+                    raise ValueError(f"Symlink in sync directory: {entry.path}")
                 if entry.is_dir():
                     traverse_local_folder(entry.path)
                 # Only handle PDF files, ignore files starting with a dot.
@@ -646,7 +670,7 @@ class DigitalPaper:
                     remote_path = normalize_path(
                         (Path(remote_folder) / relative_path).as_posix()
                     )
-                    modification_time = datetime.utcfromtimestamp(entry.stat().st_mtime)
+                    modification_time = datetime.fromtimestamp(entry.stat().st_mtime, timezone.utc)
                     file_data[remote_path]["local_time"] = modification_time
 
         traverse_local_folder(local_folder)
@@ -735,10 +759,10 @@ class DigitalPaper:
             # So let's updte data to describe the expected situation after uploading/downloding those files, to decide which additional
             # folder operations need to be performed.
             data["remote_exists"] = data["remote_exists"] or any(
-                [f.startswith(foldername) for f in to_upload]
+                [f.startswith(foldername + "/") for f in to_upload]
             )
             data["local_exists"] = data["local_exists"] or any(
-                [f.startswith(foldername) for f in to_download]
+                [f.startswith(foldername + "/") for f in to_download]
             )
 
             # Depending on whether the folder exists is remote/local/checkpoint, let's decide whether to create/delete the folder from remote/local.
@@ -831,80 +855,70 @@ class DigitalPaper:
             unit="files",
         )
 
-        # Apply changes in remote to local
-        for remote_path in to_download:
-            relative_path = Path(remote_path).relative_to(remote_folder)
-            local_path = Path(local_folder) / relative_path
-            tqdm.write("⇣ " + str(remote_path))
-            self.download_file(remote_path, local_path)
-            remote_time = (
-                file_data[remote_path]["remote_time"]
-                .replace(tzinfo=timezone.utc)
-                .astimezone(tz=None)
-            )
-            mod_time = time.mktime(remote_time.timetuple())
-            os.utime(local_path, (mod_time, mod_time))
-            progress_bar.update()
+        try:
+            # Apply changes in remote to local
+            for remote_path in to_download:
+                local_path = _sync.local_path(local_folder, remote_folder, remote_path)
+                tqdm.write("⇣ " + str(remote_path))
+                self.download_file(remote_path, local_path)
+                mod_time = file_data[remote_path]["remote_time"].timestamp()
+                os.utime(local_path, (mod_time, mod_time))
+                progress_bar.update()
 
-        for remote_path in to_delete_local:
-            relative_path = Path(remote_path).relative_to(remote_folder)
-            local_path = Path(local_folder) / relative_path
-            if os.path.exists(local_path):
-                tqdm.write("X " + str(local_path))
-                os.remove(local_path)
-            progress_bar.update()
+            for remote_path in to_delete_local:
+                local_path = _sync.local_path(local_folder, remote_folder, remote_path)
+                if os.path.exists(local_path):
+                    tqdm.write("X " + str(local_path))
+                    os.remove(local_path)
+                progress_bar.update()
 
-        for remote_path in folders_to_delete_local:
-            relative_path = Path(remote_path).relative_to(remote_folder)
-            local_path = Path(local_folder) / relative_path
-            if os.path.exists(local_path):
-                tqdm.write("X " + str(local_path))
-                try:
-                    os.rmdir(local_path)
-                except OSError as e:
-                    if e.errno == 39:
-                        tqdm.write(
-                            f"WARNING: The folder {local_path} is not empty and will not be deleted."
-                        )
-                    else:
-                        raise
-            progress_bar.update()
+            for remote_path in folders_to_delete_local:
+                local_path = _sync.local_path(local_folder, remote_folder, remote_path)
+                if os.path.exists(local_path):
+                    tqdm.write("X " + str(local_path))
+                    try:
+                        os.rmdir(local_path)
+                    except OSError as e:
+                        if e.errno == 39:
+                            tqdm.write(
+                                f"WARNING: The folder {local_path} is not empty and will not be deleted."
+                            )
+                        else:
+                            raise
+                progress_bar.update()
 
-        for remote_path in folders_to_create_local:
-            relative_path = Path(remote_path).relative_to(remote_folder)
-            local_path = Path(local_folder) / relative_path
-            tqdm.write("⇣ " + str(remote_path))
-            os.makedirs(local_path, exist_ok=True)
-            progress_bar.update()
+            for remote_path in folders_to_create_local:
+                local_path = _sync.local_path(local_folder, remote_folder, remote_path)
+                tqdm.write("⇣ " + str(remote_path))
+                os.makedirs(local_path, exist_ok=True)
+                progress_bar.update()
 
-        # Apply changes in local to remote
-        for remote_file in to_delete_remote:
-            if self.path_exists(remote_file):
-                tqdm.write("X " + str(remote_file))
-                self.delete_document(remote_file)
-            progress_bar.update()
+            # Apply changes in local to remote
+            for remote_file in to_delete_remote:
+                if self.path_exists(remote_file):
+                    tqdm.write("X " + str(remote_file))
+                    self.delete_document(remote_file)
+                progress_bar.update()
 
-        for remote_deletion_folder in folders_to_delete_remote:
-            if self.path_exists(remote_deletion_folder):
-                tqdm.write("X " + str(remote_deletion_folder))
-                self.delete_folder(remote_deletion_folder)
-            progress_bar.update()
+            for remote_deletion_folder in folders_to_delete_remote:
+                if self.path_exists(remote_deletion_folder):
+                    tqdm.write("X " + str(remote_deletion_folder))
+                    self.delete_folder(remote_deletion_folder)
+                progress_bar.update()
 
-        for remote_path in to_upload:
-            relative_path = Path(remote_path).relative_to(remote_folder)
-            local_path = Path(local_folder) / relative_path
-            tqdm.write("⇡ " + str(local_path))
-            self.upload_file(local_path, remote_path)
-            progress_bar.update()
+            for remote_path in to_upload:
+                local_path = _sync.local_path(local_folder, remote_folder, remote_path)
+                tqdm.write("⇡ " + str(local_path))
+                self.upload_file(local_path, remote_path)
+                progress_bar.update()
 
-        for remote_path in folders_to_create_remote:
-            relative_path = Path(remote_path).relative_to(remote_folder)
-            local_path = Path(local_folder) / relative_path
-            tqdm.write("⇡ " + str(local_path))
-            self.new_folder(remote_path)
-            progress_bar.update()
+            for remote_path in folders_to_create_remote:
+                tqdm.write("⇡ " + remote_path)
+                self.new_folder(remote_path)
+                progress_bar.update()
 
-        progress_bar.close()
+        finally:
+            progress_bar.close()
 
         print("Refreshing file information... ", end="", flush=True)
         remote_info = self.traverse_folder(
@@ -914,16 +928,10 @@ class DigitalPaper:
         print("done")
 
     def load_checkpoint(self, local_folder):
-        checkpoint_file = os.path.join(local_folder, ".sync")
-        if not os.path.exists(checkpoint_file):
-            return []
-        with open(checkpoint_file, "rb") as f:
-            return pickle.load(f)
+        return _sync.load_checkpoint(local_folder)
 
     def sync_checkpoint(self, local_folder, doclist):
-        checkpoint_file = os.path.join(local_folder, ".sync")
-        with open(checkpoint_file, "wb") as f:
-            pickle.dump(doclist, f)
+        _sync.save_checkpoint(local_folder, doclist)
 
     def _copy_move_data(self, file_id, folder_id, new_filename=None):
         data = {"parent_folder_id": folder_id}
@@ -1134,7 +1142,7 @@ class DigitalPaper:
         return data
 
     def set_datetime(self):
-        now = datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
+        now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
         self._put_endpoint("/system/configs/datetime", data={"value": now})
 
     ### Etc
@@ -1190,7 +1198,7 @@ class DigitalPaper:
         # modifying the prepared request, so that the "endpoint" part of
         # the URL will not be modified by urllib.
         prep.url += endpoint.lstrip("/")
-        return self.session.send(prep)
+        return self._send_request(prep)
 
     def _endpoint_request(self, method, endpoint, data=None, files=None):
         req = requests.Request(method, self.base_url, json=data, files=files)
@@ -1199,19 +1207,24 @@ class DigitalPaper:
         # modifying the prepared request, so that the "endpoint" part of
         # the URL will not be modified by urllib.
         prep.url += endpoint.lstrip("/")
-        return self.session.send(prep)
+        return self._send_request(prep)
+
+    def _send_request(self, prepared):
+        response = self.session.send(prepared, timeout=self.timeout)
+        response.raise_for_status()
+        return response
 
     def _get_endpoint(self, endpoint=""):
         return self._endpoint_request("GET", endpoint)
 
-    def _put_endpoint(self, endpoint="", data={}, files=None):
-        return self._endpoint_request("PUT", endpoint, data, files)
+    def _put_endpoint(self, endpoint="", data=None, files=None):
+        return self._endpoint_request("PUT", endpoint, {} if data is None else data, files)
 
-    def _post_endpoint(self, endpoint="", data={}):
-        return self._endpoint_request("POST", endpoint, data)
+    def _post_endpoint(self, endpoint="", data=None):
+        return self._endpoint_request("POST", endpoint, {} if data is None else data)
 
-    def _delete_endpoint(self, endpoint="", data={}):
-        return self._endpoint_request("DELETE", endpoint, data)
+    def _delete_endpoint(self, endpoint="", data=None):
+        return self._endpoint_request("DELETE", endpoint, {} if data is None else data)
 
     def _get_nonce(self, client_id):
         r = self._get_endpoint(f"/auth/nonce/{client_id}")
@@ -1220,9 +1233,16 @@ class DigitalPaper:
     def _resolve_object_by_path(self, path):
         enc_path = quote_plus(path)
         url = f"/resolve/entry/path/{enc_path}"
-        resp = self._get_endpoint(url)
-        if not resp.ok:
-            raise ResolveObjectFailed(path, resp.json()["message"])
+        try:
+            resp = self._get_endpoint(url)
+        except requests.HTTPError as exc:
+            if exc.response is None or exc.response.status_code != 404:
+                raise
+            try:
+                message = exc.response.json().get("message", "Entry not found")
+            except (ValueError, AttributeError):
+                message = "Entry not found"
+            raise ResolveObjectFailed(path, message) from exc
         return resp.json()
 
     def _get_object_id(self, path):
@@ -1242,18 +1262,17 @@ def wrap(data, authKey, keyWrapKey):
     return wrapped
 
 
-# from https://gist.github.com/adoc/8550490
 def pad(bytestring, k=16):
     """
     Pad an input bytestring according to PKCS#7
 
     """
-    l = len(bytestring)
-    val = k - (l % k)
-    return bytestring + bytearray([val] * val)
+    return _pkcs7_pad(bytestring, k)
 
 
 def unwrap(data, authKey, keyWrapKey):
+    if len(data) < 32 or len(data) % 16:
+        raise ValueError("Invalid wrapped data length")
     iv = data[-16:]
     cipher = AES.new(keyWrapKey, AES.MODE_CBC, iv)
     unwrapped = cipher.decrypt(data[:-16])
@@ -1266,8 +1285,8 @@ def unwrap(data, authKey, keyWrapKey):
     hmac.update(unwrapped)
     local_kwa = hmac.digest()[:8]
 
-    if kwa != local_kwa:
-        print("Unwrapped kwa does not match")
+    if len(kwa) != 8 or not compare_digest(kwa, local_kwa):
+        raise ValueError("Wrapped data authentication failed")
 
     return unwrapped
 
@@ -1277,8 +1296,7 @@ def unpad(bytestring, k=16):
     Remove the PKCS#7 padding from a text bytestring.
     """
 
-    val = bytestring[-1]
-    if val > k:
-        raise ValueError("Input is not padded or padding is corrupt")
-    l = len(bytestring) - val
-    return bytestring[:l]
+    try:
+        return _pkcs7_unpad(bytestring, k)
+    except ValueError as exc:
+        raise ValueError("Input is not padded or padding is corrupt") from exc

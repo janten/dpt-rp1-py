@@ -32,6 +32,11 @@ jobs:
         run: python -m pip install -e ".[dev]"
       - name: Check dependencies
         run: python -m pip check
+      - name: Install FUSE library for adapter tests
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends libfuse2t64
       - name: Run hardware-free tests
         run: python -m pytest
       - name: Check installed CLI
@@ -41,8 +46,6 @@ jobs:
       - name: Check Linux entry points
         if: runner.os == 'Linux'
         run: |
-          sudo apt-get update
-          sudo apt-get install --yes --no-install-recommends libfuse2t64
           dptusb --help
           dptmount --help
 
@@ -60,6 +63,8 @@ jobs:
           python -m twine check --strict dist/*
       - name: Test the installed wheel outside the checkout
         run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends libfuse2t64
           python -m venv "$RUNNER_TEMP/package-venv"
           "$RUNNER_TEMP/package-venv/bin/python" -m pip install dist/*.whl pytest responses
           cd "$RUNNER_TEMP"
