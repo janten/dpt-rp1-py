@@ -4,13 +4,44 @@ Python script to manage electronic paper devices made by Sony (Digital Paper, DP
 Throughout this document, _reader_ or _device_ refers to your Digital Paper device.
 
 ## Installation
-We now have a proper Python package, so you may just run:
+Python 3.9 or newer is required. Install the package with:
 
 ```
-pip3 install dpt-rp1-py
+python -m pip install dpt-rp1-py
 ```
 
-Installing the package also installs the command line utilities `dptrp1` and `dptmount`. To install the library from the sources, clone this repository, then run `python3 setup.py install` or `pip3 install .` from the root directory. To install as a developer use `python3 setup.py develop` (see [the setuptools docs](http://setuptools.readthedocs.io/en/latest/setuptools.html#development-mode)) and work on the source as usual.
+Installing the package also installs `dptrp1`, `dptmount`, and the Linux USB helper `dptusb`. To install from source, clone this repository and run `python -m pip install .` from its root directory. `dptmount` additionally needs the system FUSE library (see below).
+
+## Development
+
+Create a virtual environment and install the editable package with its development tools:
+
+```sh
+python -m venv .venv
+source .venv/bin/activate
+# On Windows: .venv\Scripts\Activate.ps1
+python -m pip install -e '.[dev]'
+python -m pytest
+```
+
+Metadata, dependencies and CLI entry points are defined in `pyproject.toml`.
+Build and check both distributions with:
+
+```sh
+python -m build
+python -m twine check --strict dist/*
+```
+
+The tests exercise cryptographic helpers, registration messages, authentication,
+document traversal and downloads, CLI help, and mDNS parsing. HTTP responses are
+simulated; no reader, credentials, USB access or FUSE mount is needed. The POSIX
+USB tests are skipped on Windows. Real pairing, synchronisation and filesystem
+mounts still need validation against a physical device.
+
+CI runs the tests on Python 3.9–3.14 on Linux and Python 3.12 on Windows and macOS.
+It also builds an sdist and wheel, validates their metadata, and runs the suite
+against the installed wheel outside the checkout. Publishing waits for these
+checks and uses the existing `PYPI_API_TOKEN` repository secret.
 
 ## Using the command line utility
 The command line utility requires a connection to the reader via WiFi, Bluetooth, or USB. The USB connection works on Windows and MacOS but may not work on a Linux machine.

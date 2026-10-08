@@ -1,0 +1,68 @@
+name: Tests and packaging
+
+on:
+  push:
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.14']
+        include:
+          - os: windows-latest
+            python-version: '3.12'
+          - os: macos-latest
+            python-version: '3.12'
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install development dependencies
+        run: python -m pip install -e ".[dev]"
+      - name: Check dependencies
+        run: python -m pip check
+      - name: Run hardware-free tests
+        run: python -m pytest
+      - name: Check installed CLI
+        run: |
+          dptrp1 --help
+          dptrp1 help upload
+      - name: Check Linux entry points
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends libfuse2t64
+          dptusb --help
+          dptmount --help
+
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - name: Build sdist and wheel in isolated environments
+        run: |
+          python -m pip install build twine
+          python -m build
+          python -m twine check --strict dist/*
+      - name: Test the installed wheel outside the checkout
+        run: |
+          python -m venv "$RUNNER_TEMP/package-venv"
+          "$RUNNER_TEMP/package-venv/bin/python" -m pip install dist/*.whl pytest responses
+          cd "$RUNNER_TEMP"
+          "$RUNNER_TEMP/package-venv/bin/python" -m pip check
+          "$RUNNER_TEMP/package-venv/bin/python" -m pytest "$GITHUB_WORKSPACE/tests" --import-mode=importlib
+          "$RUNNER_TEMP/package-venv/bin/dptrp1" --help
