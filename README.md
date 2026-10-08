@@ -24,6 +24,10 @@ python -m pip install -e '.[dev]'
 python -m pytest
 ```
 
+On Linux the FUSE adapter tests need the FUSE 2 shared library. On current
+Debian/Ubuntu releases install it with `sudo apt-get install libfuse2t64` (older
+releases call the package `libfuse2`). No mount or attached device is required.
+
 Metadata, dependencies and CLI entry points are defined in `pyproject.toml`.
 Build and check both distributions with:
 
@@ -33,10 +37,11 @@ python -m twine check --strict dist/*
 ```
 
 The tests exercise cryptographic helpers, registration messages, authentication,
-document traversal and downloads, CLI help, and mDNS parsing. HTTP responses are
-simulated; no reader, credentials, USB access or FUSE mount is needed. The POSIX
-USB tests are skipped on Windows. Real pairing, synchronisation and filesystem
-mounts still need validation against a physical device.
+HTTP failures, safe sync paths and checkpoints, FUSE buffers, CLI behavior, and
+mDNS parsing. HTTP responses are simulated; no reader, credentials, USB access or
+FUSE mount is needed. The POSIX USB tests are skipped on Windows, and the FUSE
+adapter tests run on Linux. Real pairing, synchronisation and filesystem mounts
+still need validation against a physical device.
 
 CI runs the tests on Python 3.9–3.14 on Linux and Python 3.12 on Windows and macOS.
 It also builds an sdist and wheel, validates their metadata, and runs the suite
@@ -140,6 +145,30 @@ You can get additional information about a specific command by calling `dptrp1 h
 
 Note that the root path for DPT-RP1 is always `Document/`, which is misleadingly displayed as "System Storage" on the device. To download a document called _file.pdf_ from a folder called _Articles_ of the DPT-RP1, the correct command is `dptrp1 download Document/Articles/file.pdf`.
 
+### Synchronisation and connection failures
+
+Sync requires an existing local directory. Device paths must stay below the
+chosen remote folder; parent traversal, Windows drive syntax and symbolic links
+in the local sync tree are rejected before file transfers. Remove or relocate
+links deliberately before syncing; they are not silently skipped because that
+could be mistaken for a deletion.
+
+Sync state is stored as versioned JSON in `.sync` and replaced atomically after
+successful transfers. Existing pickle checkpoints containing only plain data
+are validated and automatically migrated to JSON. Checkpoints requiring Python
+globals, callable/object construction or persistent references are rejected.
+A corrupt or unsupported checkpoint stops sync rather than being treated as an
+empty history. Keep a backup and inspect both sides before deliberately removing
+such a checkpoint: without history, files present on both sides are assumed
+identical, and deletions cannot be inferred.
+
+HTTP failures now raise `requests.HTTPError`; only a missing entry (HTTP 404) is
+reported as `ResolveObjectFailed`. Failed document requests do not overwrite an
+existing local PDF with the error response. Requests use a 5-second connection
+timeout and a 60-second idle-read timeout. Library users can override these with
+`DigitalPaper(addr="…", timeout=(5, 120))`; these limits are not a total transfer
+deadline. Discovery uses a shorter idle-read timeout.
+
 ### Registering the DPT-RP1
 The DPT-RP1 uses SSL encryption to communicate with the computer.  This requires registering the DPT-RP1 with the computer, which results in two pieces of information, the client ID and the private key. If you have used Sony's Digital Paper App on the same computer, the utility will automatically try to use the existing credentials. If you do not have the Digital Paper App, use the _register_ command.
 
@@ -188,6 +217,7 @@ If you have already registered on macOS, the Digital Paper app stores the files 
 * Deleting files and folders 
 
 #### What does not work
+* Renaming folders or replacing an existing destination through `dptmount`.
 * Currently there is no caching, therefore operations can be slow as they require uploading or downloading from the 
 device. However, this avoids having to resolve conflicts if a document has been changed both on the Digital Paper and
 the caching directory.
