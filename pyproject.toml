@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dpt-rp1-py"
+version = "0.1.21"
+description = "Python package to manage a Sony DPT-RP1"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+    {name = "Jan-Gerd Tenberge", email = "jan-gerd.tenberge@uni-muenster.de"},
+    {name = "Cuihtlauac Alvarado", email = "cuihtlauac.alvarado@orange.com"},
+    {name = "Juan Grigera", email = "juan@grigera.com.ar"},
+    {name = "Yunjae Lee", email = "lyj7694@gmail.com"},
+    {name = "Kazuhiko Sakaguchi", email = "pi8027@gmail.com"},
+    {name = "Yanzi Zhu", email = "zhuyanzi@gmail.com"},
+    {name = "Sreepathi Pai", email = "sree314@gmail.com"},
+    {name = "Jochen Schroeder", email = "jochen.schroeder@chalmers.se"},
+    {name = "Alexander Fuchs", email = "alex.fu27@gmail.com"},
+    {name = "Xiang Ji", email = "hi@xiangji.me"},
+    {name = "Håkon J. D. Johnsen", email = "hakon.j.d.johnsen@ntnu.no"},
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+]
+dependencies = [
+    "pycryptodome",
+    "requests>=2.18.4",
+    "pbkdf2>=1.3",
+    "urllib3>=1.22",
+    "pyyaml",
+    "anytree",
+    "fusepy",
+    "zeroconf>=0.29.0",
+    "tqdm",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "responses>=0.25", "build>=1.2", "twine>=6"]
+
+[project.urls]
+Repository = "https://github.com/janten/dpt-rp1-py"
+Issues = "https://github.com/janten/dpt-rp1-py/issues"
+
+[project.scripts]
+dptrp1 = "dptrp1.cli.dptrp1:main"
+dptmount = "dptrp1.cli.dptmount:main"
+dptusb = "dptrp1.cli.dptusb:main"
+
+[tool.setuptools]
+packages = ["dptrp1", "dptrp1.cli"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --import-mode=importlib"
