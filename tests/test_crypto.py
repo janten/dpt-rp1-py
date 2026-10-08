@@ -1,11 +1,8 @@
-import hashlib
 import hmac
 
 import pytest
 from Crypto.Cipher import AES
-from Crypto.Hash import SHA256
 from Crypto.Util.Padding import pad as reference_pad
-from pbkdf2 import PBKDF2
 
 from dptrp1.dptrp1 import pad, unpad, unwrap, wrap
 from dptrp1.pyDH import DiffieHellman
@@ -36,17 +33,31 @@ def test_unpad_rejects_oversized_padding():
         unpad(b"x" * 15 + b"\x11")
 
 
-def test_diffie_hellman_and_registration_key_derivation():
+def test_diffie_hellman_shared_secret():
     alice, bob = DiffieHellman(), DiffieHellman()
     shared = alice.gen_shared_key(bob.gen_public_key())
     assert shared == bob.gen_shared_key(alice.gen_public_key())
-    password = shared.to_bytes(256, "big")
-    salt = b"device nonce, MAC and client nonce"
-    derived = PBKDF2(password, salt, iterations=10000, digestmodule=SHA256).read(48)
-    assert derived == hashlib.pbkdf2_hmac("sha256", password, salt, 10000, 48)
 
 
 @pytest.mark.parametrize("public_key", [0, 1, -1])
 def test_diffie_hellman_rejects_invalid_peer_keys(public_key):
     with pytest.raises(Exception, match="Bad public key"):
         DiffieHellman().gen_shared_key(public_key)
+
+
+def test_unwrap_rejects_wrong_authentication_key():
+    wrapped = wrap(b"secret", b"a" * 32, b"k" * 16)
+    with pytest.raises(ValueError, match="authentication"):
+        unwrap(wrapped, b"b" * 32, b"k" * 16)
+
+
+@pytest.mark.parametrize("invalid", [b"", b"x" * 15 + b"\x00", b"x" * 15 + b"\x02", b"\x01"])
+def test_unpad_rejects_malformed_padding(invalid):
+    with pytest.raises(ValueError):
+        unpad(invalid)
+
+
+@pytest.mark.parametrize("invalid", [b"", b"x" * 16, b"x" * 31, b"x" * 33])
+def test_unwrap_rejects_malformed_ciphertext(invalid):
+    with pytest.raises(ValueError):
+        unwrap(invalid, b"a" * 32, b"k" * 16)

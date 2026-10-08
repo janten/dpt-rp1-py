@@ -6,9 +6,8 @@ import inspect
 import json
 import sys
 import os
-import re
 
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from dptrp1.dptrp1 import DigitalPaper, find_auth_files, get_default_auth_files
 
 ROOT_FOLDER = 'Document'
@@ -73,9 +72,9 @@ def do_download(d, remote_path, local_path):
     """
     data = d.download(remote_path)
 
-    if os.path.isdir(local_path):
-        re.sub("/?$", "/", local_path)
-        local_path += os.path.basename(remote_path)
+    local_path = Path(local_path)
+    if local_path.is_dir():
+        local_path = local_path / PurePosixPath(remote_path).name
 
     with open(local_path, "wb") as f:
         f.write(data)
@@ -168,43 +167,23 @@ def do_wifi_disable(d):
     print(d.disable_wifi())
 
 
-def do_add_wifi(d, cfg_file=""):
+def _load_wifi_config(cfg_file):
     try:
-        cfg = json.load(open(cfg_file))
-    except JSONDecodeError:
-        quit("JSONDecodeError: Check the contents of %s" % cfg_file)
-    except FileNotFoundError:
-        quit("File Not Found: %s" % cfg_file)
-    if not cfg:
-        print(
-            d.configure_wifi(
-                ssid="vecna2",
-                security="psk",
-                passwd="elijah is a cat",
-                dhcp="true",
-                static_address="",
-                gateway="",
-                network_mask="",
-                dns1="",
-                dns2="",
-                proxy="false",
-            )
-        )
-    else:
-        print(d.configure_wifi(**cfg))
+        with open(cfg_file, encoding="utf-8") as config_file:
+            cfg = json.load(config_file)
+    except (OSError, ValueError) as exc:
+        raise ValueError(f"Could not read Wi-Fi configuration: {cfg_file}") from exc
+    if not isinstance(cfg, dict) or not cfg:
+        raise ValueError("Wi-Fi configuration must be a nonempty JSON object")
+    return cfg
+
+
+def do_add_wifi(d, cfg_file=""):
+    print(d.configure_wifi(**_load_wifi_config(cfg_file)))
 
 
 def do_delete_wifi(d, cfg_file=""):
-    try:
-        cfg = json.load(open(cfg_file))
-    except ValueError:
-        quit("JSONDecodeError: Check the contents of %s" % cfg_file)
-    except FileNotFoundError:
-        quit("File Not Found: %s" % cfg_file)
-    if not cfg:
-        print(d.delete_wifi(ssid="vecna2", security="psk"))
-    else:
-        print(d.delete_wifi(**cfg))
+    print(d.delete_wifi(**_load_wifi_config(cfg_file)))
 
 
 def do_register(d, key_file, id_file):
