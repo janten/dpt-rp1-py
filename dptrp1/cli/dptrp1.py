@@ -4,6 +4,8 @@
 import argparse
 import inspect
 import json
+import shlex
+import subprocess
 import sys
 import os
 import re
@@ -261,6 +263,41 @@ def do_set_config(d, path):
     d.set_config(config)
 
 
+PRINT_SERVICE_APPLET = '''on open theFiles
+	try
+		repeat with f in theFiles
+			set p to POSIX path of f
+			set n to do shell script "basename " & quoted form of p
+			repeat while n ends with ".pdf"
+				set n to text 1 thru -5 of n
+			end repeat
+			do shell script "__COMMAND__ " & quoted form of p & " " & quoted form of ("Document/" & n & ".pdf")
+		end repeat
+		display notification "Sent to Digital Paper" with title "Digital Paper"
+	on error errMsg
+		display dialog "Upload failed: " & (paragraph -1 of errMsg) buttons {"OK"} with title "Digital Paper"
+	end try
+end open
+'''
+
+
+def do_install_print_service(dptrp1_args):
+    """
+    Adds "Send to Digital Paper" to the PDF menu of the macOS print dialog.
+    Options given before the command (e.g. --addr) are used for every upload.
+    To uninstall, delete ~/Library/PDF Services/Send to Digital Paper.app
+    """
+    if sys.platform != "darwin":
+        sys.exit("install-print-service is only available on macOS")
+    command = [sys.executable, "-m", "dptrp1.cli.dptrp1", *dptrp1_args, "upload"]
+    shell = " ".join(shlex.quote(c) for c in command)
+    script = PRINT_SERVICE_APPLET.replace("__COMMAND__", shell.replace("\\", "\\\\").replace('"', '\\"'))
+    dest = Path.home() / "Library" / "PDF Services" / "Send to Digital Paper.app"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["osacompile", "-o", str(dest)], input=script, text=True, check=True)
+    print("Installed", dest)
+
+
 commands = {
     "screenshot": do_screenshot,
     "list-documents": do_list_documents,
@@ -290,6 +327,7 @@ commands = {
     "display-document": do_display_document,
     "get-configuration": do_get_config,
     "set-configuration": do_set_config,
+    "install-print-service": do_install_print_service,
 }
 
 
@@ -337,6 +375,9 @@ def main():
     if args.command in ["help", "command-help"]:
         # Help is available without a device
         commands[args.command](*args.command_args)
+        return
+    if args.command == "install-print-service":
+        do_install_print_service(["--addr", args.addr] if args.addr else [])
         return
 
     dp = DigitalPaper(

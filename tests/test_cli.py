@@ -1,4 +1,5 @@
 import sys
+from pathlib import Path
 from unittest.mock import Mock
 
 import pytest
@@ -45,3 +46,25 @@ def test_unknown_command_exits_before_device_access(monkeypatch):
         cli.main()
     assert result.value.code == 2
     constructor.assert_not_called()
+
+
+def test_install_print_service_compiles_applet_without_device(monkeypatch, tmp_path):
+    constructor = Mock(side_effect=AssertionError("Installer must not access a reader"))
+    monkeypatch.setattr(cli, "DigitalPaper", constructor)
+    monkeypatch.setattr(sys, "platform", "darwin")
+    monkeypatch.setattr(Path, "home", lambda: tmp_path)
+    run = Mock()
+    monkeypatch.setattr(cli.subprocess, "run", run)
+    monkeypatch.setattr(sys, "argv", ["dptrp1", "--addr", "10.0.0.1", "install-print-service"])
+    cli.main()
+    (command,), kwargs = run.call_args
+    assert command[:2] == ["osacompile", "-o"]
+    assert command[2] == str(tmp_path / "Library" / "PDF Services" / "Send to Digital Paper.app")
+    assert "--addr 10.0.0.1 upload" in kwargs["input"]
+    constructor.assert_not_called()
+
+
+def test_install_print_service_refuses_other_platforms(monkeypatch):
+    monkeypatch.setattr(sys, "platform", "linux")
+    with pytest.raises(SystemExit):
+        cli.do_install_print_service([])

@@ -154,6 +154,9 @@ dptrp1 --addr 10.0.0.1 register
 
 If you get an error, wait a few seconds and try again. Sometimes it takes two or three tries to work.
 
+## Printing from macOS
+Run `dptrp1 install-print-service` to add _Send to Digital Paper_ to the PDF menu of the print dialog, replacing the one from Sony's Intel-only Digital Paper App. Options such as `--addr` given before the command are used for every upload.
+
 ## Mounting as a file system
 This Repository contains a `dptmount` script to mount the Digital Paper as a userspace mount. This tool has additional requirements.
 
