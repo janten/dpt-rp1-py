@@ -1,11 +1,13 @@
 import base64
-import hashlib
 import hmac
 import json
 from http.cookies import SimpleCookie
 
 import pytest
+import requests
+from unittest.mock import Mock
 from Crypto.Hash import SHA256
+from Crypto.Protocol.KDF import PBKDF2
 from Crypto.PublicKey import RSA
 from Crypto.Signature import pkcs1_15
 
@@ -122,8 +124,8 @@ def test_registration_preserves_peer_public_key_bytes(device, http, sign_byte, c
     def check_transcript(request):
         message = {key: base64.b64decode(value) for key, value in json.loads(request.body).items()}
         shared = pow(int.from_bytes(message["d"], "big"), peer_private, group.p)
-        keys = hashlib.pbkdf2_hmac("sha256", shared.to_bytes(256, "big"),
-                                   nonce + mac + message["b"], 10000, 48)
+        keys = PBKDF2(shared.to_bytes(256, "big"), nonce + mac + message["b"],
+                      dkLen=48, count=10000, hmac_hash_module=SHA256)
         transcript = nonce + mac + peer_bytes + nonce + message["b"] + mac + message["d"]
         assert message["e"] == hmac.digest(keys[:32], transcript, "sha256")
         # An invalid server nonce must stop registration before asking for a PIN.
@@ -132,3 +134,68 @@ def test_registration_preserves_peer_public_key_bytes(device, http, sign_byte, c
     http.add_callback("POST", registration + "/hash", callback=check_transcript)
     assert device.register() is None
     assert "Nonce N2 doesn't match" in capsys.readouterr().out
+
+
+def test_download_failure_preserves_existing_file(device, http, tmp_path):
+    http.get(BASE + "/resolve/entry/path/Document%2Fbook.pdf", json=DOCUMENT)
+    http.get(BASE + "/documents/pdf/file", status=500, body="server error")
+    target = tmp_path / "book.pdf"
+    target.write_bytes(b"original PDF")
+    with pytest.raises(requests.HTTPError):
+        device.download_file("Document/book.pdf", target)
+    assert target.read_bytes() == b"original PDF"
+
+
+@pytest.mark.parametrize("status", [401, 403, 500])
+def test_resolution_errors_are_not_missing_documents(device, http, status):
+    http.get(BASE + "/resolve/entry/path/Document%2Fbook.pdf", status=status, json={"message": "failure"})
+    with pytest.raises(requests.HTTPError):
+        device.path_exists("Document/book.pdf")
+
+
+@pytest.mark.parametrize("register", [False, True])
+def test_requests_always_have_timeouts(device, register):
+    response = requests.Response()
+    response.status_code = 204
+    device.session.send = Mock(return_value=response)
+    request = device._reg_endpoint_request if register else device._endpoint_request
+    request("PUT", "/test")
+    timeout = device.session.send.call_args.kwargs["timeout"]
+    assert len(timeout) == 2 and all(value > 0 for value in timeout)
+
+
+def test_request_timeout_is_configurable():
+    client = DigitalPaper(addr="reader.example", timeout=(2, 120))
+    try:
+        response = requests.Response()
+        response.status_code = 204
+        client.session.send = Mock(return_value=response)
+        client._get_endpoint("/test")
+        assert client.session.send.call_args.kwargs["timeout"] == (2, 120)
+    finally:
+        client.session.close()
+
+
+def test_list_folders_returns_current_paths(device, http):
+    http.get(BASE + "/documents2?entry_type=all", json={"entry_list": [ROOT, FOLDER, DOCUMENT]})
+    assert device.list_folders() == ["Document", "Document/Notes"]
+
+
+def test_fast_traversal_does_not_include_similarly_named_sibling(device, http):
+    sibling = {**DOCUMENT, "entry_path": "Document/Notes-archive/book.pdf"}
+    http.get(BASE + "/documents2?entry_type=all", json={"count": 3, "entry_list": [FOLDER, DOCUMENT, sibling]})
+    assert device.traverse_folder("Document/Notes") == [FOLDER, DOCUMENT]
+
+
+@pytest.mark.parametrize("failure", [requests.Timeout(), requests.ConnectionError()])
+def test_discovery_ignores_unreachable_advertised_reader(monkeypatch, failure):
+    from dptrp1.dptrp1 import LookUpDPT
+
+    get = Mock(side_effect=failure)
+    monkeypatch.setattr(requests, "get", get)
+    zeroconf = Mock()
+    zeroconf.get_service_info.return_value = Mock(addresses=[b"\xc0\x00\x02\x01"], port=8080)
+    lookup = LookUpDPT(quiet=True)
+    lookup.add_service(zeroconf, "_digitalpaper._tcp.local.", "reader")
+    assert get.call_args.kwargs["timeout"] == (5, 10)
+    assert lookup.addr is None

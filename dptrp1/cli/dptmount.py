@@ -71,16 +71,26 @@ class FileHandle(object):
             self.status = "unread"
         self.data = bytearray()
 
-    def read(self, length, offset):
+    def _load(self):
         if self.status == "unread":
             logger.info('Downloading %s', self.remote_path)
+            self.data = bytearray(self.fs.dpt.download(self.remote_path))
             self.status = "clean"
-            self.data = self.fs.dpt.download(self.remote_path)
-        return self.data[offset:offset + length]
+
+    def read(self, length, offset):
+        self._load()
+        return bytes(self.data[offset:offset + length])
 
     def write(self, buf, offset):
+        if offset < 0:
+            raise FuseOSError(errno.EINVAL)
+        if not buf:
+            return 0
+        self._load()
+        if offset > len(self.data):
+            self.data.extend(b"\x00" * (offset - len(self.data)))
+        self.data[offset:offset + len(buf)] = buf
         self.status = "dirty"
-        self.data[offset:] = buf
         return len(buf)
 
     def flush(self):
@@ -160,6 +170,12 @@ class DptTablet(LoggingMixIn, Operations):
 
     def _add_remote_path_to_tree(self, parent, remote_path):
         item = self.dpt._resolve_object_by_path(remote_path)
+        existing = self._map_local_remote(os.path.join(parent.localpath, item["entry_name"]))
+        if existing is not None:
+            existing.item = item
+            existing.remote_path = item["entry_path"]
+            existing.lstat = self._get_lstat(item)
+            return existing
         return self._add_node_to_tree(parent, item)
 
     def _load_document_list(self):
@@ -278,7 +294,7 @@ class DptTablet(LoggingMixIn, Operations):
     # ============
     def open(self, path, flags):
         if not self._is_read_only_flags(flags):
-            return FuseOSError(EACCES)
+            raise FuseOSError(EACCES)
         self.fd += 1
         self.handle[self.fd] = FileHandle(self, path, new=False)
         logger.info('file handle %d opened' % self.fd)
@@ -295,13 +311,22 @@ class DptTablet(LoggingMixIn, Operations):
         return self.handle[fh].read(length, offset)
 
     def rename(self, oldpath, newpath):
+        if oldpath == newpath:
+            return 0
         old_node = self._map_local_remote(oldpath)
         new_folder, fname = os.path.split(newpath)
         new_folder_node = self._map_local_remote(new_folder)
+        if old_node is None or new_folder_node is None:
+            raise FuseOSError(ENOENT)
+        if old_node.item["entry_type"] == "folder":
+            raise FuseOSError(errno.EOPNOTSUPP)
+        if self._map_local_remote(newpath) is not None:
+            raise FuseOSError(errno.EEXIST)
         newpath = os.path.join(new_folder_node.remote_path, fname)
-        self.dpt.rename_document(old_node.remote_path, newpath)
+        self.dpt.move_file(old_node.remote_path, newpath)
         self._remove_node(old_node)
         self._add_remote_path_to_tree(new_folder_node, newpath)
+        return 0
 
     def create(self, path, mode, fi=None):
         #TODO: check if files is necessary
@@ -320,7 +345,10 @@ class DptTablet(LoggingMixIn, Operations):
         return self.fd
 
     def write(self, path, buf, offset, fh):
-        return self.handle[fh].write(buf, offset)
+        written = self.handle[fh].write(buf, offset)
+        if path in self.files:
+            self.files[path]["st_size"] = len(self.handle[fh].data)
+        return written
 
     def flush(self, path, fh):
         self.handle[fh].flush()
@@ -366,7 +394,8 @@ def main():
 
     # Read YAML config if found
     if os.path.isfile(args.config):
-        config = yaml.safe_load(open(args.config, "r"))
+        with open(args.config, encoding="utf-8") as config_file:
+            config = yaml.safe_load(config_file)
     else:
         print("Config file not found")
         sys.exit(-1)
