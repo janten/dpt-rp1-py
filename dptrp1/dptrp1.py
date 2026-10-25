@@ -146,6 +146,22 @@ class LookUpDPT:
             return self.addr
 
 
+def local_path_for(local_folder, remote_folder, remote_path):
+    """Map a path on the device, under remote_folder, to its path under local_folder.
+
+    Entry paths come from the device, so refuse any that would resolve
+    outside local_folder (for example "Document/../../.bashrc", which
+    Path.relative_to alone lets through)."""
+    local_folder = Path(local_folder).resolve()
+    relative_path = Path(remote_path).relative_to(remote_folder)
+    local_path = (local_folder / relative_path).resolve()
+    if local_path != local_folder and local_folder not in local_path.parents:
+        raise ValueError(
+            f"Refusing device path {remote_path!r}: it lies outside {local_folder}"
+        )
+    return local_path
+
+
 class DigitalPaper:
     def __init__(self, addr=None, id=None, assume_yes=False, quiet=False):
         if addr:
@@ -833,8 +849,7 @@ class DigitalPaper:
 
         # Apply changes in remote to local
         for remote_path in to_download:
-            relative_path = Path(remote_path).relative_to(remote_folder)
-            local_path = Path(local_folder) / relative_path
+            local_path = local_path_for(local_folder, remote_folder, remote_path)
             tqdm.write("⇣ " + str(remote_path))
             self.download_file(remote_path, local_path)
             remote_time = (
@@ -847,16 +862,14 @@ class DigitalPaper:
             progress_bar.update()
 
         for remote_path in to_delete_local:
-            relative_path = Path(remote_path).relative_to(remote_folder)
-            local_path = Path(local_folder) / relative_path
+            local_path = local_path_for(local_folder, remote_folder, remote_path)
             if os.path.exists(local_path):
                 tqdm.write("X " + str(local_path))
                 os.remove(local_path)
             progress_bar.update()
 
         for remote_path in folders_to_delete_local:
-            relative_path = Path(remote_path).relative_to(remote_folder)
-            local_path = Path(local_folder) / relative_path
+            local_path = local_path_for(local_folder, remote_folder, remote_path)
             if os.path.exists(local_path):
                 tqdm.write("X " + str(local_path))
                 try:
@@ -871,8 +884,7 @@ class DigitalPaper:
             progress_bar.update()
 
         for remote_path in folders_to_create_local:
-            relative_path = Path(remote_path).relative_to(remote_folder)
-            local_path = Path(local_folder) / relative_path
+            local_path = local_path_for(local_folder, remote_folder, remote_path)
             tqdm.write("⇣ " + str(remote_path))
             os.makedirs(local_path, exist_ok=True)
             progress_bar.update()
@@ -891,15 +903,13 @@ class DigitalPaper:
             progress_bar.update()
 
         for remote_path in to_upload:
-            relative_path = Path(remote_path).relative_to(remote_folder)
-            local_path = Path(local_folder) / relative_path
+            local_path = local_path_for(local_folder, remote_folder, remote_path)
             tqdm.write("⇡ " + str(local_path))
             self.upload_file(local_path, remote_path)
             progress_bar.update()
 
         for remote_path in folders_to_create_remote:
-            relative_path = Path(remote_path).relative_to(remote_folder)
-            local_path = Path(local_folder) / relative_path
+            local_path = local_path_for(local_folder, remote_folder, remote_path)
             tqdm.write("⇡ " + str(local_path))
             self.new_folder(remote_path)
             progress_bar.update()
